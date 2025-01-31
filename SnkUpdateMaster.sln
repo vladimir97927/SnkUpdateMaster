@@ -3,12 +3,58 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2243A8B1-D46E-4313-B881-E068906AB603}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpdateMaster.Core", "src\SnkUpdateMaster.Core\SnkUpdateMaster.Core.csproj", "{0280CD5C-4291-4792-B9DD-AE29DD0A4563}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpdateMaster.Application", "src\SnkUpdateMaster.Application\SnkUpdateMaster.Application.csproj", "{6503D4EC-63FF-4AF7-8693-0242D25413D6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{A02F173D-5596-462B-A96A-D2C0EA06940C}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Packages.props = Directory.Packages.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{65A25C50-8152-494A-B24D-AE6E9030D1CD}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SnkUpdateMasterDb", "src\Database\SnkUpdateMasterDb\SnkUpdateMasterDb.sqlproj", "{930180A0-EDF9-4252-A252-A736D4B9F61A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C63FC9EA-53C1-4891-9C6A-440BBAB4578C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpateMaster.IntegrationTests", "tests\SnkUpateMaster.IntegrationTests\SnkUpateMaster.IntegrationTests.csproj", "{45ACFD77-90B0-45A6-901E-A3BD042A272F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0280CD5C-4291-4792-B9DD-AE29DD0A4563}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0280CD5C-4291-4792-B9DD-AE29DD0A4563}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0280CD5C-4291-4792-B9DD-AE29DD0A4563}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0280CD5C-4291-4792-B9DD-AE29DD0A4563}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6503D4EC-63FF-4AF7-8693-0242D25413D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6503D4EC-63FF-4AF7-8693-0242D25413D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6503D4EC-63FF-4AF7-8693-0242D25413D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6503D4EC-63FF-4AF7-8693-0242D25413D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{930180A0-EDF9-4252-A252-A736D4B9F61A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{930180A0-EDF9-4252-A252-A736D4B9F61A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{930180A0-EDF9-4252-A252-A736D4B9F61A}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{930180A0-EDF9-4252-A252-A736D4B9F61A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{930180A0-EDF9-4252-A252-A736D4B9F61A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{930180A0-EDF9-4252-A252-A736D4B9F61A}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{45ACFD77-90B0-45A6-901E-A3BD042A272F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45ACFD77-90B0-45A6-901E-A3BD042A272F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45ACFD77-90B0-45A6-901E-A3BD042A272F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45ACFD77-90B0-45A6-901E-A3BD042A272F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0280CD5C-4291-4792-B9DD-AE29DD0A4563} = {2243A8B1-D46E-4313-B881-E068906AB603}
+		{6503D4EC-63FF-4AF7-8693-0242D25413D6} = {2243A8B1-D46E-4313-B881-E068906AB603}
+		{65A25C50-8152-494A-B24D-AE6E9030D1CD} = {2243A8B1-D46E-4313-B881-E068906AB603}
+		{930180A0-EDF9-4252-A252-A736D4B9F61A} = {65A25C50-8152-494A-B24D-AE6E9030D1CD}
+		{45ACFD77-90B0-45A6-901E-A3BD042A272F} = {C63FC9EA-53C1-4891-9C6A-440BBAB4578C}
 	EndGlobalSection
 EndGlobal
