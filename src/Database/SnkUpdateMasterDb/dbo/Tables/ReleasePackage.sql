@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[ReleasePackage]
+(
+	[Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[VersionName] NVARCHAR(32) NOT NULL,
+	[VersionCode] INT NOT NULL UNIQUE,
+	[FileName] NVARCHAR(255) NOT NULL,
+	[FileData] VARBINARY(MAX) NOT NULL
+)

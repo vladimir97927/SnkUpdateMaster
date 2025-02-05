@@ -60,6 +60,6 @@
     <Folder Include="dbo\Tables" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\AppUpdate.sql" />
+    <Build Include="dbo\Tables\ReleasePackage.sql" />
   </ItemGroup>
 </Project>
