@@ -58,7 +58,7 @@ namespace SnkUpdateMaster.Application.Update
                 return;
             foreach (var packageFile in packageFiles)
             {
-
+                
             }
         }
     }
