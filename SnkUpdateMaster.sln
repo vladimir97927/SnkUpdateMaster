@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C63FC9EA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpateMaster.IntegrationTests", "tests\SnkUpateMaster.IntegrationTests\SnkUpateMaster.IntegrationTests.csproj", "{45ACFD77-90B0-45A6-901E-A3BD042A272F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpdateMaster.SqlServer", "src\SnkUpdateMaster.SqlServer\SnkUpdateMaster.SqlServer.csproj", "{9294AC84-B9DA-4D4C-AEE1-4B98C667B02D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{45ACFD77-90B0-45A6-901E-A3BD042A272F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45ACFD77-90B0-45A6-901E-A3BD042A272F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45ACFD77-90B0-45A6-901E-A3BD042A272F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9294AC84-B9DA-4D4C-AEE1-4B98C667B02D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9294AC84-B9DA-4D4C-AEE1-4B98C667B02D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9294AC84-B9DA-4D4C-AEE1-4B98C667B02D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9294AC84-B9DA-4D4C-AEE1-4B98C667B02D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,5 +62,6 @@ Global
 		{65A25C50-8152-494A-B24D-AE6E9030D1CD} = {2243A8B1-D46E-4313-B881-E068906AB603}
 		{930180A0-EDF9-4252-A252-A736D4B9F61A} = {65A25C50-8152-494A-B24D-AE6E9030D1CD}
 		{45ACFD77-90B0-45A6-901E-A3BD042A272F} = {C63FC9EA-53C1-4891-9C6A-440BBAB4578C}
+		{9294AC84-B9DA-4D4C-AEE1-4B98C667B02D} = {2243A8B1-D46E-4313-B881-E068906AB603}
 	EndGlobalSection
 EndGlobal
