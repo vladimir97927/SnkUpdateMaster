@@ -17,5 +17,11 @@ namespace SnkUpdateMaster.Core.Installer
         {
             throw new NotImplementedException();
         }
+
+        private async Task CreateBackupAsync(IProgress<double> progress, CancellationToken cancellationToken)
+        {
+            Directory.CreateDirectory(_backupDir);
+            
+        }
     }
 }
