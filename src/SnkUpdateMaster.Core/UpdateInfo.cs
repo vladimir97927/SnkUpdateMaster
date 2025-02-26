@@ -2,13 +2,16 @@
 {
     public class UpdateInfo
     {
-        public UpdateInfo(Version version, string fileName, string checksum, DateTime releaseDate)
+        public UpdateInfo(int id, Version version, string fileName, string checksum, DateTime releaseDate)
         {
+            Id = id;
             Version = version;
             FileName = fileName;
             Checksum = checksum;
             ReleaseDate = releaseDate;
         }
+
+        public int Id { get; }
 
         public Version Version { get; }
 

@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace SnkUpdateMaster.Application.Configuration.Data
+namespace SnkUpdateMaster.SqlServer.Configuration.Data
 {
     public interface ISqlConnectionFactory
     {

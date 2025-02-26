@@ -2,6 +2,6 @@
 {
     public interface IUpdateSource
     {
-        Task<UpdateInfo?> CheckForUpdatesAsync();
+        Task<UpdateInfo?> GetLastUpdatesAsync();
     }
 }
