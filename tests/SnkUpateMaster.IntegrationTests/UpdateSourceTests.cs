@@ -6,7 +6,7 @@
         [Test]
         public async Task GetLastUpdatesFromSqlServerSourceTest()
         {
-
+            
         }
     }
 }
