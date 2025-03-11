@@ -1,5 +1,6 @@
 ﻿using SnkUpdateMaster.Core.Installer;
 using SnkUpdateMaster.Core.Integrity;
+using SnkUpdateMaster.Core.UpdateSource;
 using SnkUpdateMaster.Core.VersionManager;
 
 namespace SnkUpdateMaster.Core

@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SnkUpdateMaster.Core;
-using SnkUpdateMaster.SqlServer.Configuration.Data;
+using SnkUpdateMaster.Core.UpdateSource;
 using SnkUpdateMaster.SqlServer.Database;
 
 namespace SnkUpdateMaster.SqlServer
 {
-    internal class SqlServerUpdateSource(SnkUpdateMasterContext context, ISqlConnectionFactory sqlConnectionFactory) : IUpdateSource
+    internal class SqlServerUpdateSource(SnkUpdateMasterContext context) : IUpdateSource
     {
         private readonly SnkUpdateMasterContext _context = context;
 

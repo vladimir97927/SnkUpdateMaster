@@ -4,16 +4,15 @@ using SnkUpdateMaster.SqlServer.Configuration.Data;
 
 namespace SnkUpdateMaster.SqlServer
 {
-    public class SqlServerUpdateDownloader : IUpdateDownloader
+    public class SqlServerUpdateDownloader(
+        ISqlConnectionFactory sqlConnectionFactory,
+        string downloadsDir) : IUpdateDownloader
     {
-        private readonly ISqlConnectionFactory _sqlConnectionFactory;
+        private readonly ISqlConnectionFactory _sqlConnectionFactory = sqlConnectionFactory;
 
-        public SqlServerUpdateDownloader(ISqlConnectionFactory sqlConnectionFactory)
-        {
-            _sqlConnectionFactory = sqlConnectionFactory;
-        }
+        private readonly string _downloadsDir = downloadsDir;
 
-        public async Task<string> DownloadUpdateAsync(UpdateInfo updateInfo, string tempPath, IProgress<double> progress, CancellationToken cancellationToken)
+        public async Task<string> DownloadUpdateAsync(UpdateInfo updateInfo, IProgress<double> progress, CancellationToken cancellationToken)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
             using var command = new SqlCommand(
@@ -26,8 +25,8 @@ namespace SnkUpdateMaster.SqlServer
             {
                 throw new Exception("Файл обновления не найден");
             }
-            Directory.CreateDirectory(tempPath);
-            var filePath = Path.Combine(tempPath, updateInfo.FileName);
+            Directory.CreateDirectory(_downloadsDir);
+            var filePath = Path.Combine(_downloadsDir, updateInfo.FileName);
             using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
             var buffer = new byte[8192];
             long bytesReadTotal = 0;

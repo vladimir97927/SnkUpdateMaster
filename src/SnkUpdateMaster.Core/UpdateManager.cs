@@ -1,5 +1,6 @@
 ﻿using SnkUpdateMaster.Core.Installer;
 using SnkUpdateMaster.Core.Integrity;
+using SnkUpdateMaster.Core.UpdateSource;
 using SnkUpdateMaster.Core.VersionManager;
 
 namespace SnkUpdateMaster.Core
@@ -8,7 +9,8 @@ namespace SnkUpdateMaster.Core
         ICurrentVersionManager currentVersionManager,
         IUpdateSource updateSource,
         IIntegrityVerifier integrityVerifier,
-        IInstaller installer)
+        IInstaller installer,
+        IUpdateDownloader updateDownloader)
     {
         private readonly ICurrentVersionManager _currentVersionManager = currentVersionManager;
 
@@ -17,6 +19,8 @@ namespace SnkUpdateMaster.Core
         private readonly IIntegrityVerifier _integrityVerifier = integrityVerifier;
 
         private readonly IInstaller _installer = installer;
+
+        private readonly IUpdateDownloader _updateDownloader = updateDownloader;
 
         public async Task<bool> CheckAndInstallUpdatesAsync(IProgress<double> progress, CancellationToken cancellationToken = default)
         {
@@ -27,9 +31,8 @@ namespace SnkUpdateMaster.Core
                 return false;
             }
 
-            var updatesPath = Path.Combine(Environment.CurrentDirectory, "updates");
             var downloadProgress = new Progress<double>(p => progress.Report(p * 0.7));
-            var updateFilePath = await _updateSource.DownloadUpdateAsync(lastUpdateInfo, updatesPath, downloadProgress, cancellationToken);
+            var updateFilePath = await _updateDownloader.DownloadUpdateAsync(lastUpdateInfo, downloadProgress, cancellationToken);
             progress.Report(0.75);
             if (!_integrityVerifier.VerifyFile(updateFilePath, lastUpdateInfo.Checksum))
             {

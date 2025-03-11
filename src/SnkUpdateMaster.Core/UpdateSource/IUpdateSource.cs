@@ -1,4 +1,4 @@
-﻿namespace SnkUpdateMaster.Core
+﻿namespace SnkUpdateMaster.Core.UpdateSource
 {
     public interface IUpdateSource
     {

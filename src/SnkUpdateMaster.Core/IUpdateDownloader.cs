@@ -2,6 +2,6 @@
 {
     public interface IUpdateDownloader
     {
-        Task<string> DownloadUpdateAsync(UpdateInfo updateInfo, string tempPath, IProgress<double> progress, CancellationToken cancellationToken);
+        Task<string> DownloadUpdateAsync(UpdateInfo updateInfo, IProgress<double> progress, CancellationToken cancellationToken);
     }
 }
