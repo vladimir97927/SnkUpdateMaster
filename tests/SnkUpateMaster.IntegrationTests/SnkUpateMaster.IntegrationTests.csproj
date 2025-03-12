@@ -10,6 +10,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="SeedWork\ClearDatabase.sql" />
+    <None Remove="SeedWork\SeedDatabase.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="SeedWork\ClearDatabase.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SeedWork\SeedDatabase.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Newtonsoft.Json" />
@@ -20,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SnkUpdateMaster.Core\SnkUpdateMaster.Core.csproj" />
+    <ProjectReference Include="..\..\src\SnkUpdateMaster.SqlServer\SnkUpdateMaster.SqlServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
