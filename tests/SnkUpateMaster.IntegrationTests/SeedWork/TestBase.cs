@@ -21,9 +21,8 @@ namespace SnkUpateMaster.IntegrationTests.SeedWork
                 throw new ApplicationException("Строка подключения отсутствует в переменных среды");
             }
             await ClearDatabase();
-            Directory.Delete(DownloadsPath, true);
-            Directory.Delete(AppDir, true);
             await SeedDatabase();
+            Directory.CreateDirectory(DownloadsPath);
             Directory.CreateDirectory(AppDir);
         }
 

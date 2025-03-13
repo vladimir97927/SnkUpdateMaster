@@ -2,6 +2,6 @@
 {
     public interface IInstaller
     {
-        Task InstallAsync(string updateFilePath, IProgress<double> progress, CancellationToken cancellationToken);
+        Task InstallAsync(string updateFilePath, IProgress<double> progress, CancellationToken cancellationToken = default);
     }
 }

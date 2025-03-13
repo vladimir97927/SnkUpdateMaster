@@ -15,7 +15,7 @@ namespace SnkUpdateMaster.Core.Installer
             _backupDir = Path.Combine(_appDir, "backup");
         }
 
-        public async Task InstallAsync(string updateFilePath, IProgress<double> progress, CancellationToken cancellationToken)
+        public async Task InstallAsync(string updateFilePath, IProgress<double> progress, CancellationToken cancellationToken = default)
         {
             try
             {
