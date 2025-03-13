@@ -8,6 +8,10 @@ namespace SnkUpateMaster.IntegrationTests.SeedWork
     {
         protected string? ConnectionString { get; private set; }
 
+        protected string DownloadsPath = "downloads";
+
+        protected string AppDir = "testApp";
+
         [SetUp]
         public async Task BeforeEachTest()
         {
@@ -17,13 +21,18 @@ namespace SnkUpateMaster.IntegrationTests.SeedWork
                 throw new ApplicationException("Строка подключения отсутствует в переменных среды");
             }
             await ClearDatabase();
+            Directory.Delete(DownloadsPath, true);
+            Directory.Delete(AppDir, true);
             await SeedDatabase();
+            Directory.CreateDirectory(AppDir);
         }
 
         [TearDown]
         public async Task AfterEachTest()
         {
             await ClearDatabase();
+            Directory.Delete(DownloadsPath, true);
+            Directory.Delete(AppDir, true);
         }
 
         protected async Task ExecuteSqlScript(string scriptPath)

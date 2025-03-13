@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using SnkUpdateMaster.Core;
+using SnkUpdateMaster.Core.Downloader;
 using SnkUpdateMaster.SqlServer.Configuration.Data;
 
 namespace SnkUpdateMaster.SqlServer
@@ -12,7 +13,7 @@ namespace SnkUpdateMaster.SqlServer
 
         private readonly string _downloadsDir = downloadsDir;
 
-        public async Task<string> DownloadUpdateAsync(UpdateInfo updateInfo, IProgress<double> progress, CancellationToken cancellationToken)
+        public async Task<string> DownloadUpdateAsync(UpdateInfo updateInfo, IProgress<double> progress, CancellationToken cancellationToken = default)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
             using var command = new SqlCommand(
