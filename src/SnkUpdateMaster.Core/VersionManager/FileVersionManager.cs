@@ -1,7 +1,7 @@
 ﻿
 namespace SnkUpdateMaster.Core.VersionManager
 {
-    class FileVersionManager : ICurrentVersionManager
+    public class FileVersionManager : ICurrentVersionManager
     {
         private readonly string _versionFileName = "version";
 
