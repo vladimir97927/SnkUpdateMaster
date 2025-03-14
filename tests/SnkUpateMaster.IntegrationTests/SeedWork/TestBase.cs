@@ -12,6 +12,10 @@ namespace SnkUpateMaster.IntegrationTests.SeedWork
 
         protected string AppDir = "testApp";
 
+        protected string VersionFileName = "version";
+
+        protected Version CurrentVersion = new("1.0.0");
+
         [SetUp]
         public async Task BeforeEachTest()
         {
@@ -24,6 +28,7 @@ namespace SnkUpateMaster.IntegrationTests.SeedWork
             await SeedDatabase();
             Directory.CreateDirectory(DownloadsPath);
             Directory.CreateDirectory(AppDir);
+            await CreateCurrentVersionFile();
         }
 
         [TearDown]
@@ -49,6 +54,18 @@ namespace SnkUpateMaster.IntegrationTests.SeedWork
         private async Task SeedDatabase()
         {
             await ExecuteSqlScript(@"SeedWork\SeedDatabase.sql");
+        }
+
+        private async Task CreateCurrentVersionFile()
+        {
+            if (File.Exists(VersionFileName))
+            {
+                File.Delete(VersionFileName);
+            }
+
+            var stream = File.Create(VersionFileName);
+            stream.Close();
+            await File.WriteAllTextAsync(VersionFileName, CurrentVersion.ToString());
         }
     }
 }

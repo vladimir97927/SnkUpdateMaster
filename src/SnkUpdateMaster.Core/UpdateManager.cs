@@ -6,7 +6,7 @@ using SnkUpdateMaster.Core.VersionManager;
 
 namespace SnkUpdateMaster.Core
 {
-    class UpdateManager(
+    public class UpdateManager(
         ICurrentVersionManager currentVersionManager,
         IUpdateSource updateSource,
         IIntegrityVerifier integrityVerifier,
