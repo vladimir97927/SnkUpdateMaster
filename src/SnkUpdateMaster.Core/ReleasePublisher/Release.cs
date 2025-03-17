@@ -18,5 +18,10 @@
         public DateTime ReleaseDate { get; } = DateTime.UtcNow;
 
         public byte[] FileData { get; } = fileData;
+
+        public static Release CreateNew(Version version, string fileName, string checksum, byte[] fileData)
+        {
+            return new Release(default, version, fileName, checksum, fileData);
+        }
     }
 }

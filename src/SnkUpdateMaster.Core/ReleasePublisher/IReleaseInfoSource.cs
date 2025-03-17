@@ -2,6 +2,6 @@
 {
     public interface IReleaseInfoSource
     {
-        Task<IEnumerable<ReleaseInfo>> GetReleaseInfoPagedAsync(int page, int pageSize);
+        Task<IEnumerable<ReleaseInfo>> GetReleaseInfosPagedAsync(int page, int pageSize);
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface IReleasePackager
     {
-        Task<Release> PackReleaseAsync(string filesDir, Version version);
+        Task<Release> PackAsync(string sourceDir, string destDir, Version version);
     }
 }
