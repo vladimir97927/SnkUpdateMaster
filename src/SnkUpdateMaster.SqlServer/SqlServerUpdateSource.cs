@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using SnkUpdateMaster.Core;
 using SnkUpdateMaster.Core.UpdateSource;
-using SnkUpdateMaster.SqlServer.Configuration.Data;
+using SnkUpdateMaster.SqlServer.Database;
 
 namespace SnkUpdateMaster.SqlServer
 {

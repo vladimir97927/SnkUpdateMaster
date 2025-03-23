@@ -2,7 +2,7 @@
 using SnkUpdateMaster.Core.Installer;
 using SnkUpdateMaster.Core.Integrity;
 using SnkUpdateMaster.SqlServer;
-using SnkUpdateMaster.SqlServer.Configuration.Data;
+using SnkUpdateMaster.SqlServer.Database;
 
 namespace SnkUpateMaster.IntegrationTests
 {

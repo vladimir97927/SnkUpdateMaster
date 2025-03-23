@@ -1,7 +1,14 @@
 SET IDENTITY_INSERT [AppUpdates] ON
 
 INSERT INTO [dbo].[AppUpdates]([Id], [Version], [FileName], [Checksum], [ReleaseDate], [FileData])
-VALUES (
+VALUES 
+(2,
+N'1.0.0',
+N'OldRelese.zip',
+N'invalid-checksum',
+'2024-12-03',
+0x0),
+(
 1,
 N'1.0.2',
 N'AppTest.zip',

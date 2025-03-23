@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using SnkUpdateMaster.Core;
 using SnkUpdateMaster.Core.Downloader;
-using SnkUpdateMaster.SqlServer.Configuration.Data;
+using SnkUpdateMaster.SqlServer.Database;
 
 namespace SnkUpdateMaster.SqlServer
 {

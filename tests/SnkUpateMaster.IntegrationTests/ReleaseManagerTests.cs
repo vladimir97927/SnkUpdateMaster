@@ -3,7 +3,7 @@ using SnkUpdateMaster.Core.Integrity;
 using SnkUpdateMaster.Core.ReleasePublisher;
 using SnkUpdateMaster.Core.ReleasePublisher.Packager;
 using SnkUpdateMaster.SqlServer;
-using SnkUpdateMaster.SqlServer.Configuration.Data;
+using SnkUpdateMaster.SqlServer.Database;
 
 namespace SnkUpateMaster.IntegrationTests
 {

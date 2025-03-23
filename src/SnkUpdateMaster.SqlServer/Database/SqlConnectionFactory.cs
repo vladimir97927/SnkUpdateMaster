@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Data;
 
-namespace SnkUpdateMaster.SqlServer.Configuration.Data
+namespace SnkUpdateMaster.SqlServer.Database
 {
     public class SqlConnectionFactory : ISqlConnectionFactory, IDisposable
     {
