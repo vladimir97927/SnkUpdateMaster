@@ -1,13 +1,11 @@
 ﻿using Dapper;
-using Microsoft.EntityFrameworkCore;
 using SnkUpdateMaster.Core;
 using SnkUpdateMaster.Core.UpdateSource;
 using SnkUpdateMaster.SqlServer.Configuration.Data;
-using SnkUpdateMaster.SqlServer.Database;
 
 namespace SnkUpdateMaster.SqlServer
 {
-    internal class SqlServerUpdateSource(ISqlConnectionFactory sqlConnectionFactory) : IUpdateSource
+    public class SqlServerUpdateSource(ISqlConnectionFactory sqlConnectionFactory) : IUpdateSource
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory = sqlConnectionFactory;
 

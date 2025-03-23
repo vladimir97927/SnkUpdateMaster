@@ -3,6 +3,7 @@ using SnkUpdateMaster.Core.Integrity;
 using SnkUpdateMaster.Core.ReleasePublisher;
 using SnkUpdateMaster.Core.ReleasePublisher.Packager;
 using SnkUpdateMaster.SqlServer;
+using SnkUpdateMaster.SqlServer.Configuration.Data;
 
 namespace SnkUpateMaster.IntegrationTests
 {
@@ -22,8 +23,8 @@ namespace SnkUpateMaster.IntegrationTests
             var newVersion = new Version(1, 1, 3);
             await manager.PulishReleaseAsync(AppDir, newVersion, new Progress<double>());
 
-            var factory = new SqlServerUpdateSourceFactory(ConnectionString!);
-            var updateSource = factory.Create();
+            var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString!);
+            var updateSource = new SqlServerUpdateSource(sqlConnectionFactory);
             var lastUpdates = await updateSource.GetLastUpdatesAsync();
 
             Assert.That(lastUpdates, Is.Not.Null);

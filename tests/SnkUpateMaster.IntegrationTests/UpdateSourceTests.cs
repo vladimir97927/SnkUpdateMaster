@@ -1,5 +1,6 @@
 ﻿using SnkUpateMaster.IntegrationTests.SeedWork;
 using SnkUpdateMaster.SqlServer;
+using SnkUpdateMaster.SqlServer.Configuration.Data;
 
 namespace SnkUpateMaster.IntegrationTests
 {
@@ -9,8 +10,8 @@ namespace SnkUpateMaster.IntegrationTests
         [Test]
         public async Task GetLastUpdatesFromSqlServerSourceTest()
         {
-            var factory = new SqlServerUpdateSourceFactory(ConnectionString!);
-            var updateSource = factory.Create();
+            var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString!);
+            var updateSource = new SqlServerUpdateSource(sqlConnectionFactory);
             var lastUpdates = await updateSource.GetLastUpdatesAsync();
 
             Assert.That(lastUpdates, Is.Not.Null);

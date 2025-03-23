@@ -37,7 +37,10 @@ namespace SnkUpateMaster.IntegrationTests.SeedWork
             await ClearDatabase();
             Directory.Delete(DownloadsPath, true);
             Directory.Delete(AppDir, true);
-            Directory.Delete("Releases", true);
+            if (Directory.Exists("Releases"))
+            {
+                Directory.Delete("Releases", true);
+            }
         }
 
         protected async Task ExecuteSqlScript(string scriptPath)

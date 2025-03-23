@@ -3,7 +3,7 @@ using SnkUpdateMaster.Core.ReleasePublisher;
 
 namespace SnkUpdateMaster.SqlServer.Database
 {
-    internal class SnkUpdateMasterContext(DbContextOptions options) : DbContext(options)
+    public class SnkUpdateMasterContext(DbContextOptions options) : DbContext(options)
     {
         public DbSet<Release> Releases { get; set; }
 

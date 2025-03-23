@@ -3,7 +3,7 @@ using System.Data;
 
 namespace SnkUpdateMaster.SqlServer.Configuration.Data
 {
-    internal class SqlConnectionFactory : ISqlConnectionFactory, IDisposable
+    public class SqlConnectionFactory : ISqlConnectionFactory, IDisposable
     {
         private readonly string _connectionString;
 

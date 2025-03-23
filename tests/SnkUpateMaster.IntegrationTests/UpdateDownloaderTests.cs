@@ -1,6 +1,7 @@
 ﻿using SnkUpateMaster.IntegrationTests.SeedWork;
 using SnkUpdateMaster.Core.Integrity;
 using SnkUpdateMaster.SqlServer;
+using SnkUpdateMaster.SqlServer.Configuration.Data;
 
 namespace SnkUpateMaster.IntegrationTests
 {
@@ -10,12 +11,11 @@ namespace SnkUpateMaster.IntegrationTests
         [Test]
         public async Task DownloadUpdatesFromSqlDatabseTest()
         {
-            var updateSourceFactory = new SqlServerUpdateSourceFactory(ConnectionString!);
-            var downloaderFactory = new SqlServerUpdateDownloaderFactory(ConnectionString!, DownloadsPath);
+            var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString!);
 
-            var updateSource = updateSourceFactory.Create();
-            var downloader = downloaderFactory.Create();
-            
+            var updateSource = new SqlServerUpdateSource(sqlConnectionFactory);
+            var downloader = new SqlServerUpdateDownloader(sqlConnectionFactory, DownloadsPath);
+
             var updateInfo = await updateSource.GetLastUpdatesAsync();
 
             Assert.That(updateInfo, Is.Not.Null);
