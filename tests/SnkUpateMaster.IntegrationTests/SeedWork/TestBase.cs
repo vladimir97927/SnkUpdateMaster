@@ -27,7 +27,7 @@ namespace SnkUpateMaster.IntegrationTests.SeedWork
             await ClearDatabase();
             await SeedDatabase();
             Directory.CreateDirectory(DownloadsPath);
-            Directory.CreateDirectory(AppDir);
+            CreateMockAppFiles();
             await CreateCurrentVersionFile();
         }
 
@@ -37,6 +37,7 @@ namespace SnkUpateMaster.IntegrationTests.SeedWork
             await ClearDatabase();
             Directory.Delete(DownloadsPath, true);
             Directory.Delete(AppDir, true);
+            Directory.Delete("Releases", true);
         }
 
         protected async Task ExecuteSqlScript(string scriptPath)
@@ -66,6 +67,28 @@ namespace SnkUpateMaster.IntegrationTests.SeedWork
             var stream = File.Create(VersionFileName);
             stream.Close();
             await File.WriteAllTextAsync(VersionFileName, CurrentVersion.ToString());
+        }
+
+        private void CreateMockAppFiles()
+        {
+            Directory.CreateDirectory(AppDir);
+            var testFiles = new List<string>()
+            {
+                "testlib_1.dll",
+                "testlib_2.dll",
+                "testApp.exe",
+                "testFolder\\testFile.txt"
+            };
+            foreach (var file in testFiles)
+            {
+                var path = Path.Combine(AppDir, file);
+                var dir = Path.GetDirectoryName(path);
+                if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+                File.Create(path).Close();
+            }
         }
     }
 }

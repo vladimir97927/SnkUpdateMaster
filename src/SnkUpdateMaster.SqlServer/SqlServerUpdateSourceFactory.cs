@@ -1,20 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SnkUpdateMaster.Core.UpdateSource;
-using SnkUpdateMaster.SqlServer.Database;
+﻿using SnkUpdateMaster.Core.UpdateSource;
+using SnkUpdateMaster.SqlServer.Configuration.Data;
 
 namespace SnkUpdateMaster.SqlServer
 {
     public class SqlServerUpdateSourceFactory(string connectionString) : IUpdateSourceFactory
     {
-        private readonly string _connectionString = connectionString;
+        private readonly ISqlConnectionFactory _sqlConnectionFactory = new SqlConnectionFactory(connectionString);
 
         public IUpdateSource Create()
         {
-            var dbContextOptionsBuilder = new DbContextOptionsBuilder<SnkUpdateMasterContext>();
-            dbContextOptionsBuilder.UseSqlServer(_connectionString);
-            var context = new SnkUpdateMasterContext(dbContextOptionsBuilder.Options);
-
-            return new SqlServerUpdateSource(context);
+            return new SqlServerUpdateSource(_sqlConnectionFactory);
         }
     }
 }

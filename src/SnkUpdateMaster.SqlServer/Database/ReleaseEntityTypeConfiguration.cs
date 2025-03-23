@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SnkUpdateMaster.Core;
+using SnkUpdateMaster.Core.ReleasePublisher;
 
 namespace SnkUpdateMaster.SqlServer.Database
 {
-    internal class UpdateInfoEntityTypeConfiguration : IEntityTypeConfiguration<UpdateInfo>
+    internal class ReleaseEntityTypeConfiguration : IEntityTypeConfiguration<Release>
     {
-        public void Configure(EntityTypeBuilder<UpdateInfo> builder)
+        public void Configure(EntityTypeBuilder<Release> builder)
         {
             builder.ToTable("AppUpdates");
 
@@ -19,6 +19,7 @@ namespace SnkUpdateMaster.SqlServer.Database
             builder.Property(x => x.Version).HasColumnName("Version").HasConversion(
                 x => x.ToString(),
                 x => new Version(x));
+            builder.Property(x => x.FileData).HasColumnName("FileData");
         }
     }
 }

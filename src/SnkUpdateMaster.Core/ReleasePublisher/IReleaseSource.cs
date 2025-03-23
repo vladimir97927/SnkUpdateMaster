@@ -4,8 +4,8 @@
     {
         Task UploadReleaseAsync(Release release);
 
-        Task<Release> GetReleaseAsync(int id);
+        Task<Release?> GetReleaseAsync(int id);
 
-        Task DeleteReleaseAsync(Release release);
+        Task RemoveReleaseAsync(Release release);
     }
 }

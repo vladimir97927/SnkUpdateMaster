@@ -1,9 +1,9 @@
-﻿using System.Security.Cryptography;
-
-namespace SnkUpdateMaster.Core.Integrity
+﻿namespace SnkUpdateMaster.Core.Integrity
 {
     public class ShaIntegrityProvider : IIntegrityProvider
     {
+        private readonly ShaChecksumCalculator _checksumCalculator = new();
+
         public string ComputeFileChecksum(string filePath)
         {
             if (!File.Exists(filePath))
@@ -11,12 +11,7 @@ namespace SnkUpdateMaster.Core.Integrity
                 throw new FileNotFoundException("Файл не найден при расчете контрольной суммы", filePath);
             }
 
-            using var sha256 = SHA256.Create();
-            using var stream = File.OpenRead(filePath);
-
-            var checksum = BitConverter.ToString(sha256.ComputeHash(stream))
-                .Replace("-", "")
-                .ToLowerInvariant();
+            var checksum = _checksumCalculator.ComputeChecksum(filePath);
 
             return checksum;
         }
