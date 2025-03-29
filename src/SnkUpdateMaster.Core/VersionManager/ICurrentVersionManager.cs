@@ -2,7 +2,7 @@
 {
     public interface ICurrentVersionManager
     {
-        Task<Version> GetCurrentVersionAsync();
+        Task<Version?> GetCurrentVersionAsync();
 
         Task UpdateCurrentVersionAsync(Version version);
     }

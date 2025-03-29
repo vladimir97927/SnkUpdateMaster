@@ -5,12 +5,13 @@ namespace SnkUpdateMaster.Core.VersionManager
     {
         private readonly string _versionFileName = "version";
 
-        public async Task<Version> GetCurrentVersionAsync()
+        public async Task<Version?> GetCurrentVersionAsync()
         {
             var versionFilePath = Path.Combine(Environment.CurrentDirectory, _versionFileName);
             if (!File.Exists(versionFilePath))
             {
-                throw new FileNotFoundException("Файл версии не найден", versionFilePath);
+                // throw new FileNotFoundException("Файл версии не найден", versionFilePath);
+                return null;
             }
 
             var versionString = (await File.ReadAllTextAsync(versionFilePath)).Trim();
@@ -19,7 +20,8 @@ namespace SnkUpdateMaster.Core.VersionManager
                 return version;
             }
 
-            throw new InvalidOperationException("Неверный формат версии в файле");
+            //throw new InvalidOperationException("Неверный формат версии в файле");
+            return null;
         }
 
         public async Task UpdateCurrentVersionAsync(Version version)
