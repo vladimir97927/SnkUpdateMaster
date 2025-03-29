@@ -27,7 +27,8 @@ namespace SnkUpdateMaster.Core.VersionManager
             var versionFilePath = Path.Combine(Environment.CurrentDirectory, _versionFileName);
             if (!File.Exists(versionFilePath))
             {
-                throw new FileNotFoundException("Файл версии не найден", versionFilePath);
+                var stream = File.Create(versionFilePath);
+                stream.Close();
             }
 
             await File.WriteAllTextAsync(versionFilePath, version.ToString());
