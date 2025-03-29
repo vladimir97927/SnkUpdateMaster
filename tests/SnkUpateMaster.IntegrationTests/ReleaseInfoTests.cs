@@ -15,7 +15,13 @@ namespace SnkUpateMaster.IntegrationTests
 
             var releases = await releaseInfoSource.GetReleaseInfosPagedAsync();
 
-            Assert.That(releases.Count, Is.EqualTo(2));
+            Assert.That(releases.Data.Count, Is.EqualTo(2));
+            Assert.Multiple(() =>
+            {
+                Assert.That(releases.TotalCount, Is.EqualTo(2));
+                Assert.That(releases.PageNumber, Is.Null);
+                Assert.That(releases.PageSize, Is.Null);
+            });
         }
 
         [Test]
@@ -26,11 +32,23 @@ namespace SnkUpateMaster.IntegrationTests
 
             var releases = await releaseInfoSource.GetReleaseInfosPagedAsync(1, 1);
 
-            Assert.That(releases.Count, Is.EqualTo(1));
+            Assert.That(releases.Data.Count, Is.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(releases.TotalCount, Is.EqualTo(2));
+                Assert.That(releases.PageNumber, Is.EqualTo(1));
+                Assert.That(releases.PageSize, Is.EqualTo(1));
+            });
 
             releases = await releaseInfoSource.GetReleaseInfosPagedAsync(2, 1);
 
-            Assert.That(releases.Count, Is.EqualTo(1));
+            Assert.That(releases.Data.Count, Is.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(releases.TotalCount, Is.EqualTo(2));
+                Assert.That(releases.PageNumber, Is.EqualTo(2));
+                Assert.That(releases.PageSize, Is.EqualTo(1));
+            });
         }
     }
 }

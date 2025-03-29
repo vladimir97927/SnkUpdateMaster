@@ -1,7 +1,9 @@
-﻿namespace SnkUpdateMaster.Core.ReleasePublisher
+﻿using SnkUpdateMaster.Core.Common;
+
+namespace SnkUpdateMaster.Core.ReleasePublisher
 {
     public interface IReleaseInfoSource
     {
-        Task<IEnumerable<ReleaseInfo>> GetReleaseInfosPagedAsync(int? page = null, int? pageSize = null);
+        Task<PagedData<IEnumerable<ReleaseInfo>>> GetReleaseInfosPagedAsync(int? page = null, int? pageSize = null);
     }
 }
