@@ -4,6 +4,7 @@ using SnkUpdateMaster.Core.Installer;
 using SnkUpdateMaster.Core.Integrity;
 using SnkUpdateMaster.Core.VersionManager;
 using SnkUpdateMaster.SqlServer;
+using SnkUpdateMaster.SqlServer.Configuration;
 using SnkUpdateMaster.SqlServer.Database;
 
 namespace SnkUpateMaster.IntegrationTests
