@@ -18,9 +18,11 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SnkUpdateMasterDb", "src\Da
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C63FC9EA-53C1-4891-9C6A-440BBAB4578C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpateMaster.IntegrationTests", "tests\SnkUpateMaster.IntegrationTests\SnkUpateMaster.IntegrationTests.csproj", "{45ACFD77-90B0-45A6-901E-A3BD042A272F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpateMaster.Core.IntegrationTests", "tests\SnkUpateMaster.IntegrationTests\SnkUpateMaster.Core.IntegrationTests.csproj", "{45ACFD77-90B0-45A6-901E-A3BD042A272F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpdateMaster.SqlServer", "src\SnkUpdateMaster.SqlServer\SnkUpdateMaster.SqlServer.csproj", "{9294AC84-B9DA-4D4C-AEE1-4B98C667B02D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpdateMaster.SqlServer.IntegrationTests", "tests\SnkUpdateMaster.SqlServer.IntegrationTests\SnkUpdateMaster.SqlServer.IntegrationTests.csproj", "{77B4F54C-48C2-4D0A-A342-0F98B3AB842D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +48,10 @@ Global
 		{9294AC84-B9DA-4D4C-AEE1-4B98C667B02D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9294AC84-B9DA-4D4C-AEE1-4B98C667B02D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9294AC84-B9DA-4D4C-AEE1-4B98C667B02D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77B4F54C-48C2-4D0A-A342-0F98B3AB842D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77B4F54C-48C2-4D0A-A342-0F98B3AB842D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77B4F54C-48C2-4D0A-A342-0F98B3AB842D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77B4F54C-48C2-4D0A-A342-0F98B3AB842D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,5 +62,9 @@ Global
 		{930180A0-EDF9-4252-A252-A736D4B9F61A} = {65A25C50-8152-494A-B24D-AE6E9030D1CD}
 		{45ACFD77-90B0-45A6-901E-A3BD042A272F} = {C63FC9EA-53C1-4891-9C6A-440BBAB4578C}
 		{9294AC84-B9DA-4D4C-AEE1-4B98C667B02D} = {2243A8B1-D46E-4313-B881-E068906AB603}
+		{77B4F54C-48C2-4D0A-A342-0F98B3AB842D} = {C63FC9EA-53C1-4891-9C6A-440BBAB4578C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B369AE71-FA7C-4772-85B2-6FF8E6B2B4C6}
 	EndGlobalSection
 EndGlobal

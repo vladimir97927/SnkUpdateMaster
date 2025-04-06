@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6,13 +6,7 @@
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="SeedWork\ClearDatabase.sql" />
-    <None Remove="SeedWork\SeedDatabase.sql" />
-  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="SeedWork\ClearDatabase.sql">
@@ -24,21 +18,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="NUnit" />
-    <PackageReference Include="NUnit.Analyzers" />
     <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="NUnit.Analyzers" />
+    <PackageReference Include="coverlet.collector" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SnkUpdateMaster.Core\SnkUpdateMaster.Core.csproj" />
     <ProjectReference Include="..\..\src\SnkUpdateMaster.SqlServer\SnkUpdateMaster.SqlServer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="NUnit.Framework" />
   </ItemGroup>
 
 </Project>

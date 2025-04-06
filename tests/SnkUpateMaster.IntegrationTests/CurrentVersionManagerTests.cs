@@ -1,7 +1,7 @@
-﻿using SnkUpateMaster.IntegrationTests.SeedWork;
+﻿using SnkUpateMaster.Core.IntegrationTests.SeedWork;
 using SnkUpdateMaster.Core.VersionManager;
 
-namespace SnkUpateMaster.IntegrationTests
+namespace SnkUpateMaster.Core.IntegrationTests
 {
     [TestFixture]
     class CurrentVersionManagerTests : TestBase

@@ -1,4 +1,4 @@
-﻿namespace SnkUpateMaster.IntegrationTests.SeedWork
+﻿namespace SnkUpdateMaster.SqlServer.IntegrationTests.SeedWork
 {
     public static class EnviromentVariablesProvider
     {

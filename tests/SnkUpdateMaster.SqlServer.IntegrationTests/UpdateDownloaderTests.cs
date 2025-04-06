@@ -1,9 +1,9 @@
-﻿using SnkUpateMaster.IntegrationTests.SeedWork;
+﻿using SnkUpdateMaster.SqlServer.IntegrationTests.SeedWork;
 using SnkUpdateMaster.Core.Integrity;
-using SnkUpdateMaster.SqlServer;
 using SnkUpdateMaster.SqlServer.Database;
+using NUnit.Framework;
 
-namespace SnkUpateMaster.IntegrationTests
+namespace SnkUpdateMaster.SqlServer.IntegrationTests
 {
     [TestFixture]
     class UpdateDownloaderTests : TestBase

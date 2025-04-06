@@ -1,38 +1,26 @@
-﻿using SnkUpateMaster.IntegrationTests.SeedWork;
+﻿using SnkUpateMaster.Core.IntegrationTests.SeedWork;
 using SnkUpdateMaster.Core.Installer;
-using SnkUpdateMaster.Core.Integrity;
-using SnkUpdateMaster.SqlServer;
-using SnkUpdateMaster.SqlServer.Database;
 
-namespace SnkUpateMaster.IntegrationTests
+namespace SnkUpateMaster.Core.IntegrationTests
 {
     [TestFixture]
-    class InstallerTests : TestBase
+    internal class InstallerTests : TestBase
     {
         [Test]
         public async Task ZipInstallerTest()
         {
-            var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString!);
+            var zipInstaller = new ZipInstaller(AppDir);
+            var mockProgress = new Progress<double>();
+            var updateFilePath = @"SeedWork\TestApp.zip";
 
-            var updateSource = new SqlServerUpdateSource(sqlConnectionFactory);
-            var downloader = new SqlServerUpdateDownloader(sqlConnectionFactory, DownloadsPath);
+            await zipInstaller.InstallAsync(updateFilePath, mockProgress);
 
-            var updateInfo = await updateSource.GetLastUpdatesAsync();
-
-            Assert.That(updateInfo, Is.Not.Null);
-
-            var path = await downloader.DownloadUpdateAsync(updateInfo, new Progress<double>());
-            Assert.That(path, Is.EqualTo($"{DownloadsPath}\\{updateInfo.FileName}"));
-
-            var integrityVerifier = new ShaIntegrityVerifier();
-            var isSuccess = integrityVerifier.VerifyFile(path, updateInfo.Checksum);
-
-            Assert.That(isSuccess, Is.True);
-
-            var installer = new ZipInstaller(AppDir!);
-            await installer.InstallAsync(path, new Progress<double>());
-
-            Assert.That(File.Exists(Path.Combine(AppDir, "TestApp", "TestApp.exe")), Is.True);
+            var directories = Directory.GetDirectories(AppDir);
+            Assert.Multiple(() =>
+            {
+                Assert.That(directories, Does.Contain("testApp\\testFolder"));
+                Assert.That(directories, Does.Contain("testApp\\backup"));
+            });
         }
     }
 }

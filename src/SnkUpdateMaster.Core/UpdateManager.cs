@@ -48,5 +48,10 @@ namespace SnkUpdateMaster.Core
 
             return true;
         }
+
+        public async Task<Version?> GetCurrentVersionAsync()
+        {
+            return await _currentVersionManager.GetCurrentVersionAsync();
+        }
     }
 }
