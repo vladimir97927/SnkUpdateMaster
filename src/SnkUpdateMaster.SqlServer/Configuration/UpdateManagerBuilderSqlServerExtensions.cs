@@ -5,7 +5,7 @@ using SnkUpdateMaster.SqlServer.Database;
 
 namespace SnkUpdateMaster.SqlServer.Configuration
 {
-    public static class UpdateManagerBuilderSqlServerExtension
+    public static class UpdateManagerBuilderSqlServerExtensions
     {
         public static UpdateManagerBuilder WithSqlServerUpdateProvider(
             this UpdateManagerBuilder builder,

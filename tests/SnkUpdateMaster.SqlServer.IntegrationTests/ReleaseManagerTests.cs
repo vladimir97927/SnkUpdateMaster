@@ -4,6 +4,7 @@ using SnkUpdateMaster.Core.ReleasePublisher;
 using SnkUpdateMaster.Core.ReleasePublisher.Packager;
 using SnkUpdateMaster.SqlServer.Database;
 using NUnit.Framework;
+using SnkUpdateMaster.SqlServer.Configuration;
 
 namespace SnkUpdateMaster.SqlServer.IntegrationTests
 {
@@ -13,13 +14,10 @@ namespace SnkUpdateMaster.SqlServer.IntegrationTests
         [Test]
         public async Task PublishReleaseTest()
         {
-            var integrityProvider = new ShaIntegrityProvider();
-            var releasePackager = new ZipReleasePackager(integrityProvider);
-
-            var releaseSourceFactory = new SqlServerReleaseSourceFactory(ConnectionString!);
-            var releaseSource = releaseSourceFactory.Create();
-
-            var manager = new ReleaseManager(releasePackager, releaseSource);
+            var manager = new ReleaseManagerBuilder()
+                .WithZipPackager()
+                .WithSqlServerReleaseSource(ConnectionString!)
+                .Build();
             var newVersion = new Version(1, 1, 3);
             await manager.PulishReleaseAsync(AppDir, newVersion, new Progress<double>());
 
