@@ -15,8 +15,11 @@ namespace SnkUpdateMaster.Core.ReleasePublisher
             {
                 Directory.CreateDirectory(destPath);
             }
+            progress.Report(0.2);
             var release = await _releasePackager.PackAsync(appDir, destPath, version);
+            progress.Report(0.5);
             await _releaseSource.UploadReleaseAsync(release);
+            progress.Report(1);
 
             return release.Id;
         }
