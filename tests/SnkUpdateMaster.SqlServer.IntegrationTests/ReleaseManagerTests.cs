@@ -15,7 +15,7 @@ namespace SnkUpdateMaster.SqlServer.IntegrationTests
         public async Task PublishReleaseTest()
         {
             var manager = new ReleaseManagerBuilder()
-                .WithZipPackager()
+                .WithZipPackager(IntegrityProviderType.Sha256)
                 .WithSqlServerReleaseSource(ConnectionString!)
                 .Build();
             var newVersion = new Version(1, 1, 3);
