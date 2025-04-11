@@ -69,7 +69,7 @@ class Program
             }
 
             _cts = new CancellationTokenSource();
-            var progress = new Progress<double>(p => Console.WriteLine($"Publish progress: {p:P0}"));
+            var progress = new Progress<double>(p => Console.Write($"\rPublish progress: {p:P0} "));
 
             Console.WriteLine("Starting publish... (Press 'C' to stop)");
 

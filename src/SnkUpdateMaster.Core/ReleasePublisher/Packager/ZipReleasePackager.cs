@@ -8,14 +8,17 @@ namespace SnkUpdateMaster.Core.ReleasePublisher.Packager
     {
         private readonly IIntegrityProvider _integrityProvider = integrityProvider;
 
-        public async Task<Release> PackAsync(string sourceDir, string destDir, Version version)
+        public async Task<Release> PackAsync(string sourceDir, string destDir, Version version, IProgress<double> progress)
         {
             var destPath = Path.Combine(destDir, $"release-v{version}.zip");
+            var files = Directory.GetFiles(sourceDir, "*", SearchOption.AllDirectories);
             using (var archive = ZipFile.Open(destPath, ZipArchiveMode.Create))
-                foreach (var file in Directory.EnumerateFiles(sourceDir, "*", SearchOption.AllDirectories))
+                for (var i = 0; i < files.Length; i++)
                 {
+                    var file = files[i];
                     var entryName = Path.GetRelativePath(sourceDir, file);
                     archive.CreateEntryFromFile(file, entryName, CompressionLevel.Optimal);
+                    progress.Report((double)i / files.Length * 0.5);
                 }
             var checksum = _integrityProvider.ComputeFileChecksum(destPath);
             var fileName = Path.GetFileName(destPath);
