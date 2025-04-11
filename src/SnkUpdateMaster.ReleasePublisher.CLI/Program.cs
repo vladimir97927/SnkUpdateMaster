@@ -104,8 +104,8 @@ class Program
     {
         try
         {
-            int? currentPage = 1;
-            int? pageSize = 20;
+            int currentPage = 1;
+            int pageSize = 20;
 
             while (true)
             {
