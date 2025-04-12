@@ -18,21 +18,40 @@
    - Скрипты.
 3. Контроль целостности данных. Выбор алгоритма хэширования
 
-## Особенности проекта
-- Язык программирования: C#.
-- Платформа: .NET 9.0.
-- Entity Framework Core, Dapper для работы с реляционной базой данных.
+## Зависимости проекта
+- Язык программирования: C# 12.0.
+- Платформа: .NET 8.0.
+- Microsoft.EntityFrameworkCore 9.0.2.
+- Microsoft.EntityFrameworkCore.Relational 9.0.2.
+- Microsoft.EntityFrameworkCore.SqlServer 9.0.2.
+- Microsoft.Data.SqlClient 6.0.1.
+- Dapper 2.1.66.
 
 ## Модули проекта
 - [Core - основные компоненты работы приложения.]()
 - [SqlServer - реализация работы с обновлениями через реляционную базу данных.]()
+- [SnkUpdateMasterDb - проект базы данных.]()
 
-## Использование
+## Использование SQL Server
 1. Создание менеджера обновлений со следующим функционалом:
 - Хранение версии приложения в файле.
 - Использование алгоритма SHA256 для вычисления хэша и обеспечения целостности загруженных файлов обновлений.
 - Установка обновлений из ZIP архива.
 - Хранение обновлений в базе данных SqlServer.
+
+Создайте таблицу в БД:
+
+```tsql
+CREATE TABLE [dbo].[AppUpdates]
+(
+	[Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[Version] NVARCHAR(256) NOT NULL,
+	[FileName] NVARCHAR(256) NOT NULL,
+	[Checksum] NVARCHAR(256) NOT NULL,
+	[ReleaseDate] DATETIME NOT NULL,
+	[FileData] VARBINARY(MAX) NOT NULL
+)
+```
 
 Для проверки наличия обновлений и установки используется класс UpdateManager. Экземпляр класса создается через UpdateManagerBuilder.
 ```csharp
@@ -51,7 +70,7 @@ var progress = new Progress<double>();
 var isSuccess = await updateManager.CheckAndInstallUpdatesAsync(progress);
 ```
 
-2. Загрузка ZIP архива с обновлениями в базу данных Sql Server. Алгоритм хэширования SHA256.
+2. Загрузка ZIP архива с обновлениями в базу данных SQL Server. Алгоритм хэширования SHA256.
 
 Для публикации обновлений используется класс ReleaseManager. Экземпляр класса создается через ReleaseManagerBuilder.
 ```csharp
@@ -68,7 +87,7 @@ var progress = new Progress<double>();
 await manager.PulishReleaseAsync(appDir, newVersion, progress);
 ```
 
-3. Постраничный вывод загруженных обновлений в базе данных Sql Server.
+3. Постраничный вывод загруженных обновлений в базе данных SQL Server.
 
 Для получения информации об обновлениях используется класс SqlServerReleaseInfoSource. Класс требует зависимости от ISqlConnectionFactory, который предоставляет функции для подключения к БД.
 
@@ -108,12 +127,25 @@ public class PagedData<T>
 
 **ReleasePublisher.CLI**
 
+Программа, использующая разработанную библиотеку для загрузки новых и просмотра существующих ZIP архивов с обновлениями в БД SQL Server.
 
+Для работы необходимо переопределить переменную ``connectionString`` в классе ``Program``.
 
+Для установки приложения клонируйте репозиторий:
 
+```
+git clone https://github.com/vladimir97927/SnkUpdateMaster.git
+```
 
+Переопределите переменную ``connectionString`` в классе ``Program``.
 
+Соберите проект из папки решения
 
+```
+dotnet publish src/SnkUpdateMaster.ReleasePublisher.CLI/SnkUpdateMaster.ReleasePublisher.CLI.csproj --artifacts-path build-release-publisher-cli
+```
+
+## Установка
 
 
 
