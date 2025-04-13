@@ -1,4 +1,9 @@
 # SnkUpdateMaster
+
+[![WIP](https://img.shields.io/badge/Status-Work%20In%20Progress-orange)](https://github.com/vladimir97927/SnkUpdateMaster)
+
+> **⚠️ Внимание**: Проект в разработке. API и структура могут меняться.
+
 Проект является универсальной библиотекой для управления обновлениями приложений.
 
 **Основная идея**
