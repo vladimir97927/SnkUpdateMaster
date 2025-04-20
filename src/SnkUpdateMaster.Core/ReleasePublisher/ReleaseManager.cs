@@ -1,12 +1,18 @@
-﻿using SnkUpdateMaster.Core.ReleasePublisher.Packager;
+﻿using SnkUpdateMaster.Core.Common;
+using SnkUpdateMaster.Core.ReleasePublisher.Packager;
 
 namespace SnkUpdateMaster.Core.ReleasePublisher
 {
-    public class ReleaseManager(IReleasePackager releasePackager, IReleaseSource releaseSource)
+    public class ReleaseManager(
+        IReleasePackager releasePackager,
+        IReleaseSource releaseSource,
+        IReleaseInfoSource releaseInfoSource)
     {
         private readonly IReleasePackager _releasePackager = releasePackager;
 
         private readonly IReleaseSource _releaseSource = releaseSource;
+
+        private readonly IReleaseInfoSource _releaseInfoSource = releaseInfoSource;
 
         public async Task<int> PulishReleaseAsync(string appDir, Version version, IProgress<double> progress, CancellationToken cancellationToken = default)
         {
@@ -22,6 +28,11 @@ namespace SnkUpdateMaster.Core.ReleasePublisher
             progress.Report(1);
 
             return release.Id;
+        }
+
+        public Task<PagedData<IEnumerable<ReleaseInfo>>> GetReleaseInfosPagedAsync(int? page = null, int? pageSize = null)
+        {
+            return _releaseInfoSource.GetReleaseInfosPagedAsync(page, pageSize);
         }
     }
 }

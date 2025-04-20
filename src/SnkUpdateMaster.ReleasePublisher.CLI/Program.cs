@@ -1,26 +1,35 @@
 ﻿using SnkUpdateMaster.Core.ReleasePublisher;
-using SnkUpdateMaster.SqlServer;
 using SnkUpdateMaster.SqlServer.Configuration;
-using SnkUpdateMaster.SqlServer.Database;
 
 class Program
 {
-    private const string connectionString = "Data Source=localhost;Initial Catalog= SnkUpdateMasterDb;Integrated Security=True;Persist Security Info=False;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=True;Trust Server Certificate=True;Command Timeout=0";
-
-    private static readonly ISqlConnectionFactory _sqlConnectionFactory = new SqlConnectionFactory(connectionString);
-
-    private static readonly IReleaseInfoSource _releaseInfoSource = new SqlServerReleaseInfoSource(_sqlConnectionFactory);
-
-    private static readonly ReleaseManager _releaseManager = new ReleaseManagerBuilder()
-        .WithZipPackager()
-        .WithSqlServerReleaseSource(connectionString)
-        .Build();
+    private static ReleaseManager? _releaseManager;
 
     private static CancellationTokenSource? _cts;
 
+    // "Data Source=localhost;Initial Catalog= SnkUpdateMasterDb;Integrated Security=True;Persist Security Info=False;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=True;Trust Server Certificate=True;Command Timeout=0"
     static async Task Main(string[] args)
     {
-        Console.WriteLine("SNK release publisher CLI");
+        if (args.Length == 0)
+        {
+            Console.WriteLine("Usage: --cs <sql db connection string>");
+            return;
+        }
+        var connectionString = string.Empty;
+        if (args[0] == "--cs")
+        {
+            connectionString = args[1];
+        }
+        else
+        {
+            Console.WriteLine("Usage: --cs <sql db connection string>");
+            return;
+        }
+        
+        _releaseManager = new ReleaseManagerBuilder()
+            .WithSqlServerReleaseSource(connectionString)
+            .WithZipPackager()
+            .Build();
 
         while (true)
         {
@@ -73,7 +82,7 @@ class Program
 
             Console.WriteLine("Starting publish... (Press 'C' to stop)");
 
-            var publishTask = _releaseManager.PulishReleaseAsync(
+            var publishTask = _releaseManager!.PulishReleaseAsync(
                 appDir,
                 version,
                 progress,
@@ -109,7 +118,7 @@ class Program
 
             while (true)
             {
-                var pagedReleaseInfos = await _releaseInfoSource.GetReleaseInfosPagedAsync(
+                var pagedReleaseInfos = await _releaseManager!.GetReleaseInfosPagedAsync(
                     currentPage, pageSize);
 
                 Console.WriteLine("\nReleases:");

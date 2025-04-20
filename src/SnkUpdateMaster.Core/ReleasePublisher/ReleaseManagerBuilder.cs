@@ -23,10 +23,12 @@ namespace SnkUpdateMaster.Core.ReleasePublisher
         {
             var packager = GetDependency<IReleasePackager>();
             var releaseSource = GetDependency<IReleaseSource>();
+            var releaseInfoSource = GetDependency<IReleaseInfoSource>();
 
             return new ReleaseManager(
                 packager,
-                releaseSource);
+                releaseSource,
+                releaseInfoSource);
         }
     }
 }
