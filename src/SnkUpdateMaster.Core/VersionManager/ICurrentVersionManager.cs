@@ -20,8 +20,9 @@
         /// <summary>
         /// Асинхронно получает текущую версию приложения
         /// </summary>
+        /// <param name="cancellationToken">Токен отмены операции</param>
         /// <returns>
-        /// При успешном выполнении содержит:
+        /// При успешном выполнении возвращает:
         /// <para>
         /// <see cref="Version"/> - текущая версия приложения<br/>
         /// <see langword="null"/> - если версия не определена
@@ -33,6 +34,7 @@
         /// Асинхронно обновляет информацию о текущей версии приложения
         /// </summary>
         /// <param name="version">Новая версия приложения</param>
+        /// <param name="cancellationToken">Токен отмены операции</param>
         Task UpdateCurrentVersionAsync(Version version, CancellationToken cancellationToken = default);
     }
 }

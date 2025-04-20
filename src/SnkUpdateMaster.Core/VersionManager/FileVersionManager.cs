@@ -23,6 +23,7 @@ namespace SnkUpdateMaster.Core.VersionManager
         /// <summary>
         /// Получает текущую версию из файла
         /// </summary>
+        /// <param name="cancellationToken">Токен отмены операции</param>
         /// <returns>
         /// <para>Version - объект версии при успешном чтении и парсинге</para>
         /// <para>null - в случаях:</para>
@@ -59,6 +60,7 @@ namespace SnkUpdateMaster.Core.VersionManager
         /// Обновляет версию в файле
         /// </summary>
         /// <param name="version">Объект новой версии</param>
+        /// <param name="cancellationToken">Токен отмены операции</param>
         /// <exception cref="IOException">
         /// Ошибка записи в файл версии
         /// </exception>
