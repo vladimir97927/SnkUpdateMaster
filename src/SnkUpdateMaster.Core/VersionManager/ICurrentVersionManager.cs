@@ -27,12 +27,12 @@
         /// <see langword="null"/> - если версия не определена
         /// </para>
         /// </returns>
-        Task<Version?> GetCurrentVersionAsync();
+        Task<Version?> GetCurrentVersionAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Асинхронно обновляет информацию о текущей версии приложения
         /// </summary>
         /// <param name="version">Новая версия приложения</param>
-        Task UpdateCurrentVersionAsync(Version version);
+        Task UpdateCurrentVersionAsync(Version version, CancellationToken cancellationToken = default);
     }
 }

@@ -38,7 +38,7 @@ namespace SnkUpdateMaster.Core.VersionManager
         /// <exception cref="IOException">
         /// Ошибка ввода-вывода при работе с файлом
         /// </exception>
-        public async Task<Version?> GetCurrentVersionAsync()
+        public async Task<Version?> GetCurrentVersionAsync(CancellationToken cancellationToken = default)
         {
             var versionFilePath = Path.Combine(Environment.CurrentDirectory, _versionFileName);
             if (!File.Exists(versionFilePath))
@@ -46,7 +46,7 @@ namespace SnkUpdateMaster.Core.VersionManager
                 return null;
             }
 
-            var versionString = (await File.ReadAllTextAsync(versionFilePath)).Trim();
+            var versionString = (await File.ReadAllTextAsync(versionFilePath, cancellationToken)).Trim();
             if (Version.TryParse(versionString, out var version))
             {
                 return version;
@@ -72,7 +72,7 @@ namespace SnkUpdateMaster.Core.VersionManager
         /// <item><description>Полностью перезаписывает содержимое файла</description></item>
         /// </list>
         /// </remarks>
-        public async Task UpdateCurrentVersionAsync(Version version)
+        public async Task UpdateCurrentVersionAsync(Version version, CancellationToken cancellationToken = default)
         {
             var versionFilePath = Path.Combine(Environment.CurrentDirectory, _versionFileName);
             if (!File.Exists(versionFilePath))
@@ -81,7 +81,7 @@ namespace SnkUpdateMaster.Core.VersionManager
                 stream.Close();
             }
 
-            await File.WriteAllTextAsync(versionFilePath, version.ToString());
+            await File.WriteAllTextAsync(versionFilePath, version.ToString(), cancellationToken);
         }
     }
 }
