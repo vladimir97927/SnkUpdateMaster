@@ -97,11 +97,12 @@ var isSuccessful = await updateManager.CheckAndInstallUpdatesAsync(
 ### Кастомные реализации
 
 Модуль требует пользовательской реализации интерфейсов: 
+
 -`IUpdateSource`
 -`IUpdateDownloader`
 -`IReleaseSource`
 -`IReleaseInfoSource`
 
 В проекте интерфейсы реализованы в отдельных модулях:
-- [SqlServer]()
+- [SqlServer](docs/README-SQL-SERVER.md) 
 
