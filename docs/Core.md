@@ -108,5 +108,5 @@ var isSuccessful = await updateManager.CheckAndInstallUpdatesAsync(
 - `IReleaseInfoSource`
 
 В проекте интерфейсы реализованы в отдельных модулях:
-- [SqlServer](README-SQL-SERVER.md) 
+- [SqlServer](SqlServer.md) 
 
