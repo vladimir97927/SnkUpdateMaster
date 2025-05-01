@@ -1,6 +1,16 @@
 # SqlServer
 Загрузка и доставка обновлений средствами SQL Server.
 
+## 🔧 Требования
+
+* Язык программирования: C# 12.0
+* Платформа: .NET 8.0
+* Microsoft.EntityFrameworkCore 9.0.2
+* Microsoft.EntityFrameworkCore.Relational 9.0.2
+* Microsoft.EntityFrameworkCore.SqlServer 9.0.2
+* Microsoft.Data.SqlClient 6.0.1
+* Dapper 2.1.66
+
 ## 📦 Основные компоненты
 
 ### Расширения для билдеров
