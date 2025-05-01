@@ -95,3 +95,11 @@ var isSuccess = await updateManager.CheckAndInstallUpdatesAsync(progress);
 
 var releases = await manager.GetReleaseInfosPagedAsync(currentPage, pageSize);
 ```
+
+## 🧪 Тестирование
+
+Для тестирования модуля необходимо:
+
+1. Установить SQL Server 2012
+2. Опубликовать проект с базой данных [SnkUpdateMasterDb](SnkUpdateMasterDb.md)
+3. Добавить строку подключения в переменные среды с именем `NET_SnkUpdateMaster_ConnectionString`
