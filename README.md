@@ -26,7 +26,7 @@
 ## Модули проекта
 - [Core - основные компоненты работы приложения.](docs/Core.md)
 - [SqlServer - реализация работы с обновлениями через реляционную базу данных.](docs/SqlServer.md)
-- [SnkUpdateMasterDb - проект базы данных.]()
+- [SnkUpdateMasterDb - проект базы данных.](docs/SnkUpdateMasterDb.md)
 
 ## Приложения
 
