@@ -23,15 +23,6 @@
    - Скрипты.
 3. Контроль целостности данных. Выбор алгоритма хэширования
 
-## Зависимости проекта
-- Язык программирования: C# 12.0.
-- Платформа: .NET 8.0.
-- Microsoft.EntityFrameworkCore 9.0.2.
-- Microsoft.EntityFrameworkCore.Relational 9.0.2.
-- Microsoft.EntityFrameworkCore.SqlServer 9.0.2.
-- Microsoft.Data.SqlClient 6.0.1.
-- Dapper 2.1.66.
-
 ## Модули проекта
 - [Core - основные компоненты работы приложения.](docs/README-CORE.md)
 - [SqlServer - реализация работы с обновлениями через реляционную базу данных.](docs/README-SQL-SERVER.md)
