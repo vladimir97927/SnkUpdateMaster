@@ -5,10 +5,19 @@ using SnkUpdateMaster.SqlServer.Database;
 
 namespace SnkUpdateMaster.SqlServer
 {
+    /// <summary>
+    /// Класс предоставляет реализацию источника обновлений, работающую с Microsoft SQL Server. 
+    /// Используется для получения информации о последнем доступном обновлении из базы данных.
+    /// </summary>
+    /// <param name="sqlConnectionFactory">Фабрика для создания подключений к SQL Server</param>
     public class SqlServerUpdateSource(ISqlConnectionFactory sqlConnectionFactory) : IUpdateSource
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory = sqlConnectionFactory;
 
+        /// <summary>
+        /// Возвращает информацию о последнем опубликованном обновлении из таблицы AppUpdates.
+        /// </summary>
+        /// <returns>Объект с данными обновления <see cref="UpdateInfo"/> или null, если обновления отсутствуют</returns>
         public async Task<UpdateInfo?> GetLastUpdatesAsync()
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();

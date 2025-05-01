@@ -5,6 +5,13 @@ using SnkUpdateMaster.SqlServer.Database;
 
 namespace SnkUpdateMaster.SqlServer
 {
+    /// <summary>
+    /// Класс реализует загрузчик обновлений из Microsoft SQL Server.
+    /// Сохраняет файлы обновлений из BLOB-поля таблицы в указанную директорию с поддержкой 
+    /// прогресса и отмены.
+    /// </summary>
+    /// <param name="sqlConnectionFactory">Фабрика подключений к SQL Server</param>
+    /// <param name="downloadsDir">Директория для сохранения файлов</param>
     public class SqlServerUpdateDownloader(
         ISqlConnectionFactory sqlConnectionFactory,
         string downloadsDir) : IUpdateDownloader
@@ -13,6 +20,14 @@ namespace SnkUpdateMaster.SqlServer
 
         private readonly string _downloadsDir = downloadsDir;
 
+        /// <summary>
+        /// Скачивает обновления в заданную директроию
+        /// </summary>
+        /// <param name="updateInfo">Метаданные запрашиваемого обновления</param>
+        /// <param name="progress">Объект для отслеживания прогресса (0.0-1.0)</param>
+        /// <param name="cancellationToken">Токен отмены операции</param>
+        /// <returns>Полный путь к скачанному файлу</returns>
+        /// <exception cref="KeyNotFoundException">Файл обновления не найден в базе данных</exception>
         public async Task<string> DownloadUpdateAsync(UpdateInfo updateInfo, IProgress<double> progress, CancellationToken cancellationToken = default)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
@@ -24,7 +39,7 @@ namespace SnkUpdateMaster.SqlServer
             using var reader = await command.ExecuteReaderAsync(System.Data.CommandBehavior.SequentialAccess, cancellationToken);
             if (!await reader.ReadAsync(cancellationToken))
             {
-                throw new Exception("Файл обновления не найден");
+                throw new KeyNotFoundException("Файл обновления не найден");
             }
             Directory.CreateDirectory(_downloadsDir);
             var filePath = Path.Combine(_downloadsDir, updateInfo.FileName);
