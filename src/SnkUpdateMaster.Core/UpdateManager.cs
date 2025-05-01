@@ -6,6 +6,26 @@ using SnkUpdateMaster.Core.VersionManager;
 
 namespace SnkUpdateMaster.Core
 {
+    /// <summary>
+    /// Основной класс для управления процессом обновления приложения
+    /// </summary>
+    /// <remarks>
+    /// Реализует полный цикл обновления:
+    /// <list type="number">
+    /// <item><description>Проверка доступных обновлений</description></item>
+    /// <item><description>Загрузка файлов обновления</description></item>
+    /// <item><description>Проверка целостности файлов</description></item>
+    /// <item><description>Установка обновления</description></item>
+    /// <item><description>Обновление информации о версии</description></item>
+    /// </list>
+    /// 
+    /// <para><strong>Зависимости:</strong></para>
+    /// <param name="currentVersionManager">Менеджер текущей версии</param>
+    /// <param name="updateSource">Источник информации об обновлениях</param>
+    /// <param name="integrityVerifier">Верификатор целостности файлов</param>
+    /// <param name="installer">Установщик обновлений</param>
+    /// <param name="updateDownloader">Загрузчик обновлений</param>
+    /// </remarks>
     public class UpdateManager(
         ICurrentVersionManager currentVersionManager,
         IUpdateSource updateSource,
@@ -23,6 +43,21 @@ namespace SnkUpdateMaster.Core
 
         private readonly IUpdateDownloader _updateDownloader = updateDownloader;
 
+        /// <summary>
+        /// Выполняет полный цикл проверки и установки обновлений
+        /// </summary>
+        /// <param name="progress">Объект для отслеживания прогресса (0.0-1.0)</param>
+        /// <param name="cancellationToken">Токен отмены операции</param>
+        /// <returns>
+        /// <c>true</c> - если обновление было успешно установлено<br/>
+        /// <c>false</c> - если обновление не требуется или произошла ошибка
+        /// </returns>
+        /// <exception cref="OperationCanceledException">
+        /// Операция была отменена через токен
+        /// </exception>
+        /// <exception cref="IOException">
+        /// Ошибка ввода-вывода при работе с файлами
+        /// </exception>
         public async Task<bool> CheckAndInstallUpdatesAsync(IProgress<double> progress, CancellationToken cancellationToken = default)
         {
             var currentVersion = await _currentVersionManager.GetCurrentVersionAsync();
@@ -49,6 +84,12 @@ namespace SnkUpdateMaster.Core
             return true;
         }
 
+        /// <summary>
+        /// Получает текущую версию приложения
+        /// </summary>
+        /// <returns>
+        /// Текущая версия приложения или null, если версия не определена
+        /// </returns>
         public async Task<Version?> GetCurrentVersionAsync()
         {
             return await _currentVersionManager.GetCurrentVersionAsync();

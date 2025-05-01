@@ -19,12 +19,6 @@
         /// <c>true</c> - если вычисленная сумма совпадает с ожидаемой<br/>
         /// <c>false</c> - при несовпадении или ошибках верификации
         /// </returns>
-        /// <exception cref="FileNotFoundException">
-        /// Указанный файл не существует
-        /// </exception>
-        /// <exception cref="IOException">
-        /// Ошибка доступа к файлу
-        /// </exception>
         bool VerifyFile(string filePath, string expectedChecksum);
     }
 }

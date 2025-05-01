@@ -23,15 +23,6 @@
         /// <returns>
         /// Строковое представление контрольной суммы в HEX-формате.
         /// </returns>
-        /// <exception cref="FileNotFoundException">
-        /// Указанный файл не существует
-        /// </exception>
-        /// <exception cref="IOException">
-        /// Ошибка чтения файла
-        /// </exception>
-        /// <exception cref="UnauthorizedAccessException">
-        /// Нет прав на чтение файла
-        /// </exception>
         string ComputeChecksum(string filePath);
     }
 }
