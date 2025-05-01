@@ -3,6 +3,15 @@ using SnkUpdateMaster.Core.ReleasePublisher.Packager;
 
 namespace SnkUpdateMaster.Core.ReleasePublisher
 {
+    /// <summary>
+    /// Класс управления релизами приложенияя
+    /// </summary>
+    /// <remarks>
+    /// <para><strong>Зависимости:</strong></para>
+    /// <param name="releasePackager">Упаковщик релизов</param>
+    /// <param name="releaseSource">Хранилище релизов</param>
+    /// <param name="releaseInfoSource">Источник информации о релизах</param>
+    /// </remarks>
     public class ReleaseManager(
         IReleasePackager releasePackager,
         IReleaseSource releaseSource,
@@ -14,6 +23,14 @@ namespace SnkUpdateMaster.Core.ReleasePublisher
 
         private readonly IReleaseInfoSource _releaseInfoSource = releaseInfoSource;
 
+        /// <summary>
+        /// Публикует новый релиз приложения
+        /// </summary>
+        /// <param name="appDir">Директория с файлами приложения</param>
+        /// <param name="version">Версия релиза</param>
+        /// <param name="progress">Объект для отслеживания прогресса (0.0-1.0)</param>
+        /// <param name="cancellationToken">Токен отмены операции</param>
+        /// <returns>ID созданного релиза</returns>
         public async Task<int> PulishReleaseAsync(string appDir, Version version, IProgress<double> progress, CancellationToken cancellationToken = default)
         {
             var destPath = Path.Combine(Environment.CurrentDirectory, "Releases");
@@ -30,6 +47,12 @@ namespace SnkUpdateMaster.Core.ReleasePublisher
             return release.Id;
         }
 
+        /// <summary>
+        /// Получает страничный список информации о релизах
+        /// </summary>
+        /// <param name="page">Номер страницы (начиная с 1)</param>
+        /// <param name="pageSize">Размер страницы</param>
+        /// <returns>Пагинированные данные с информацией о релизах</returns>
         public Task<PagedData<IEnumerable<ReleaseInfo>>> GetReleaseInfosPagedAsync(int? page = null, int? pageSize = null)
         {
             return _releaseInfoSource.GetReleaseInfosPagedAsync(page, pageSize);

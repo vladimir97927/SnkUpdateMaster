@@ -20,7 +20,7 @@ namespace SnkUpdateMaster.Core
     /// <item><description>IUpdateDownloader</description></item>
     /// </list>
     /// 
-    /// <para><strong>Опциональные зависимости (имеют реализации по умолчанию):</strong></para>
+    /// <para><strong>Зависимости, имеющие реализацию по умолчанию:</strong></para>
     /// <list type="bullet">
     /// <item><description>ICurrentVersionManager</description></item>
     /// <item><description>IIntegrityVerifier</description></item>
