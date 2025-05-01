@@ -13,13 +13,13 @@ namespace SnkUpdateMaster.Core.ReleasePublisher
     /// 
     /// <para><strong>Обязательные зависимости:</strong></para>
     /// <list type="bullet">
-    /// <item><description>IReleaseSource</description></item>
-    /// <item><description>IReleaseInfoSource</description></item>
+    /// <item><description><see cref="IReleaseSource"/></description></item>
+    /// <item><description><see cref="IReleaseInfoSource"/></description></item>
     /// </list>
     /// 
     /// <para><strong>Зависимости, имеющие реализацию по умолчанию:</strong></para>
     /// <list type="bullet">
-    /// <item><description>IReleasePackager</description></item>
+    /// <item><description><see cref="IReleasePackager"/></description></item>
     /// </list>
     /// </remarks>
     public class ReleaseManagerBuilder : DependencyBuilder<ReleaseManager>
@@ -31,7 +31,7 @@ namespace SnkUpdateMaster.Core.ReleasePublisher
         /// (по умолчанию SHA-256)</param>
         /// <returns>Текущий экземпляр строителя</returns>
         /// <remarks>
-        /// Создает ZipReleasePackager
+        /// Создает <see cref="ZipReleasePackager"/>
         /// </remarks>
         public ReleaseManagerBuilder WithZipPackager(IntegrityProviderType integrityProviderType = IntegrityProviderType.Sha256)
         {
@@ -48,9 +48,9 @@ namespace SnkUpdateMaster.Core.ReleasePublisher
 
 
         /// <summary>
-        /// Создает экземпляр ReleaseManager с настроенными зависимостями
+        /// Создает экземпляр <see cref="ReleaseManager"/> с настроенными зависимостями
         /// </summary>
-        /// <returns>Полностью сконфигурированный ReleaseManager</returns>
+        /// <returns>Полностью сконфигурированный <see cref="ReleaseManager"/></returns>
         public override ReleaseManager Build()
         {
             var packager = GetDependency<IReleasePackager>();

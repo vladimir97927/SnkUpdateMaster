@@ -6,7 +6,7 @@
     /// <remarks>
     /// Класс предоставляет:
     /// <list type="bullet">
-    /// <item><description>Обертку над SHA-256 ChecksumCalculator</description></item>
+    /// <item><description>Обертку над SHA-256 <see cref="ShaChecksumCalculator"/></description></item>
     /// <item><description>Дополнительную проверку существования файла</description></item>
     /// <item><description>Интеграцию с системой контроля целостности</description></item>
     /// </list>

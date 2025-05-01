@@ -8,23 +8,23 @@ using SnkUpdateMaster.Core.VersionManager;
 namespace SnkUpdateMaster.Core
 {
     /// <summary>
-    /// Строитель для создания и настройки экземпляра UpdateManager
+    /// Строитель для создания и настройки экземпляра <see cref="UpdateManager"/>
     /// </summary>
     /// <remarks>
-    /// Реализует паттерн "Строитель" для пошаговой настройки зависимостей UpdateManager.
+    /// Реализует паттерн "Строитель" для пошаговой настройки зависимостей <see cref="UpdateManager"/>.
     /// Позволяет гибко конфигурировать компоненты системы обновлений через fluent-интерфейс.
     /// 
     /// <para><strong>Обязательные зависимости:</strong></para>
     /// <list type="bullet">
-    /// <item><description>IUpdateSource</description></item>
-    /// <item><description>IUpdateDownloader</description></item>
+    /// <item><description><see cref="IUpdateSource"/></description></item>
+    /// <item><description><see cref="IUpdateDownloader"/></description></item>
     /// </list>
     /// 
     /// <para><strong>Зависимости, имеющие реализацию по умолчанию:</strong></para>
     /// <list type="bullet">
-    /// <item><description>ICurrentVersionManager</description></item>
-    /// <item><description>IIntegrityVerifier</description></item>
-    /// <item><description>IInstaller</description></item>
+    /// <item><description><see cref="ICurrentVersionManager"/></description></item>
+    /// <item><description><see cref="IIntegrityVerifier"/></description></item>
+    /// <item><description><see cref="IInstaller"/></description></item>
     /// </list>
     /// </remarks>
     public class UpdateManagerBuilder : DependencyBuilder<UpdateManager>
@@ -34,7 +34,7 @@ namespace SnkUpdateMaster.Core
         /// </summary>
         /// <returns>Текущий экземпляр строителя</returns>
         /// <remarks>
-        /// Использует FileVersionManager для работы с версией через файл в рабочей директории
+        /// Использует <see cref="FileVersionManager"/> для работы с версией через файл в рабочей директории
         /// </remarks>
         public UpdateManagerBuilder WithFileCurrentVersionManager()
         {
@@ -47,7 +47,7 @@ namespace SnkUpdateMaster.Core
         /// </summary>
         /// <returns>Текущий экземпляр строителя</returns>
         /// <remarks>
-        /// Использует ShaIntegrityVerifier для проверки контрольных сумм файлов
+        /// Использует <see cref="ShaIntegrityVerifier"/> для проверки контрольных сумм файлов
         /// </remarks>
         public UpdateManagerBuilder WithSha256IntegrityVerifier()
         {
@@ -61,7 +61,7 @@ namespace SnkUpdateMaster.Core
         /// <param name="appDir">Путь к корневой директории приложения</param>
         /// <returns>Текущий экземпляр строителя</returns>
         /// <remarks>
-        /// Создает ZipInstaller с автоматическим созданием бэкапов
+        /// Создает <see cref="ZipInstaller"/> с автоматическим созданием бэкапов
         /// </remarks>
         public UpdateManagerBuilder WithZipInstaller(string appDir)
         {
@@ -71,9 +71,9 @@ namespace SnkUpdateMaster.Core
         }
 
         /// <summary>
-        /// Создает экземпляр UpdateManager с настроенными зависимостями
+        /// Создает экземпляр <see cref="UpdateManager"/> с настроенными зависимостями
         /// </summary>
-        /// <returns>Полностью сконфигурированный UpdateManager</returns>
+        /// <returns>Полностью сконфигурированный <see cref="UpdateManager"/></returns>
         public override UpdateManager Build()
         {
             var currentVersionManager = GetDependency<ICurrentVersionManager>();
