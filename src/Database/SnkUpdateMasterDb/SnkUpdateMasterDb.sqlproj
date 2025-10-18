@@ -63,4 +63,7 @@
   <ItemGroup>
     <Build Include="dbo\Tables\AppUpdates.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="scripts\CreateDatabase.sql" />
+  </ItemGroup>
 </Project>
