@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\SnkUpdateMaster.Core\SnkUpdateMaster.Core.csproj" />
+    <ProjectReference Include="..\SnkUpdateMaster.Core\SnkUpdateMaster.Core.csproj" />
   </ItemGroup>
 
 </Project>
