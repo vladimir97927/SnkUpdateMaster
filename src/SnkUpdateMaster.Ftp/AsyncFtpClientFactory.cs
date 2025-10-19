@@ -2,23 +2,47 @@
 
 namespace SnkUpdateMaster.Ftp
 {
-    public class AsyncFtpClientFactory : IAsyncFtpClientFactory
+    public class AsyncFtpClientFactory : IAsyncFtpClientFactory, IDisposable
     {
-        private readonly AsyncFtpClient _client;
+        private readonly string _host;
 
-        public AsyncFtpClientFactory(string host, string username, string password, int port = 21)
+        private readonly string _username;
+
+        private readonly string _password;
+
+        private readonly int _port = 21;
+
+        private AsyncFtpClient? _client;
+
+        public AsyncFtpClientFactory(
+            string host,
+            string username,
+            string password,
+            int port = 21)
         {
-            
+            _host = host;
+            _username = username;
+            _password = password;
+            _port = port;
         }
 
-        public FtpClient GetConnectClient()
+        public void Dispose()
         {
-            throw new NotImplementedException();
+            if (_client != null && _client.IsConnected)
+            {
+                _client.Dispose();
+            }
         }
 
-        public AsyncFtpClient GetConnectClientAsync()
+        public async Task<IAsyncFtpClient> GetConnectClientAsync(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            if (_client == null || !_client.IsConnected)
+            {
+                _client = new AsyncFtpClient(_host, _username, _password, _port);
+                await _client.AutoConnect(cancellationToken);
+            }
+
+            return _client;
         }
     }
 }

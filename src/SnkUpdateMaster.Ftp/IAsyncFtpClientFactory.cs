@@ -4,6 +4,6 @@ namespace SnkUpdateMaster.Ftp
 {
     public interface IAsyncFtpClientFactory
     {
-        AsyncFtpClient GetConnectClientAsync();
+        Task<IAsyncFtpClient> GetConnectClientAsync(CancellationToken cancellationToken = default);
     }
 }
