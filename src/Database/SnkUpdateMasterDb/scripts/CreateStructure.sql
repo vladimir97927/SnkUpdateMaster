@@ -1,0 +1,35 @@
+﻿USE [SnkUpdateMasterDb]
+GO
+/****** Object:  Table [dbo].[UpdateFile]    Script Date: 23.11.2025 23:17:16 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[UpdateFile](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UpdateInfoId] [int] NOT NULL,
+	[FileData] [varbinary](max) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[UpdateInfo]    Script Date: 23.11.2025 23:17:16 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[UpdateInfo](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Version] [nvarchar](256) NOT NULL,
+	[FileName] [nvarchar](256) NOT NULL,
+	[FileDir] [nvarchar](256) NULL,
+	[CheckSum] [nvarchar](256) NOT NULL,
+	[ReleaseDate] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO

@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: snk_update_master_db
+    build: ./src/Database
+    platform: linux/amd64
+    ports:
+     - 1455:1433

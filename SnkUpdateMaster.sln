@@ -9,10 +9,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpdateMaster.Core", "src
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{A02F173D-5596-462B-A96A-D2C0EA06940C}"
 	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
 		Directory.Packages.props = Directory.Packages.props
+		docker-compose.override.yml = docker-compose.override.yml
+		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{65A25C50-8152-494A-B24D-AE6E9030D1CD}"
+	ProjectSection(SolutionItems) = preProject
+		src\Database\Dockerfile = src\Database\Dockerfile
+		entrypoint.sh = entrypoint.sh
+		wait-for-it.sh = wait-for-it.sh
+	EndProjectSection
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SnkUpdateMasterDb", "src\Database\SnkUpdateMasterDb\SnkUpdateMasterDb.sqlproj", "{930180A0-EDF9-4252-A252-A736D4B9F61A}"
 EndProject

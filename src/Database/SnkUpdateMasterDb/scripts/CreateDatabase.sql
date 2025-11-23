@@ -1,12 +1,12 @@
-﻿USE [master];
+﻿CREATE DATABASE [SnkUpdateMasterDb]
 GO
 
-IF (DB_ID(N'$(DatabaseName)') IS NOT NULL) 
-BEGIN
-    ALTER DATABASE [$(DatabaseName)]
-    SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-    DROP DATABASE [$(DatabaseName)];
-END
+IF EXISTS (SELECT 1
+           FROM   [master].[dbo].[sysdatabases]
+           WHERE  [name] = N'SnkUpdateMasterDb')
+    BEGIN
+        ALTER DATABASE [SnkUpdateMasterDb]
+            SET AUTO_CLOSE OFF 
+            WITH ROLLBACK IMMEDIATE;
+    END
 GO
-
-CREATE DATABASE [$(DatabaseName)]
