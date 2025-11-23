@@ -18,7 +18,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{65A25C50-8152-494A-B24D-AE6E9030D1CD}"
 	ProjectSection(SolutionItems) = preProject
 		src\Database\Dockerfile = src\Database\Dockerfile
-		entrypoint.sh = entrypoint.sh
+		src\Database\entrypoint.sh = src\Database\entrypoint.sh
 		wait-for-it.sh = wait-for-it.sh
 	EndProjectSection
 EndProject
