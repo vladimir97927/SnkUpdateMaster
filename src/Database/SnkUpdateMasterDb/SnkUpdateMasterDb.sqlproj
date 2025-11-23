@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\AppUpdates.sql" />
+    <Build Include="dbo\Tables\UpdateInfo.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="scripts\CreateDatabase.sql" />
