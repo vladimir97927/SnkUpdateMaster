@@ -12,7 +12,7 @@
     /// </list>
     /// Реализации должны обрабатывать ошибки связи и форматирования данных
     /// </remarks>
-    public interface IUpdateSource
+    public interface IUpdateInfoProvider
     {
         /// <summary>
         /// Асинхронно получает информацию о последнем доступном обновлении

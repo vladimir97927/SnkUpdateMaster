@@ -10,7 +10,7 @@ namespace SnkUpdateMaster.SqlServer
     /// Используется для получения информации о последнем доступном обновлении из базы данных.
     /// </summary>
     /// <param name="sqlConnectionFactory">Фабрика для создания подключений к SQL Server</param>
-    public class SqlServerUpdateSource(ISqlConnectionFactory sqlConnectionFactory) : IUpdateSource
+    public class SqlServerUpdateInfoProvider(ISqlConnectionFactory sqlConnectionFactory) : IUpdateInfoProvider
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory = sqlConnectionFactory;
 
@@ -27,8 +27,9 @@ namespace SnkUpdateMaster.SqlServer
                 "u.[Version], " +
                 "u.[FileName], " +
                 "u.[Checksum], " +
-                "u.[ReleaseDate] " +
-                "FROM [dbo].[AppUpdates] u " +
+                "u.[ReleaseDate], " +
+                "u.[FileDir] " +
+                "FROM [dbo].[UpdateInfo] u " +
                 "ORDER BY u.[ReleaseDate] DESC");
 
             return updateInfo;

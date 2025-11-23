@@ -16,7 +16,7 @@ namespace SnkUpdateMaster.Core
     /// 
     /// <para><strong>Обязательные зависимости:</strong></para>
     /// <list type="bullet">
-    /// <item><description><see cref="IUpdateSource"/></description></item>
+    /// <item><description><see cref="IUpdateInfoProvider"/></description></item>
     /// <item><description><see cref="IUpdateDownloader"/></description></item>
     /// </list>
     /// 
@@ -77,7 +77,7 @@ namespace SnkUpdateMaster.Core
         public override UpdateManager Build()
         {
             var currentVersionManager = GetDependency<ICurrentVersionManager>();
-            var updateSource = GetDependency<IUpdateSource>();
+            var updateSource = GetDependency<IUpdateInfoProvider>();
             var integrityVerifier = GetDependency<IIntegrityVerifier>();
             var installer = GetDependency<IInstaller>();
             var downloader = GetDependency<IUpdateDownloader>();

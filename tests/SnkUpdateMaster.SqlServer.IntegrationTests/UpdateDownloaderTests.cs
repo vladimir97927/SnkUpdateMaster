@@ -13,7 +13,7 @@ namespace SnkUpdateMaster.SqlServer.IntegrationTests
         {
             var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString!);
 
-            var updateSource = new SqlServerUpdateSource(sqlConnectionFactory);
+            var updateSource = new SqlServerUpdateInfoProvider(sqlConnectionFactory);
             var downloader = new SqlServerUpdateDownloader(sqlConnectionFactory, DownloadsPath);
 
             var updateInfo = await updateSource.GetLastUpdatesAsync();

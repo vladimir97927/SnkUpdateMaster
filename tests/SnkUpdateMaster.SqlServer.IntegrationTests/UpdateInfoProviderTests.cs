@@ -5,14 +5,14 @@ using NUnit.Framework;
 namespace SnkUpdateMaster.SqlServer.IntegrationTests
 {
     [TestFixture]
-    internal class UpdateSourceTests : TestBase
+    internal class UpdateInfoProviderTests : TestBase
     {
         [Test]
         public async Task GetLastUpdatesFromSqlServerSourceTest()
         {
             var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString!);
-            var updateSource = new SqlServerUpdateSource(sqlConnectionFactory);
-            var lastUpdates = await updateSource.GetLastUpdatesAsync();
+            var updateInfoProvider = new SqlServerUpdateInfoProvider(sqlConnectionFactory);
+            var lastUpdates = await updateInfoProvider.GetLastUpdatesAsync();
 
             Assert.That(lastUpdates, Is.Not.Null);
             Assert.Multiple(() =>

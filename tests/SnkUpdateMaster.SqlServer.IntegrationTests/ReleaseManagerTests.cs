@@ -21,7 +21,7 @@ namespace SnkUpdateMaster.SqlServer.IntegrationTests
             await manager.PulishReleaseAsync(AppDir, newVersion, new Progress<double>());
 
             var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString!);
-            var updateSource = new SqlServerUpdateSource(sqlConnectionFactory);
+            var updateSource = new SqlServerUpdateInfoProvider(sqlConnectionFactory);
             var lastUpdates = await updateSource.GetLastUpdatesAsync();
 
             Assert.That(lastUpdates, Is.Not.Null);

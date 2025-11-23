@@ -15,7 +15,7 @@ namespace SnkUpdateMaster.Ftp.Configuration
         {
             var updateSource = new FtpUpdateSource(asyncFtpClientFactory, updateInfoFileParser, updateFileInfoPath);
 
-            builder.AddDependency<IUpdateSource>(updateSource);
+            builder.AddDependency<IUpdateInfoProvider>(updateSource);
 
             return builder;
         }

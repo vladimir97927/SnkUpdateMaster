@@ -33,9 +33,9 @@ namespace SnkUpdateMaster.SqlServer
             var connection = _sqlConnectionFactory.GetOpenConnection();
             using var command = new SqlCommand(
                 "SELECT [FileData] " +
-                "FROM [dbo].[AppUpdates] " +
-                "WHERE [Id] = @Id", (SqlConnection)connection);
-            command.Parameters.AddWithValue("@Id", updateInfo.Id);
+                "FROM [dbo].[UpdateFile] " +
+                "WHERE [UpdateInfoId] = @UpdateInfoId", (SqlConnection)connection);
+            command.Parameters.AddWithValue("@UpdateInfoId", updateInfo.Id);
             using var reader = await command.ExecuteReaderAsync(System.Data.CommandBehavior.SequentialAccess, cancellationToken);
             if (!await reader.ReadAsync(cancellationToken))
             {

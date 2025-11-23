@@ -4,7 +4,7 @@ using SnkUpdateMaster.Core.UpdateSource;
 
 namespace SnkUpdateMaster.Ftp
 {
-    internal class FtpUpdateSource : IUpdateSource
+    internal class FtpUpdateSource : IUpdateInfoProvider
     {
         private readonly IAsyncFtpClientFactory _ftpClientFactory;
 

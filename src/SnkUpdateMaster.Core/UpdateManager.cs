@@ -28,14 +28,14 @@ namespace SnkUpdateMaster.Core
     /// </remarks>
     public class UpdateManager(
         ICurrentVersionManager currentVersionManager,
-        IUpdateSource updateSource,
+        IUpdateInfoProvider updateSource,
         IIntegrityVerifier integrityVerifier,
         IInstaller installer,
         IUpdateDownloader updateDownloader)
     {
         private readonly ICurrentVersionManager _currentVersionManager = currentVersionManager;
 
-        private readonly IUpdateSource _updateSource = updateSource;
+        private readonly IUpdateInfoProvider _updateSource = updateSource;
 
         private readonly IIntegrityVerifier _integrityVerifier = integrityVerifier;
 

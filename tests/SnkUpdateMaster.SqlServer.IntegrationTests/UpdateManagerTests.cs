@@ -2,6 +2,7 @@
 using SnkUpdateMaster.Core;
 using NUnit.Framework;
 using SnkUpdateMaster.SqlServer.Configuration;
+using SnkUpdateMaster.SqlServer.Database;
 
 namespace SnkUpdateMaster.SqlServer.IntegrationTests
 {
@@ -11,11 +12,14 @@ namespace SnkUpdateMaster.SqlServer.IntegrationTests
         [Test]
         public async Task CheckAndInstallUpdateTest()
         {
+            var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString!);
+
             var updateManager = new UpdateManagerBuilder()
                 .WithFileCurrentVersionManager()
                 .WithSha256IntegrityVerifier()
                 .WithZipInstaller(AppDir)
-                .WithSqlServerUpdateProvider(ConnectionString!, DownloadsPath)
+                .WithSqlServerUpdateInfoProvider(sqlConnectionFactory)
+                .WithSqlServerUpdateDownloader(sqlConnectionFactory, DownloadsPath)
                 .Build();
 
             var mockProgress = new Progress<double>();
