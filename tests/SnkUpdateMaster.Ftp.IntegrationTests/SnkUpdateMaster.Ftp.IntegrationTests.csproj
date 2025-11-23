@@ -12,13 +12,23 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Moq" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit.Analyzers" />
     <PackageReference Include="NUnit3TestAdapter" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\SnkUpdateMaster.Core\SnkUpdateMaster.Core.csproj" />
+    <ProjectReference Include="..\..\src\SnkUpdateMaster.Ftp\SnkUpdateMaster.Ftp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="NUnit.Framework" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="SeedWork\" />
   </ItemGroup>
 
 </Project>

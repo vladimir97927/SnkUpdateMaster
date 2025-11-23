@@ -1,5 +1,7 @@
 ﻿using SnkUpdateMaster.Core;
+using SnkUpdateMaster.Core.Downloader;
 using SnkUpdateMaster.Core.Files;
+using SnkUpdateMaster.Core.UpdateSource;
 
 namespace SnkUpdateMaster.Ftp.Configuration
 {
@@ -7,23 +9,28 @@ namespace SnkUpdateMaster.Ftp.Configuration
     {
         public static UpdateManagerBuilder WithFtpUpdateSource(
             this UpdateManagerBuilder builder,
-            )
+            IUpdateInfoFileParser updateInfoFileParser,
+            IAsyncFtpClientFactory asyncFtpClientFactory,
+            string updateFileInfoPath)
         {
+            var updateSource = new FtpUpdateSource(asyncFtpClientFactory, updateInfoFileParser, updateFileInfoPath);
 
+            builder.AddDependency<IUpdateSource>(updateSource);
+
+            return builder;
         }
 
-        public static UpdateManagerBuilder WithFtpUpdateProvider(
+        public static UpdateManagerBuilder WithFtpUpdateDownloader(
             this UpdateManagerBuilder builder,
-            IUpdateInfoFileParser updateInfoFileParser,
-            string host,
-            string username,
-            string password,
-            string updateFileInfoPath,
-            string downloadsDir,
-            int port = 21)
+            IAsyncFtpClientFactory asyncFtpClientFactory,
+            string updateFileDir,
+            string downloadsDir)
         {
-            var ftpClientFactory = new AsyncFtpClientFactory(host, username, password, port);
-            var updateSource = new FtpUpdateSource(ftpClientFactory, updateInfoFileParser, updateFileInfoPath);
+            var updateDownloader = new FtpUpdateDownloader(asyncFtpClientFactory, downloadsDir, updateFileDir);
+
+            builder.AddDependency<IUpdateDownloader>(updateDownloader);
+
+            return builder;
         }
     }
 }
