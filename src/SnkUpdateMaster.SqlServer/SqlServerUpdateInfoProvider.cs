@@ -15,7 +15,7 @@ namespace SnkUpdateMaster.SqlServer
         private readonly ISqlConnectionFactory _sqlConnectionFactory = sqlConnectionFactory;
 
         /// <summary>
-        /// Возвращает информацию о последнем опубликованном обновлении из таблицы AppUpdates.
+        /// Возвращает информацию о последнем опубликованном обновлении из таблицы UpdateInfo.
         /// </summary>
         /// <returns>Объект с данными обновления <see cref="UpdateInfo"/> или null, если обновления отсутствуют</returns>
         public async Task<UpdateInfo?> GetLastUpdatesAsync()

@@ -2,29 +2,21 @@
 
 namespace SnkUpdateMaster.Ftp
 {
-    public class AsyncFtpClientFactory : IAsyncFtpClientFactory, IDisposable
+    public class AsyncFtpClientFactory(
+        string host,
+        string username,
+        string password,
+        int port = 21) : IAsyncFtpClientFactory, IDisposable
     {
-        private readonly string _host;
+        private readonly string _host = host;
 
-        private readonly string _username;
+        private readonly string _username = username;
 
-        private readonly string _password;
+        private readonly string _password = password;
 
-        private readonly int _port = 21;
+        private readonly int _port = port;
 
         private AsyncFtpClient? _client;
-
-        public AsyncFtpClientFactory(
-            string host,
-            string username,
-            string password,
-            int port = 21)
-        {
-            _host = host;
-            _username = username;
-            _password = password;
-            _port = port;
-        }
 
         public void Dispose()
         {

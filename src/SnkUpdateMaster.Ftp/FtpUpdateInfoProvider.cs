@@ -1,27 +1,34 @@
-﻿using SnkUpdateMaster.Core;
+﻿using FluentFTP.Exceptions;
+using SnkUpdateMaster.Core;
 using SnkUpdateMaster.Core.Files;
 using SnkUpdateMaster.Core.UpdateSource;
 
 namespace SnkUpdateMaster.Ftp
 {
-    public class FtpUpdateInfoProvider : IUpdateInfoProvider
+    /// <summary>
+    /// Класс предоставляет реализацию источника обновлений, работающую с FTP-сервером.
+    /// Используется для получения информации о последнем доступном обновлении из файла на FTP-сервере.
+    /// </summary>
+    /// <param name="ftpClientFactory">Фабрика подключений к FTP-серверу.</param>
+    /// <param name="updateInfoFileParser">Парсер фала обновлений в класс <see cref="UpdateInfo"/>.</param>
+    /// <param name="updateInfoFilePath">Путь к файлу с данными об обнолвении на FTP-сервере.</param>
+    public class FtpUpdateInfoProvider(
+        IAsyncFtpClientFactory ftpClientFactory,
+        IUpdateInfoFileParser updateInfoFileParser,
+        string updateInfoFilePath) : IUpdateInfoProvider
     {
-        private readonly IAsyncFtpClientFactory _ftpClientFactory;
+        private readonly IAsyncFtpClientFactory _ftpClientFactory = ftpClientFactory;
 
-        private readonly IUpdateInfoFileParser _updateInfoFileParser;
+        private readonly IUpdateInfoFileParser _updateInfoFileParser = updateInfoFileParser;
 
-        private readonly string _updateInfoFilePath;
+        private readonly string _updateInfoFilePath = updateInfoFilePath;
 
-        public FtpUpdateInfoProvider(
-            IAsyncFtpClientFactory ftpClientFactory,
-            IUpdateInfoFileParser updateInfoFileParser,
-            string updateInfoFilePath)
-        {
-            _ftpClientFactory = ftpClientFactory;
-            _updateInfoFileParser = updateInfoFileParser;
-            _updateInfoFilePath = updateInfoFilePath;
-        }
 
+        /// <summary>
+        /// Асинхронно получает информацию о последнем обновлении из файла на FTP-сервере.
+        /// </summary>
+        /// <returns>Объект с данными обновления <see cref="UpdateInfo"/> или null, если обновления отсутствуют.</returns>
+        /// <exception cref="FtpException">Не удалось скачать файл с данными об обновлении с FTP-сервера.</exception>
         public async Task<UpdateInfo?> GetLastUpdatesAsync()
         {
             var client = await _ftpClientFactory.GetConnectClientAsync();
@@ -36,7 +43,7 @@ namespace SnkUpdateMaster.Ftp
                 bool isSuccess = await client.DownloadStream(stream, _updateInfoFilePath);
                 if (!isSuccess)
                 {
-                    throw new FileNotFoundException($"Can't download update info file from {_updateInfoFilePath}");
+                    throw new FtpException($"Can't download update info file from {_updateInfoFilePath}");
                 }
                 fileBytes = stream.ToArray();
                 var updateInfo = _updateInfoFileParser.Parse(fileBytes);
