@@ -12,7 +12,7 @@ namespace SnkUpdateMaster.SqlServer.IntegrationTests
         [Test]
         public async Task CheckAndInstallUpdateTest()
         {
-            var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString!);
+            var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString);
 
             var updateManager = new UpdateManagerBuilder()
                 .WithFileCurrentVersionManager()

@@ -11,7 +11,7 @@ namespace SnkUpdateMaster.SqlServer.IntegrationTests
         [Test]
         public async Task DownloadUpdatesFromSqlDatabseTest()
         {
-            var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString!);
+            var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString);
 
             var updateSource = new SqlServerUpdateInfoProvider(sqlConnectionFactory);
             var downloader = new SqlServerUpdateDownloader(sqlConnectionFactory, DownloadsPath);

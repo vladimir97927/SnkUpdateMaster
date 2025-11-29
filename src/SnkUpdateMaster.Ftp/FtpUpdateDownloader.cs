@@ -10,13 +10,10 @@ namespace SnkUpdateMaster.Ftp
 
         private readonly string _downloadsDir;
 
-        private readonly string _updateFileDir;
-
-        public FtpUpdateDownloader(IAsyncFtpClientFactory ftpClientFactory, string downloadsDir, string updateFileDir)
+        public FtpUpdateDownloader(IAsyncFtpClientFactory ftpClientFactory, string downloadsDir)
         {
             _ftpClientFactory = ftpClientFactory;
             _downloadsDir = downloadsDir;
-            _updateFileDir = updateFileDir;
         }
 
         public async Task<string> DownloadUpdateAsync(
@@ -26,7 +23,7 @@ namespace SnkUpdateMaster.Ftp
         {
             var client = await _ftpClientFactory.GetConnectClientAsync(cancellationToken);
 
-            var remoteFilePath = Path.Combine(_updateFileDir, updateInfo.FileName);
+            var remoteFilePath = Path.Combine(updateInfo.FileDir ?? string.Empty, updateInfo.FileName);
             if (!await client.FileExists(remoteFilePath, cancellationToken))
             {
                 throw new FileNotFoundException($"Update file not found {remoteFilePath}");

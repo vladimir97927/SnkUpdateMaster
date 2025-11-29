@@ -7,3 +7,15 @@ services:
     platform: linux/amd64
     ports:
      - 1455:1433
+
+  ftp-server:
+    image: garethflowers/ftp-server:latest
+    container_name: snk_update_master_ftp_server
+    environment:
+     - FTP_USER=snk
+     - FTP_PASS=snk@12345
+    ports:
+     - "2121:21"
+     - "40000-40009:40000-40009"
+    volumes:
+     - "./tests/ftp-data:/home/snk"

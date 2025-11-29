@@ -10,7 +10,7 @@ namespace SnkUpdateMaster.SqlServer.IntegrationTests
         [Test]
         public async Task GetReleaseInfosTest()
         {
-            var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString!);
+            var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString);
             var releaseInfoSource = new SqlServerReleaseInfoSource(sqlConnectionFactory);
 
             var releases = await releaseInfoSource.GetReleaseInfosPagedAsync();
@@ -27,7 +27,7 @@ namespace SnkUpdateMaster.SqlServer.IntegrationTests
         [Test]
         public async Task GetPagedReleaseInfosTest()
         {
-            var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString!);
+            var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString);
             var releaseInfoSource = new SqlServerReleaseInfoSource(sqlConnectionFactory);
 
             var releases = await releaseInfoSource.GetReleaseInfosPagedAsync(1, 1);

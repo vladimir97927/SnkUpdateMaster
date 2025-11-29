@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11222.15 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2243A8B1-D46E-4313-B881-E068906AB603}"
 EndProject
@@ -26,7 +26,7 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SnkUpdateMasterDb", "src\Da
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C63FC9EA-53C1-4891-9C6A-440BBAB4578C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpateMaster.Core.IntegrationTests", "tests\SnkUpateMaster.IntegrationTests\SnkUpateMaster.Core.IntegrationTests.csproj", "{45ACFD77-90B0-45A6-901E-A3BD042A272F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpateMaster.Core.IntegrationTests", "tests\SnkUpateMaster.Core.IntegrationTests\SnkUpateMaster.Core.IntegrationTests.csproj", "{45ACFD77-90B0-45A6-901E-A3BD042A272F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpdateMaster.SqlServer", "src\SnkUpdateMaster.SqlServer\SnkUpdateMaster.SqlServer.csproj", "{9294AC84-B9DA-4D4C-AEE1-4B98C667B02D}"
 EndProject
@@ -37,6 +37,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpdateMaster.Ftp", "src\SnkUpdateMaster.Ftp\SnkUpdateMaster.Ftp.csproj", "{525A89D9-A75E-3BD0-8069-D6B36EF77800}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpdateMaster.Ftp.IntegrationTests", "tests\SnkUpdateMaster.Ftp.IntegrationTests\SnkUpdateMaster.Ftp.IntegrationTests.csproj", "{57287071-D68B-4E44-8FD5-DEBD51A0816A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ftp-data", "ftp-data", "{F36ABA36-8B11-4009-BE5E-715B9F33DD99}"
+	ProjectSection(SolutionItems) = preProject
+		tests\ftp-data\manifest.json = tests\ftp-data\manifest.json
+		tests\ftp-data\release-1.0.0.zip = tests\ftp-data\release-1.0.0.zip
+		tests\ftp-data\release-1.0.1.zip = tests\ftp-data\release-1.0.1.zip
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -92,6 +99,7 @@ Global
 		{32E8B98C-A233-4DB5-BBB2-5843B680D55C} = {2243A8B1-D46E-4313-B881-E068906AB603}
 		{525A89D9-A75E-3BD0-8069-D6B36EF77800} = {2243A8B1-D46E-4313-B881-E068906AB603}
 		{57287071-D68B-4E44-8FD5-DEBD51A0816A} = {C63FC9EA-53C1-4891-9C6A-440BBAB4578C}
+		{F36ABA36-8B11-4009-BE5E-715B9F33DD99} = {C63FC9EA-53C1-4891-9C6A-440BBAB4578C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B369AE71-FA7C-4772-85B2-6FF8E6B2B4C6}

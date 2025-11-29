@@ -7,13 +7,13 @@ namespace SnkUpdateMaster.Ftp.Configuration
 {
     public static class UpdateManagerBuilderFtpExtensions
     {
-        public static UpdateManagerBuilder WithFtpUpdateSource(
+        public static UpdateManagerBuilder WithFtpUpdateInfoProvider(
             this UpdateManagerBuilder builder,
             IUpdateInfoFileParser updateInfoFileParser,
             IAsyncFtpClientFactory asyncFtpClientFactory,
             string updateFileInfoPath)
         {
-            var updateSource = new FtpUpdateSource(asyncFtpClientFactory, updateInfoFileParser, updateFileInfoPath);
+            var updateSource = new FtpUpdateInfoProvider(asyncFtpClientFactory, updateInfoFileParser, updateFileInfoPath);
 
             builder.AddDependency<IUpdateInfoProvider>(updateSource);
 
@@ -23,10 +23,9 @@ namespace SnkUpdateMaster.Ftp.Configuration
         public static UpdateManagerBuilder WithFtpUpdateDownloader(
             this UpdateManagerBuilder builder,
             IAsyncFtpClientFactory asyncFtpClientFactory,
-            string updateFileDir,
             string downloadsDir)
         {
-            var updateDownloader = new FtpUpdateDownloader(asyncFtpClientFactory, downloadsDir, updateFileDir);
+            var updateDownloader = new FtpUpdateDownloader(asyncFtpClientFactory, downloadsDir);
 
             builder.AddDependency<IUpdateDownloader>(updateDownloader);
 

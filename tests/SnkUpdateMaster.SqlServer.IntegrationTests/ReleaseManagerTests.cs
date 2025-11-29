@@ -15,12 +15,12 @@ namespace SnkUpdateMaster.SqlServer.IntegrationTests
         {
             var manager = new ReleaseManagerBuilder()
                 .WithZipPackager(IntegrityProviderType.Sha256)
-                .WithSqlServerReleaseSource(ConnectionString!)
+                .WithSqlServerReleaseSource(ConnectionString)
                 .Build();
             var newVersion = new Version(1, 1, 3);
             await manager.PulishReleaseAsync(AppDir, newVersion, new Progress<double>());
 
-            var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString!);
+            var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString);
             var updateSource = new SqlServerUpdateInfoProvider(sqlConnectionFactory);
             var lastUpdates = await updateSource.GetLastUpdatesAsync();
 

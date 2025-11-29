@@ -6,7 +6,7 @@ namespace SnkUpdateMaster.SqlServer.IntegrationTests.SeedWork
 {
     internal class TestBase
     {
-        protected string? ConnectionString { get; private set; }
+        protected string ConnectionString { get; } = IntegrationTestConfig.SqlConnectionString;
 
         protected string DownloadsPath = "downloads";
 
@@ -19,11 +19,6 @@ namespace SnkUpdateMaster.SqlServer.IntegrationTests.SeedWork
         [SetUp]
         public async Task BeforeEachTest()
         {
-            ConnectionString = EnviromentVariablesProvider.GetConnectionStringEnviromentVariable();
-            if (string.IsNullOrEmpty(ConnectionString))
-            {
-                throw new ApplicationException("Строка подключения отсутствует в переменных среды");
-            }
             await ClearDatabase();
             await SeedDatabase();
             Directory.CreateDirectory(DownloadsPath);
