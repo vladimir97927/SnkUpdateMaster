@@ -1,105 +1,53 @@
-# SqlServer
-Загрузка и доставка обновлений средствами SQL Server.
+### SnkUpdateMaster.SqlServer
 
-## 🔧 Требования
+**Назначение:** интеграция с Microsoft SQL Server для:
 
-* Язык программирования: C# 12.0
-* Платформа: .NET 8.0
-* Microsoft.EntityFrameworkCore 9.0.2
-* Microsoft.EntityFrameworkCore.Relational 9.0.2
-* Microsoft.EntityFrameworkCore.SqlServer 9.0.2
-* Microsoft.Data.SqlClient 6.0.1
-* Dapper 2.1.66
+*   получения и загрузки обновлений из таблиц `UpdateInfo` / `UpdateFile`;
+*   конфигурации билдера через extension‑методы.
 
-## 📦 Основные компоненты
+Файлы (основные):
 
-### Расширения для билдеров
+*   `Configuration/UpdateManagerBuilderSqlServerExtensions.cs`
+*   `Configuration/ReleaseManagerBuilderSqlServerExtensions.cs`
+*   `Database/ISqlConnectionFactory.cs`
+*   `Database/SqlConnectionFactory.cs`
+*   `Database/SnkUpdateMasterContext.cs`
+*   `Database/ReleaseEntityTypeConfiguration.cs`
+*   `Pagination/PageData.cs`
+*   `Pagination/PagedQueryHelper.cs`
+*   `SqlServerUpdateInfoProvider.cs`
+*   `SqlServerUpdateDownloader.cs`
+*   `SqlServerReleaseInfoSource.cs`
+*   `SqlServerReleaseSource.cs`
+*   `SqlServerReleaseSourceFactory.cs`
 
-**Для UpdateManagerBuilder**
+#### Обновления через SQL Server
 
-```cs
-.WithSqlServerUpdateProvider(
-    connectionString: string,      // Строка подключения к SQL
-    downloadsDir: string)          // Папка для загруженных файлов
-```
+*   `SqlServerUpdateInfoProvider : IUpdateInfoProvider`  
+    Использует Dapper и `ISqlConnectionFactory`, читает последнюю запись из `[dbo].[UpdateInfo]` по `ReleaseDate DESC`.
+*   `SqlServerUpdateDownloader : IUpdateDownloader`  
+    Читает BLOB из `[dbo].[UpdateFile]` по `UpdateInfoId`, сохраняет в указанную директорию (`downloadsDir`), поддерживает прогресс.
+*   `UpdateManagerBuilderSqlServerExtensions`:
+    *   `WithSqlServerUpdateInfoProvider(ISqlConnectionFactory sqlConnectionFactory)`
+    *   `WithSqlServerUpdateDownloader(ISqlConnectionFactory sqlConnectionFactory, string downloadsDir)`
 
-Регистрирует:
-* `IUpdateSource` - получение метаданных из SQL
-* `IUpdateDownloader` - загрузка BLOB-данных
-
-**Для ReleaseManagerBuilder**
-
-```cs
-.WithSqlServerReleaseSource(
-    connectionString: string)      // Строка подключения к SQL
-```
-
-Регистрирует:
-* `IReleaseSource` - CRUD операций с релизами
-* `IReleaseInfoSource` - постраничный список версий
-
-## 🚀 Быстрый старт
-
-### Подготовка базы данных
-
-```tsql
-CREATE TABLE [dbo].[AppUpdates]
-(
-	[Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-	[Version] NVARCHAR(256) NOT NULL,
-	[FileName] NVARCHAR(256) NOT NULL,
-	[Checksum] NVARCHAR(256) NOT NULL,
-	[ReleaseDate] DATETIME NOT NULL,
-	[FileData] VARBINARY(MAX) NOT NULL
-)
-```
-### Публикация релиза
+**Пример конфигурации:**
 
 ```csharp
-string appDir; // Путь до папки с обновлениями.
-string connectionString; // Строка подключения к БД.
+using SnkUpdateMaster.Core;
+using SnkUpdateMaster.SqlServer.Configuration;
+using SnkUpdateMaster.SqlServer.Database;
 
-var manager = new ReleaseManagerBuilder()
-    .WithZipPackager(IntegrityProviderType.Sha256)
-    .WithSqlServerReleaseSource(connectionString)
-    .Build();
-var newVersion = new Version(1, 1, 3);
-
-var progress = new Progress<double>();
-await manager.PulishReleaseAsync(appDir, newVersion, progress);
-```
-
-### Проверка и установка обновлений
-
-```csharp
-string appDir; // Путь до папки с обновляемым приложением.
-string downloadsPath; // Путь, по которому хранятся скачанные обновления.
-string connectionString; // Строка подключения к БД. 
+var connectionString = "Server=localhost,1455;Database=SnkUpdateMasterDb;User Id=sa;Password=Snk@12345;Encrypt=False;TrustServerCertificate=True";
+var sqlConnectionFactory = new SqlConnectionFactory(connectionString);
+var appDir = "app";
+var downloadsDir = "downloads";
 
 var updateManager = new UpdateManagerBuilder()
     .WithFileCurrentVersionManager()
     .WithSha256IntegrityVerifier()
     .WithZipInstaller(appDir)
-    .WithSqlServerUpdateProvider(connectionString, downloadsPath)
+    .WithSqlServerUpdateInfoProvider(sqlConnectionFactory)
+    .WithSqlServerUpdateDownloader(sqlConnectionFactory, downloadsDir)
     .Build();
-
-var progress = new Progress<double>();
-var isSuccess = await updateManager.CheckAndInstallUpdatesAsync(progress);
 ```
-
-### Просмотр истории релизов
-
-```csharp
- int currentPage = 1; // Отображаемая страница.
- int pageSize = 20; // Число элементов на странице.
-
-var releases = await manager.GetReleaseInfosPagedAsync(currentPage, pageSize);
-```
-
-## 🧪 Тестирование
-
-Для тестирования модуля необходимо:
-
-1. Установить SQL Server 2012
-2. Опубликовать проект с базой данных [SnkUpdateMasterDb](SnkUpdateMasterDb.md)
-3. Добавить строку подключения в переменные среды с именем `NET_SnkUpdateMaster_ConnectionString`
