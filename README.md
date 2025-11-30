@@ -25,7 +25,7 @@
    - Скрипты.❌
 3. Контроль целостности данных. Выбор алгоритма хэширования
 
-## ✅ Требования
+## ⚙️ Требования
 
 ### Среда разработки
 
@@ -39,6 +39,50 @@
 - Настроен как минимум один источник обновлений:
   - **FTP‑сервер** — доступен извне;
   - **или SQL Server** — поддерживается Microsoft SQL Server 2019+.
+
+## 🚀 Быстрый старт (Sql Server + FTP)
+
+Пример использования с хранением метаданных обновлений в БД и файлов обновлений на FTP-сервере. Текущая версия приложения хранится в файле `[app directory]\version`.
+Целостость файлов обновлений проверяется хэш функцией алгоритмом sha256. Файлы обновления должны содержаться в zip архиве.
+
+```csharp
+using SnkUpdateMaster.Core;
+using SnkUpdateMaster.Ftp;
+using SnkUpdateMaster.Ftp.Configuration;
+using SnkUpdateMaster.SqlServer.Configuration;
+using SnkUpdateMaster.SqlServer.Database;
+
+var ftpClientFactory = new AsyncFtpClientFactory("localhost", "snk", "snk@12345", 2121);
+var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString);
+var appDir = "app";
+var downloadsDir = "downloads";
+
+var updateManager = new UpdateManagerBuilder()
+    .WithFileCurrentVersionManager()
+    .WithSha256IntegrityVerifier()
+    .WithZipInstaller(appDir)
+    .WithSqlServerUpdateInfoProvider(sqlConnectionFactory)
+    .WithFtpUpdateDownloader(ftpClientFactory, downloadsDir)
+    .Build();
+
+var progress = new Progress<double>();
+var updated = await updateManager.CheckAndInstallUpdatesAsync(progress);
+```
+
+## 🏗️ Архитектура
+
+Корневые каталоги:
+
+```text
+src/
+  SnkUpdateMaster.Core            — основные компоненты работы приложения 
+  SnkUpdateMaster.Ftp             — интеграция с FTP
+  SnkUpdateMaster.SqlServer       — интеграция с SQL Server
+  SnkUpdateMaster.ReleasePublisher.CLI — консольный загрузчик релизов (**временно не работает** ⚠️)
+  Database                        — Docker-окружение и проект БД
+tests/                            — интеграционные тесты и тестовые данные
+docker-compose.yml                — инфраструктура (SQL + FTP)
+````
 
 ## 📚 Модули проекта
 - [Core - основные компоненты работы приложения.](docs/Core.md)
@@ -114,8 +158,6 @@ docker compose down
 - `SNK_UPDATE_MASTER__SQL_CONN` — строка подключения к SQL Server  
   По умолчанию:
   `Server=localhost,1455;Database=SnkUpdateMasterDb;User Id=sa;Password=Snk@12345;Encrypt=False;TrustServerCertificate=True`
-
-## ⚙️ Установка
 
 
 
