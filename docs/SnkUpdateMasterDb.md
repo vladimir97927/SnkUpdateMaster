@@ -1,59 +1,31 @@
-# SnkUpdateMasterDb
+### Database
 
-Проект SQL Server базы данных для хранения обновлений приложения.
+**Назначение:** окружение для SQL Server, скрипты создания базы и структуры.
 
-## 🔧 Требования
+Файлы:
 
-* SQL Server 2012
+*   `Database/Dockerfile`
+*   `Database/entrypoint.sh`
+*   `Database/SnkUpdateMasterDb/scripts/CreateDatabase.sql`
+*   `Database/SnkUpdateMasterDb/scripts/CreateStructure.sql`
+*   `Database/SnkUpdateMasterDb/dbo/Tables/*.sql` — таблицы `UpdateInfo`, `UpdateFile`
 
-## 📃 Скрипты
+`Dockerfile`:
 
-1. Создание базы данных
+*   базовый образ: `mcr.microsoft.com/mssql/server:2025-latest`;
+*   копирует скрипты в контейнер;
+*   задаёт:
+    *   `ACCEPT_EULA=Y`
+    *   `MSSQL_SA_PASSWORD=Snk@12345`
+    *   `MSSQL_TCP_PORT=1433`;
+*   запускает `entrypoint.sh`, который:
+    *   стартует SQL Server;
+    *   ждёт 30 секунд;
+    *   выполняет `CreateDatabase.sql` и `CreateStructure.sql`.
 
-```tsql
-USE [master];
-GO
+Основные таблицы:
 
-IF (DB_ID(N'$(DatabaseName)') IS NOT NULL) 
-BEGIN
-    ALTER DATABASE [$(DatabaseName)]
-    SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-    DROP DATABASE [$(DatabaseName)];
-END
-GO
+*   `UpdateInfo` — метаданные доступных обновлений.
+*   `UpdateFile` — BLOB‑ы файлов обновлений.
 
-CREATE DATABASE [$(DatabaseName)]
-```
-
-2. Добавление таблиц в базу
-
-```tsql
-USE [$(DatabaseName)]
-GO
-
-CREATE TABLE [dbo].[AppUpdates] (
-    [Id]          INT             IDENTITY (1, 1) NOT NULL,
-    [Version]     NVARCHAR (256)  NOT NULL,
-    [FileName]    NVARCHAR (256)  NOT NULL,
-    [Checksum]    NVARCHAR (256)  NOT NULL,
-    [ReleaseDate] DATETIME        NOT NULL,
-    [FileData]    VARBINARY (MAX) NOT NULL,
-    PRIMARY KEY CLUSTERED ([Id] ASC)
-);
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+> ⚠️ Логин/пароль `sa / Snk@12345` и настройки из Docker предназначены только для разработки и тестов, не использовать в продакшене.
