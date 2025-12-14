@@ -1,5 +1,7 @@
 ### SnkUpdateMaster.SqlServer
 
+Набор расширений для реализации механизма обновлений через Microsoft SQL Server.
+
 **Назначение:** интеграция с Microsoft SQL Server для:
 
 *   получения и загрузки обновлений из таблиц `UpdateInfo` / `UpdateFile`;
