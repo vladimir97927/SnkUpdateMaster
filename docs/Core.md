@@ -2,6 +2,35 @@
 
 **Назначение:** Здесь сосредоточена бизнес‑логика, интерфейсы и базовые реализации.
 
+#### Основной вариант использования
+
+**Для работы модуль требует реализации интерфейсов:**
+- `IUpdateInfoProvider` - получение информации об обновлениях из внешнего источника.
+- `IUpdateDownloader` - загрузка файлов обновлений из внешнего источника.
+
+**Предоставлены реализации интерфейсов:**
+- `IInstaller` - установка загруженных обновлений:
+	- `ZipInstaller` - распаковка файлов обновлений из ZIP архива.
+- `IIntegrityVerifier` - проверка целостности файлов путем сравнения контрольных сумм:
+	- `ShaIntegrityVerifier` - проверка целостности файлов с использованием алгоритма SHA-256.
+- `ICurrentVersionManager` - управление данными о текущей установленной версии приложения:
+	- `FileVersionManager` - хранение версии в текстовом файле. Формат версии `major.minor.build`.
+
+Для загрузки и установки обновлений используется класс `UpdateManager`. Создать экземпляр класса можно через `UpdateManagerBuilder`:
+```csharp
+var updateManager = new UpdateManagerBuilder()
+	.WithZipInstaller("path to app folder")
+	.WithFileCurrentVersionManager()
+	.WithSha256IntegrityVerifier()
+	.AddDependency<IUpdateInfoProvider>(customImplementation)
+	.AddDependency<IUpdateDownloader>(customImplementation)
+	.Build();
+```
+
+Проверка наличия обновлений и установка: 
+```csharp
+var updated = await updateManager.CheckAndInstallUpdatesAsync(progress);
+```
 #### Основные подсистемы
 
 1.  **Обновление приложения (`UpdateManager`)**
@@ -100,37 +129,3 @@
           "releaseDate": "2025-11-29"
         }
         ```
-8.  **Публикация релизов (`ReleasePublisher`)**
-    Файлы:
-    *   `ReleasePublisher/Release.cs`
-    *   `ReleasePublisher/ReleaseInfo.cs`
-    *   `ReleasePublisher/IReleaseSource.cs`
-    *   `ReleasePublisher/IReleaseInfoSource.cs`
-    *   `ReleasePublisher/IReleaseSourceFactory.cs`
-    *   `ReleasePublisher/ReleaseManager.cs`
-    *   `ReleasePublisher/ReleaseManagerBuilder.cs`
-    *   `ReleasePublisher/Packager/IReleasePackager.cs`
-    *   `ReleasePublisher/Packager/ZipReleasePackager.cs`
-    Ключевые типы:
-    *   `Release` — агрегат “релиз приложения”: версия, имя файла, checksum, бинарные данные.
-    *   `ReleaseInfo` — краткая информация о релизе (Id, строковая версия, дата выпуска).
-    *   `IReleaseSource` — абстракция хранилища релизов (CRUD‑операции).
-    *   `IReleaseInfoSource` — источник пагинированной информации о релизах.
-    *   `IReleaseSourceFactory` — фабрика для создания `IReleaseSource`.
-    *   `IReleasePackager` — упаковщик релиза из каталога приложения.
-    *   `ZipReleasePackager`:
-        *   собирает ZIP‑архив из указанной директории;
-        *   считает SHA‑256 и создаёт `Release` с бинарными данными архива.
-    *   `ReleaseManager`:
-        *   через `IReleasePackager` собирает релиз из исходной директории;
-        *   публикует релиз в `IReleaseSource`;
-        *   предоставляет пагинированный список релизов (`GetReleaseInfosPagedAsync`).
-        *   метод для публикации называется **`PulishReleaseAsync`** (опечатка в имени, важно учитывать при вызове).
-    *   `ReleaseManagerBuilder`:
-        *   использует `DependencyBuilder<ReleaseManager>`;
-        *   метод `WithZipPackager(IntegrityProviderType integrityProviderType = IntegrityProviderType.Sha256)` регистрирует ZIP‑упаковщик;
-        *   интеграция с SQL Server добавляется через extension‑методы модуля `SnkUpdateMaster.SqlServer`.
-9.  **Общие утилиты (`Common`)**
-    Файлы:
-    *   `Common/DependencyBuilder.cs` — базовый класс билдера через словарь зависимостей.
-    *   `Common/PagedData.cs` — модель для пагинации (данные страницы + метаданные: `PageNumber`, `PageSize`, `TotalCount`).

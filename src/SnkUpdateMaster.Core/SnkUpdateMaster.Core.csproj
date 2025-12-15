@@ -4,6 +4,27 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Title>SnkUpdateMaster.Core</Title>
+    <Authors>Vladimir Vyplaven</Authors>
+    <Description>Основной модуль библиотеки для загрузки и установки файлов обновлений своего ПО.
+Модуль требует реализации интерфейсов:
+- IUpdateInfoProvider - получение информации об обновлениях из внешнего источника.
+- IUpdateDownloader - загрузка файлов обновлений из внешнего источника.
+Для использования существующих реализаций необходимо скачать:
+- SnkUpdateMaster.SqlServer - использование БД SQL Server в качестве внешнего источника.
+- SnkUpdateMaster.Ftp - использование FTP сервера в качестве внешнего источника.</Description>
+    <PackageProjectUrl>https://github.com/vladimir97927/SnkUpdateMaster</PackageProjectUrl>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageReadmeFile>Core.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\docs\Core.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
