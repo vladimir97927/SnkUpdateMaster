@@ -10,6 +10,8 @@
     <Description>Набор расширений для реализации механизма обновлений через Microsoft SQL Server.</Description>
     <PackageReadmeFile>SqlServer.md</PackageReadmeFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
