@@ -1,42 +1,42 @@
 ### SnkUpdateMaster.SqlServer
 
-Набор расширений, которые позволяют получать метаданные обновлений и сами файлы напрямую из Microsoft SQL Server.
+Extensions that fetch update metadata and files directly from Microsoft SQL Server.
 
-**Назначение:** интеграция с Microsoft SQL Server для получения и загрузки обновлений из таблиц `UpdateInfo` / `UpdateFile`.
+**Purpose:** integrate with SQL Server to read updates from the `UpdateInfo` / `UpdateFile` tables.
 
-#### Предоставляемые реализации
+#### Provided implementations
 
-*   `SqlServerUpdateInfoProvider : IUpdateInfoProvider`  
-    Использует Dapper и `ISqlConnectionFactory`, читает последнюю запись из `[dbo].[UpdateInfo]` по `ReleaseDate DESC`.
-*   `SqlServerUpdateDownloader : IUpdateDownloader`  
-    Читает BLOB из `[dbo].[UpdateFile]` по `UpdateInfoId`, сохраняет в указанную директорию (`downloadsDir`).
-*   `UpdateManagerBuilderSqlServerExtensions`:
-    *   `WithSqlServerUpdateInfoProvider(ISqlConnectionFactory sqlConnectionFactory)`
-    *   `WithSqlServerUpdateDownloader(ISqlConnectionFactory sqlConnectionFactory, string downloadsDir)`
+* `SqlServerUpdateInfoProvider : IUpdateInfoProvider`  
+  Uses Dapper and `ISqlConnectionFactory`; selects the latest `[dbo].[UpdateInfo]` row ordered by `ReleaseDate DESC`.
+* `SqlServerUpdateDownloader : IUpdateDownloader`  
+  Reads BLOBs from `[dbo].[UpdateFile]` by `UpdateInfoId` and saves them to the specified `downloadsDir`.
+* `UpdateManagerBuilderSqlServerExtensions`:
+  * `WithSqlServerUpdateInfoProvider(ISqlConnectionFactory sqlConnectionFactory)`
+  * `WithSqlServerUpdateDownloader(ISqlConnectionFactory sqlConnectionFactory, string downloadsDir)`
 
-**Пример использования:**
+**Usage example:**
 
-Предварительно необходимо создать таблицы в БД:
+Create tables first:
 ```sql
 CREATE TABLE [dbo].[UpdateInfo]
 (
-	[Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-	[Version] NVARCHAR(256) NOT NULL,
-	[FileName] NVARCHAR(256) NOT NULL,
-	[FileDir] NVARCHAR(256) NULL, --Может быть пустым при хранении файлов обновления в таблице [UpdateFile]
-	[CheckSum] NVARCHAR(256) NOT NULL,
-	[ReleaseDate] DATETIME NOT NULL,
+    [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    [Version] NVARCHAR(256) NOT NULL,
+    [FileName] NVARCHAR(256) NOT NULL,
+    [FileDir] NVARCHAR(256) NULL, -- Can be empty when files are stored in [UpdateFile]
+    [CheckSum] NVARCHAR(256) NOT NULL,
+    [ReleaseDate] DATETIME NOT NULL,
 )
 
 CREATE TABLE [dbo].[UpdateFile]
 (
-	[Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-	[UpdateInfoId] INT NOT NULL,
-	[FileData] VARBINARY(MAX) NOT NULL
+    [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    [UpdateInfoId] INT NOT NULL,
+    [FileData] VARBINARY(MAX) NOT NULL
 )
 ```
 
-Создание менеджера обновлений:
+Build the update manager:
 ```csharp
 using SnkUpdateMaster.Core;
 using SnkUpdateMaster.SqlServer.Configuration;
@@ -56,4 +56,4 @@ var updateManager = new UpdateManagerBuilder()
     .Build();
 ```
 
-> 📌 Если файлы обновлений хранятся в таблице `UpdateFile`, указывайте пустой `FileDir` в `UpdateInfo` - загрузчик сам выберет правильный источник.
+> 📌 If update archives are stored in `UpdateFile`, leave `FileDir` empty in `UpdateInfo`—the downloader will pick the right source automatically.

@@ -7,7 +7,7 @@
     <Title>SnkUpdateMaster.SqlServer</Title>
     <Authors>Vladimir Vyplaven</Authors>
     <PackageProjectUrl>https://github.com/vladimir97927/SnkUpdateMaster</PackageProjectUrl>
-    <Description>Набор расширений для реализации механизма обновлений через Microsoft SQL Server.</Description>
+    <Description>Extensions that fetch update metadata and files directly from Microsoft SQL Server.</Description>
     <PackageReadmeFile>SqlServer.md</PackageReadmeFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <AssemblyVersion>1.0.0</AssemblyVersion>

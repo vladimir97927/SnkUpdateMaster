@@ -6,13 +6,13 @@
     <Nullable>enable</Nullable>
     <Title>SnkUpdateMaster.Core</Title>
     <Authors>Vladimir Vyplaven</Authors>
-    <Description>Основной модуль библиотеки для загрузки и установки файлов обновлений своего ПО.
-Модуль требует реализации интерфейсов:
-- IUpdateInfoProvider - получение информации об обновлениях из внешнего источника.
-- IUpdateDownloader - загрузка файлов обновлений из внешнего источника.
-Для использования существующих реализаций необходимо скачать:
-- SnkUpdateMaster.SqlServer - использование БД SQL Server в качестве внешнего источника.
-- SnkUpdateMaster.Ftp - использование FTP сервера в качестве внешнего источника.</Description>
+    <Description>The main library module for downloading and installing update files for your software.
+The module requires implementation of the following interfaces:
+- IUpdateInfoProvider - retrieving update information from an external source.
+- IUpdateDownloader - downloading update files from an external source.
+To use existing implementations, you need to download:
+- SnkUpdateMaster.SqlServer - using a SQL Server database as an external source.
+- SnkUpdateMaster.Ftp - using an FTP server as an external source.</Description>
     <PackageProjectUrl>https://github.com/vladimir97927/SnkUpdateMaster</PackageProjectUrl>
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <FileVersion>1.0.0</FileVersion>

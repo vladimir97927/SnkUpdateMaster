@@ -1,35 +1,35 @@
 ### SnkUpdateMasterDb
 
-**Назначение:** инфраструктурный модуль с Docker-окружением SQL Server и скриптами создания схемы данных для хранения метаданных и файлов обновлений.
+**Purpose:** infrastructure module with SQL Server Docker setup and schema scripts for storing update metadata and files.
 
-Файлы:
+Files:
 
-*   `Database/Dockerfile`
-*   `Database/entrypoint.sh`
-*   `Database/SnkUpdateMasterDb/scripts/CreateDatabase.sql`
-*   `Database/SnkUpdateMasterDb/scripts/CreateStructure.sql`
-*   `Database/SnkUpdateMasterDb/dbo/Tables/*.sql` — таблицы `UpdateInfo`, `UpdateFile`
+* `Database/Dockerfile`
+* `Database/entrypoint.sh`
+* `Database/SnkUpdateMasterDb/scripts/CreateDatabase.sql`
+* `Database/SnkUpdateMasterDb/scripts/CreateStructure.sql`
+* `Database/SnkUpdateMasterDb/dbo/Tables/*.sql` — `UpdateInfo`, `UpdateFile` tables
 
 `Dockerfile`:
 
-*   базовый образ: `mcr.microsoft.com/mssql/server:2025-latest`;
-*   копирует скрипты в контейнер;
-*   задаёт:
-    *   `ACCEPT_EULA=Y`
-    *   `MSSQL_SA_PASSWORD=Snk@12345`
-    *   `MSSQL_TCP_PORT=1433`;
-*   запускает `entrypoint.sh`, который:
-    *   стартует SQL Server;
-    *   ждёт 30 секунд;
-    *   выполняет `CreateDatabase.sql` и `CreateStructure.sql`.
+* base image: `mcr.microsoft.com/mssql/server:2025-latest`;
+* copies scripts into the container;
+* sets:
+  * `ACCEPT_EULA=Y`
+  * `MSSQL_SA_PASSWORD=Snk@12345`
+  * `MSSQL_TCP_PORT=1433`;
+* runs `entrypoint.sh`, which:
+  * starts SQL Server;
+  * waits 30 seconds;
+  * executes `CreateDatabase.sql` and `CreateStructure.sql`.
 
-Основные таблицы:
+Key tables:
 
-*   `UpdateInfo` — метаданные доступных обновлений.
-*   `UpdateFile` — BLOB‑ы файлов обновлений.
+* `UpdateInfo` — available update metadata.
+* `UpdateFile` — BLOBs with update files.
 
-**Как использовать:**
-- запустите инфраструктуру через `docker compose up` в корне репозитория — контейнер создаст базу и структуру автоматически;
-- строка подключения по умолчанию: `Server=localhost,1455;Database=SnkUpdateMasterDb;User Id=sa;Password=Snk@12345;Encrypt=False;TrustServerCertificate=True`.
+**How to use:**
+- start infra with `docker compose up` in the repo root — the container creates the DB and schema automatically;
+- default connection string: `Server=localhost,1455;Database=SnkUpdateMasterDb;User Id=sa;Password=Snk@12345;Encrypt=False;TrustServerCertificate=True`.
 
-> ⚠️ Логин/пароль `sa / Snk@12345` и настройки из Docker предназначены только для разработки и тестов. Не использовать в продакшене.
+> ⚠️ The `sa / Snk@12345` credentials and Docker settings are for development and testing only. Do not use in production.

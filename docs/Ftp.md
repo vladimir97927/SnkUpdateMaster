@@ -1,21 +1,21 @@
 ### SnkUpdateMaster.Ftp
 
-**Назначение:** модуль, который позволяет получать метаданные обновлений и сами архивы через FTP/SFTP.
+**Purpose:** module that retrieves update metadata and archives via FTP/SFTP.
 
-#### Предоставляемые реализации
+#### Provided implementations
 
-*   `IAsyncFtpClientFactory` / `AsyncFtpClientFactory`  
-    Инкапсулирует создание и подключение `FluentFTP.AsyncFtpClient`. Позволяет переиспользовать подключение, автоматически переподключаться.
-*   `FtpUpdateInfoProvider : IUpdateInfoProvider`  
-    Скачивает файл манифеста (например, `/manifest.json`) и парсит его через `IUpdateInfoFileParser` (обычно `JsonUpdateInfoFileParser`).
-*   `FtpUpdateDownloader : IUpdateDownloader`  
-    Скачивает архив обновления из FTP в локальную директорию загрузок, с поддержкой прогресса и проверки статуса FTP‑операции.
-*   `UpdateManagerBuilderFtpExtensions`  
-    Extension‑методы для `UpdateManagerBuilder`:
-    *   `WithFtpUpdateInfoProvider(IUpdateInfoFileParser parser, IAsyncFtpClientFactory ftpFactory, string updateFileInfoPath)`
-    *   `WithFtpUpdateDownloader(IAsyncFtpClientFactory ftpFactory, string downloadsDir)`
+* `IAsyncFtpClientFactory` / `AsyncFtpClientFactory`  
+  Wraps `FluentFTP.AsyncFtpClient` creation and connection. Supports reuse and automatic reconnects.
+* `FtpUpdateInfoProvider : IUpdateInfoProvider`  
+  Downloads a manifest file (e.g., `/manifest.json`) and parses it using `IUpdateInfoFileParser` (typically `JsonUpdateInfoFileParser`).
+* `FtpUpdateDownloader : IUpdateDownloader`  
+  Downloads the update archive from FTP into a local downloads directory with progress reporting and status checks.
+* `UpdateManagerBuilderFtpExtensions`  
+  Extension methods for `UpdateManagerBuilder`:
+  * `WithFtpUpdateInfoProvider(IUpdateInfoFileParser parser, IAsyncFtpClientFactory ftpFactory, string updateFileInfoPath)`
+  * `WithFtpUpdateDownloader(IAsyncFtpClientFactory ftpFactory, string downloadsDir)`
 
-**Пример использования:**
+**Usage example:**
 
 ```csharp
 using SnkUpdateMaster.Core;
@@ -39,3 +39,5 @@ var updateManager = new UpdateManagerBuilder()
 var progress = new Progress<double>();
 var updated = await updateManager.CheckAndInstallUpdatesAsync(progress);
 ```
+
+> 🔧 Tip: set FTP client timeouts and use a dedicated downloads directory to avoid interfering with application files.

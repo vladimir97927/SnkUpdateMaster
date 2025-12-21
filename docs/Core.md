@@ -1,131 +1,102 @@
 ### SnkUpdateMaster.Core
 
-**Назначение:** базовый модуль, в котором сосредоточена бизнес‑логика, интерфейсы и готовые реализации для построения конвейера обновления.
+**Purpose:** the base module with business logic, interfaces, and ready-made implementations for the update pipeline.
 
-#### Основной вариант использования
+#### Typical usage
 
-**Для работы модуль требует реализации интерфейсов:**
-- `IUpdateInfoProvider` - получение информации об обновлениях из внешнего источника.
-- `IUpdateDownloader` - загрузка файлов обновлений из внешнего источника.
+**Key interfaces:**
+- `IUpdateInfoProvider` — fetches information about the available update.
+- `IUpdateDownloader` — downloads the update file.
+- `IInstaller` — applies the downloaded file to the application.
+- `IIntegrityVerifier` — validates the checksum before installation.
+- `ICurrentVersionManager` — reads and updates the current application version.
 
-**Предоставлены реализации интерфейсов:**
-- `IInstaller` - установка загруженных обновлений:
-	- `ZipInstaller` - распаковка файлов обновлений из ZIP архива.
-- `IIntegrityVerifier` - проверка целостности файлов путем сравнения контрольных сумм:
-	- `ShaIntegrityVerifier` - проверка целостности файлов с использованием алгоритма SHA-256.
-- `ICurrentVersionManager` - управление данными о текущей установленной версии приложения:
-	- `FileVersionManager` - хранение версии в текстовом файле. Формат версии `major.minor.build`.
+**Built-in implementations:**
+- `ZipInstaller` — unpacks an update from a ZIP archive with backup.
+- `ShaIntegrityVerifier` — SHA‑256 integrity check.
+- `FileVersionManager` — stores the version in a text file (`major.minor.build`).
 
-Для загрузки и установки обновлений используется класс `UpdateManager`. Создать экземпляр класса можно через `UpdateManagerBuilder`:
+Use `UpdateManager` to orchestrate download and installation. Build it via `UpdateManagerBuilder`:
 ```csharp
 var updateManager = new UpdateManagerBuilder()
-	.WithZipInstaller("path to app folder")
-	.WithFileCurrentVersionManager()
-	.WithSha256IntegrityVerifier()
-	.AddDependency<IUpdateInfoProvider>(customImplementation)
-	.AddDependency<IUpdateDownloader>(customImplementation)
-	.Build();
+    .WithZipInstaller("path to app folder")
+    .WithFileCurrentVersionManager()
+    .WithSha256IntegrityVerifier()
+    .AddDependency<IUpdateInfoProvider>(customImplementation)
+    .AddDependency<IUpdateDownloader>(customImplementation)
+    .Build();
 ```
 
-Проверка наличия обновлений и установка:
+Check for updates and install:
 ```csharp
 var updated = await updateManager.CheckAndInstallUpdatesAsync(progress);
 ```
-#### Основные подсистемы
 
-1.  **Обновление приложения (`UpdateManager`)**
-    Файлы:
-    *   `UpdateManager.cs`
-    *   `UpdateManagerBuilder.cs`
-    *   `UpdateInfo.cs`
-    Ключевые типы:
-    *   `UpdateManager`  
-        Основной класс, который реализует полный цикл обновления:
-        1.  получение текущей версии приложения (`ICurrentVersionManager`);
-        2.  получение информации о доступном обновлении (`IUpdateInfoProvider`);
-        3.  загрузка файла обновления (`IUpdateDownloader`);
-        4.  проверка контрольной суммы (`IIntegrityVerifier`);
-        5.  установка обновления (`IInstaller`);
-        6.  обновление текущей версии (`ICurrentVersionManager.UpdateCurrentVersionAsync`).
-        Основной метод:
-        ```csharp
-        Task<bool> CheckAndInstallUpdatesAsync(
-            IProgress<double> progress,
-            CancellationToken cancellationToken = default);
-        ```
-        Возвращает `true`, если обновление было найдено и установлено.
-    *   `UpdateInfo`  
-        Класс с метаданными обновления:
-        *   `Id` — идентификатор;
-        *   `Version` — `System.Version`;
-        *   `FileName`;
-        *   `Checksum` (SHA‑256, hex);
-        *   `ReleaseDate` (UTC);
-        *   `FileDir` — каталог файла (для FTP / файловых сценариев).
-    *   `UpdateManagerBuilder` (наследуется от `DependencyBuilder<UpdateManager>`)  
-        Fluent‑билдер для конфигурации `UpdateManager`. Встроенные методы:
-        *   `WithFileCurrentVersionManager()` — хранение текущей версии в файле `version` в `Environment.CurrentDirectory`;
-        *   `WithSha256IntegrityVerifier()` — проверка целостности через SHA‑256;
-        *   `WithZipInstaller(string appDir)` — установщик, который разворачивает ZIP‑архив поверх директории приложения `appDir` с созданием бэкапа.
-        Источники обновлений и загрузчики подключаются либо напрямую через `AddDependency<T>`, либо через extension‑методы из модулей `Ftp` и `SqlServer`.
-2.  **Управление версией (`VersionManager`)**
-    Файлы:
-    *   `VersionManager/ICurrentVersionManager.cs`
-    *   `VersionManager/FileVersionManager.cs`
-    *   `ICurrentVersionManager` — абстракция над хранением текущей версии приложения.
-    *   `FileVersionManager` — реализация через обычный текстовый файл `version`:
-        *   формат: `major.minor.build` (например, `1.0.2`);
-        *   умеет читать и обновлять версию;
-        *   автоматически создаёт файл при первом обновлении.
-3.  **Провайдеры обновлений (`UpdateSource`)**
-    Файл:
-    *   `UpdateSource/IUpdateInfoProvider.cs`
-    *   `IUpdateInfoProvider` — интерфейс для получения информации о последнем доступном обновлении из любого внешнего источника (FTP, БД, файловая система и т.п.).
-    Конкретные реализации находятся в проектах `SnkUpdateMaster.Ftp` и `SnkUpdateMaster.SqlServer`.
-4.  **Загрузчики обновлений (`Downloader`)**
-    Файл:
-    *   `Downloader/IUpdateDownloader.cs`
-    *   `IUpdateDownloader` — интерфейс для асинхронной загрузки файла обновления (HTTP, FTP, БД, локальное копирование и т.п.).  
-        Возвращает путь к локальному файлу.
-    Реализации — в проектах `SnkUpdateMaster.Ftp` и `SnkUpdateMaster.SqlServer`.
-5.  **Установщики обновлений (`Installer`)**
-    Файлы:
-    *   `Installer/IInstaller.cs`
-    *   `Installer/ZipInstaller.cs`
-    *   `IInstaller` — абстракция “как применить загруженный файл обновления”.
-    *   `ZipInstaller`:
-        *   создаёт полную резервную копию директории приложения;
-        *   распаковывает ZIP‑архив поверх приложения;
-        *   при ошибке пытается откатиться, удаляя новую версию и возвращая бэкап.
-    > ⚠️ Важно: `ZipInstaller` активно манипулирует файловой системой (удаляет/перемещает директории). Использовать только когда приложение остановлено.
-6.  **Целостность и контрольные суммы (`Integrity`)**
-    Файлы:
-    *   `Integrity/IChecksumCalculator.cs`
-    *   `Integrity/IIntegrityProvider.cs`
-    *   `Integrity/IIntegrityVerifier.cs`
-    *   `Integrity/ShaChecksumCalculator.cs`
-    *   `Integrity/ShaIntegrityProvider.cs`
-    *   `Integrity/ShaIntegrityVerifier.cs`
-    *   `Integrity/IntegrityProviderType.cs`
-    Основные типы:
-    *   `IChecksumCalculator` — расчёт контрольной суммы файла;
-    *   `IIntegrityProvider` — “обёртка” над калькулятором, может выполнять дополнительные проверки;
-    *   `IIntegrityVerifier` — сравнение вычисленной суммы с ожидаемой;
-    *   `ShaChecksumCalculator` / `ShaIntegrityProvider` / `ShaIntegrityVerifier` — реализация через SHA‑256.
-7.  **Парсинг файлов с описанием обновлений (`Files`)**
-    Файлы:
-    *   `Files/IUpdateInfoFileParser.cs`
-    *   `Files/JsonUpdateInfoFileParser.cs`
-    *   `IUpdateInfoFileParser` — абстракция над парсингом файла с метаданными обновления.
-    *   `JsonUpdateInfoFileParser` — реализация для JSON‑файла.  
-        Ожидаемый формат (пример `tests/ftp-data/manifest.json`):
-        ```json
-        {
-          "id": 1,
-          "version": "1.0.1",
-          "fileName": "release-1.0.1.zip",
-          "fileDir": "/",
-          "checksum": "…sha256…",
-          "releaseDate": "2025-11-29"
-        }
-        ```
+> 💡 Besides the built-ins, you can register custom interface implementations via `AddDependency` and mix them with provided components.
+
+#### Main subsystems
+
+1. **Application update (`UpdateManager`)**  
+   Files: `UpdateManager.cs`, `UpdateManagerBuilder.cs`, `UpdateInfo.cs`  
+   Types:
+   * `UpdateManager` — orchestrates the full update flow:
+     1. get current version (`ICurrentVersionManager`);
+     2. get available update info (`IUpdateInfoProvider`);
+     3. download update file (`IUpdateDownloader`);
+     4. verify checksum (`IIntegrityVerifier`);
+     5. install update (`IInstaller`);
+     6. update stored version (`ICurrentVersionManager.UpdateCurrentVersionAsync`).  
+     Main method:
+     ```csharp
+     Task<bool> CheckAndInstallUpdatesAsync(
+         IProgress<double> progress,
+         CancellationToken cancellationToken = default);
+     ```
+     Returns `true` if an update was found and installed.
+   * `UpdateInfo` — metadata: `Id`, `Version` (`System.Version`), `FileName`, `Checksum` (SHA‑256 hex), `ReleaseDate` (UTC), `FileDir`.
+   * `UpdateManagerBuilder` (inherits `DependencyBuilder<UpdateManager>`) — fluent builder with shortcuts:
+     * `WithFileCurrentVersionManager()` — stores version in `version` file under `Environment.CurrentDirectory`;
+     * `WithSha256IntegrityVerifier()` — SHA‑256 integrity check;
+     * `WithZipInstaller(string appDir)` — expands ZIP archive over `appDir` with backup.  
+     Sources and downloaders are added directly via `AddDependency<T>` or through module extensions (`Ftp`, `SqlServer`).
+2. **Version management (`VersionManager`)**  
+   Files: `VersionManager/ICurrentVersionManager.cs`, `VersionManager/FileVersionManager.cs`  
+   * `ICurrentVersionManager` — abstraction over version storage.  
+   * `FileVersionManager` — stores version in a `version` text file (`major.minor.build`), creates the file on first update.
+3. **Update providers (`UpdateSource`)**  
+   File: `UpdateSource/IUpdateInfoProvider.cs`  
+   * `IUpdateInfoProvider` — gets the latest available update from any source (FTP, DB, file system, etc.).  
+   Concrete implementations live in `SnkUpdateMaster.Ftp` and `SnkUpdateMaster.SqlServer`.
+4. **Downloaders (`Downloader`)**  
+   File: `Downloader/IUpdateDownloader.cs`  
+   * `IUpdateDownloader` — async download of the update file (HTTP, FTP, DB, local copy, etc.), returning a local path.  
+   Implementations reside in `SnkUpdateMaster.Ftp` and `SnkUpdateMaster.SqlServer`.
+5. **Installers (`Installer`)**  
+   Files: `Installer/IInstaller.cs`, `Installer/ZipInstaller.cs`  
+   * `IInstaller` — “how to apply the downloaded update.”  
+   * `ZipInstaller`:
+     * makes a full backup of the application directory;
+     * unpacks the ZIP over the app;
+     * on failure, attempts rollback by restoring the backup.  
+   > ⚠️ `ZipInstaller` performs destructive file-system operations (delete/move directories). Use only when the app is stopped.
+6. **Integrity and checksums (`Integrity`)**  
+   Files: `Integrity/IChecksumCalculator.cs`, `Integrity/IIntegrityProvider.cs`, `Integrity/IIntegrityVerifier.cs`, `Integrity/ShaChecksumCalculator.cs`, `Integrity/ShaIntegrityProvider.cs`, `Integrity/ShaIntegrityVerifier.cs`, `Integrity/IntegrityProviderType.cs`  
+   Types:
+   * `IChecksumCalculator` — compute file checksum;
+   * `IIntegrityProvider` — a wrapper around the calculator, can add extra checks;
+   * `IIntegrityVerifier` — compares calculated checksum against expected;
+   * `ShaChecksumCalculator` / `ShaIntegrityProvider` / `ShaIntegrityVerifier` — SHA‑256 implementations.
+7. **Parsing update manifests (`Files`)**  
+   Files: `Files/IUpdateInfoFileParser.cs`, `Files/JsonUpdateInfoFileParser.cs`  
+   * `IUpdateInfoFileParser` — parses update metadata files.  
+   * `JsonUpdateInfoFileParser` — JSON parser. Expected format (see `tests/ftp-data/manifest.json`):
+     ```json
+     {
+       "id": 1,
+       "version": "1.0.1",
+       "fileName": "release-1.0.1.zip",
+       "fileDir": "/",
+       "checksum": "…sha256…",
+       "releaseDate": "2025-11-29"
+     }
+     ```
