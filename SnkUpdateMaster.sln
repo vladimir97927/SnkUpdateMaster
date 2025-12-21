@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11222.15 d18.0
+VisualStudioVersion = 18.1.11304.174
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2243A8B1-D46E-4313-B881-E068906AB603}"
 EndProject
@@ -9,24 +9,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpdateMaster.Core", "src
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{A02F173D-5596-462B-A96A-D2C0EA06940C}"
 	ProjectSection(SolutionItems) = preProject
-		.dockerignore = .dockerignore
 		Directory.Packages.props = Directory.Packages.props
-		docker-compose.override.yml = docker-compose.override.yml
-		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{65A25C50-8152-494A-B24D-AE6E9030D1CD}"
-	ProjectSection(SolutionItems) = preProject
-		src\Database\Dockerfile = src\Database\Dockerfile
-		src\Database\entrypoint.sh = src\Database\entrypoint.sh
-		wait-for-it.sh = wait-for-it.sh
-	EndProjectSection
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SnkUpdateMasterDb", "src\Database\SnkUpdateMasterDb\SnkUpdateMasterDb.sqlproj", "{930180A0-EDF9-4252-A252-A736D4B9F61A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C63FC9EA-53C1-4891-9C6A-440BBAB4578C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpateMaster.Core.IntegrationTests", "tests\SnkUpateMaster.Core.IntegrationTests\SnkUpateMaster.Core.IntegrationTests.csproj", "{45ACFD77-90B0-45A6-901E-A3BD042A272F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpdateMaster.SqlServer", "src\SnkUpdateMaster.SqlServer\SnkUpdateMaster.SqlServer.csproj", "{9294AC84-B9DA-4D4C-AEE1-4B98C667B02D}"
 EndProject
@@ -39,11 +29,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpdateMaster.Ftp.IntegrationTests", "tests\SnkUpdateMaster.Ftp.IntegrationTests\SnkUpdateMaster.Ftp.IntegrationTests.csproj", "{57287071-D68B-4E44-8FD5-DEBD51A0816A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ftp-data", "ftp-data", "{F36ABA36-8B11-4009-BE5E-715B9F33DD99}"
-	ProjectSection(SolutionItems) = preProject
-		tests\ftp-data\manifest.json = tests\ftp-data\manifest.json
-		tests\ftp-data\release-1.0.0.zip = tests\ftp-data\release-1.0.0.zip
-		tests\ftp-data\release-1.0.1.zip = tests\ftp-data\release-1.0.1.zip
-	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpateMaster.Core.IntegrationTests", "tests\SnkUpateMaster.Core.IntegrationTests\SnkUpateMaster.Core.IntegrationTests.csproj", "{24373E95-8BE1-E5A2-DA51-3F7EB46DA1D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,10 +48,6 @@ Global
 		{930180A0-EDF9-4252-A252-A736D4B9F61A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{930180A0-EDF9-4252-A252-A736D4B9F61A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{930180A0-EDF9-4252-A252-A736D4B9F61A}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{45ACFD77-90B0-45A6-901E-A3BD042A272F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{45ACFD77-90B0-45A6-901E-A3BD042A272F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{45ACFD77-90B0-45A6-901E-A3BD042A272F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{45ACFD77-90B0-45A6-901E-A3BD042A272F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9294AC84-B9DA-4D4C-AEE1-4B98C667B02D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9294AC84-B9DA-4D4C-AEE1-4B98C667B02D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9294AC84-B9DA-4D4C-AEE1-4B98C667B02D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -85,6 +68,10 @@ Global
 		{57287071-D68B-4E44-8FD5-DEBD51A0816A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57287071-D68B-4E44-8FD5-DEBD51A0816A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57287071-D68B-4E44-8FD5-DEBD51A0816A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24373E95-8BE1-E5A2-DA51-3F7EB46DA1D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24373E95-8BE1-E5A2-DA51-3F7EB46DA1D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24373E95-8BE1-E5A2-DA51-3F7EB46DA1D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24373E95-8BE1-E5A2-DA51-3F7EB46DA1D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,13 +80,13 @@ Global
 		{0280CD5C-4291-4792-B9DD-AE29DD0A4563} = {2243A8B1-D46E-4313-B881-E068906AB603}
 		{65A25C50-8152-494A-B24D-AE6E9030D1CD} = {2243A8B1-D46E-4313-B881-E068906AB603}
 		{930180A0-EDF9-4252-A252-A736D4B9F61A} = {65A25C50-8152-494A-B24D-AE6E9030D1CD}
-		{45ACFD77-90B0-45A6-901E-A3BD042A272F} = {C63FC9EA-53C1-4891-9C6A-440BBAB4578C}
 		{9294AC84-B9DA-4D4C-AEE1-4B98C667B02D} = {2243A8B1-D46E-4313-B881-E068906AB603}
 		{77B4F54C-48C2-4D0A-A342-0F98B3AB842D} = {C63FC9EA-53C1-4891-9C6A-440BBAB4578C}
 		{32E8B98C-A233-4DB5-BBB2-5843B680D55C} = {2243A8B1-D46E-4313-B881-E068906AB603}
 		{525A89D9-A75E-3BD0-8069-D6B36EF77800} = {2243A8B1-D46E-4313-B881-E068906AB603}
 		{57287071-D68B-4E44-8FD5-DEBD51A0816A} = {C63FC9EA-53C1-4891-9C6A-440BBAB4578C}
 		{F36ABA36-8B11-4009-BE5E-715B9F33DD99} = {C63FC9EA-53C1-4891-9C6A-440BBAB4578C}
+		{24373E95-8BE1-E5A2-DA51-3F7EB46DA1D9} = {C63FC9EA-53C1-4891-9C6A-440BBAB4578C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B369AE71-FA7C-4772-85B2-6FF8E6B2B4C6}

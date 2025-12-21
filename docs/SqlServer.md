@@ -1,40 +1,42 @@
 ### SnkUpdateMaster.SqlServer
 
-Набор расширений для реализации механизма обновлений через Microsoft SQL Server.
+Extensions that fetch update metadata and files directly from Microsoft SQL Server.
 
-**Назначение:** интеграция с Microsoft SQL Server для:
+**Purpose:** integrate with SQL Server to read updates from the `UpdateInfo` / `UpdateFile` tables.
 
-*   получения и загрузки обновлений из таблиц `UpdateInfo` / `UpdateFile`;
-*   конфигурации билдера через extension‑методы.
+#### Provided implementations
 
-Файлы (основные):
+* `SqlServerUpdateInfoProvider : IUpdateInfoProvider`  
+  Uses Dapper and `ISqlConnectionFactory`; selects the latest `[dbo].[UpdateInfo]` row ordered by `ReleaseDate DESC`.
+* `SqlServerUpdateDownloader : IUpdateDownloader`  
+  Reads BLOBs from `[dbo].[UpdateFile]` by `UpdateInfoId` and saves them to the specified `downloadsDir`.
+* `UpdateManagerBuilderSqlServerExtensions`:
+  * `WithSqlServerUpdateInfoProvider(ISqlConnectionFactory sqlConnectionFactory)`
+  * `WithSqlServerUpdateDownloader(ISqlConnectionFactory sqlConnectionFactory, string downloadsDir)`
 
-*   `Configuration/UpdateManagerBuilderSqlServerExtensions.cs`
-*   `Configuration/ReleaseManagerBuilderSqlServerExtensions.cs`
-*   `Database/ISqlConnectionFactory.cs`
-*   `Database/SqlConnectionFactory.cs`
-*   `Database/SnkUpdateMasterContext.cs`
-*   `Database/ReleaseEntityTypeConfiguration.cs`
-*   `Pagination/PageData.cs`
-*   `Pagination/PagedQueryHelper.cs`
-*   `SqlServerUpdateInfoProvider.cs`
-*   `SqlServerUpdateDownloader.cs`
-*   `SqlServerReleaseInfoSource.cs`
-*   `SqlServerReleaseSource.cs`
-*   `SqlServerReleaseSourceFactory.cs`
+**Usage example:**
 
-#### Обновления через SQL Server
+Create tables first:
+```sql
+CREATE TABLE [dbo].[UpdateInfo]
+(
+    [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    [Version] NVARCHAR(256) NOT NULL,
+    [FileName] NVARCHAR(256) NOT NULL,
+    [FileDir] NVARCHAR(256) NULL, -- Can be empty when files are stored in [UpdateFile]
+    [CheckSum] NVARCHAR(256) NOT NULL,
+    [ReleaseDate] DATETIME NOT NULL,
+)
 
-*   `SqlServerUpdateInfoProvider : IUpdateInfoProvider`  
-    Использует Dapper и `ISqlConnectionFactory`, читает последнюю запись из `[dbo].[UpdateInfo]` по `ReleaseDate DESC`.
-*   `SqlServerUpdateDownloader : IUpdateDownloader`  
-    Читает BLOB из `[dbo].[UpdateFile]` по `UpdateInfoId`, сохраняет в указанную директорию (`downloadsDir`), поддерживает прогресс.
-*   `UpdateManagerBuilderSqlServerExtensions`:
-    *   `WithSqlServerUpdateInfoProvider(ISqlConnectionFactory sqlConnectionFactory)`
-    *   `WithSqlServerUpdateDownloader(ISqlConnectionFactory sqlConnectionFactory, string downloadsDir)`
+CREATE TABLE [dbo].[UpdateFile]
+(
+    [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    [UpdateInfoId] INT NOT NULL,
+    [FileData] VARBINARY(MAX) NOT NULL
+)
+```
 
-**Пример конфигурации:**
-
+Build the update manager:
 ```csharp
 using SnkUpdateMaster.Core;
 using SnkUpdateMaster.SqlServer.Configuration;
@@ -53,3 +55,5 @@ var updateManager = new UpdateManagerBuilder()
     .WithSqlServerUpdateDownloader(sqlConnectionFactory, downloadsDir)
     .Build();
 ```
+
+> 📌 If update archives are stored in `UpdateFile`, leave `FileDir` empty in `UpdateInfo`—the downloader will pick the right source automatically.

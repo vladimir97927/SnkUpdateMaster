@@ -4,7 +4,22 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Title>SnkUpdateMaster.SqlServer</Title>
+    <Authors>Vladimir Vyplaven</Authors>
+    <PackageProjectUrl>https://github.com/vladimir97927/SnkUpdateMaster</PackageProjectUrl>
+    <Description>Extensions that fetch update metadata and files directly from Microsoft SQL Server.</Description>
+    <PackageReadmeFile>SqlServer.md</PackageReadmeFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\docs\SqlServer.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SnkUpdateMaster.Core\SnkUpdateMaster.Core.csproj" />

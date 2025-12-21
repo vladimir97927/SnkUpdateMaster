@@ -4,47 +4,51 @@
 ![platform: .NET](https://img.shields.io/badge/platform-.NET-informational)
 ![language: C#](https://img.shields.io/badge/language-C%23-blue)
 
-> **⚠️ Внимание**: Проект в разработке. API и структура могут меняться.
+**Documentation:** English | [Русский](README.ru.md)
 
-Проект является универсальной библиотекой для управления обновлениями приложений.
+> **⚠️ Heads‑up:** The project is under active development. API and structure may change.
 
-## 🌟 Основная идея
+SnkUpdateMaster is a modular library for managing desktop application updates. It lets you store release metadata in SQL Server or on FTP, download and install ZIP archives with integrity checks, and keep track of the currently installed version.
 
-Проект представляет собой модульную библиотеку, предназначенную для управления процессом обновления настольных приложений. Ключевой особенностью является поддержка кастомизации на всех этапах работы: от получения метаданных до установки новых версий, что позволяет адаптировать решение под уникальные требования инфраструктуры.
+## 🌟 Core idea
 
-**Ключевые возможности**
+The library covers the full update cycle: discover an available version, download the file, verify its checksum, and safely apply the update with a backup. All key components—metadata provider, downloader, integrity verifier, and installer—are dependencies that can be swapped with your own implementations.
 
-1. Выбор источника обновлений
-   - HTTP/S-сервер.❌
-   - FTP/SFTP-сервер.✅
-   - Реляционные базы данных.✅
-   - GitHub Releases.❌
-2. Выбор установщика
-   - Архивы.✅
-   - Исполняемые файлы.❌
-   - Скрипты.❌
-3. Контроль целостности данных. Выбор алгоритма хэширования
+**Key capabilities**
 
-## ⚙️ Требования
+1. Choose the update source
+   - FTP/SFTP server (manifest and ZIP archives).
+   - Microsoft SQL Server (`UpdateInfo` and `UpdateFile` tables).
+2. Flexible installation: unzip the update over the app directory with backup.
+3. SHA‑256 integrity check before installation.
+4. Fluent configuration through `UpdateManagerBuilder`.
 
-### Среда разработки
-
-- **.NET SDK 8.0**
-- **Docker** и **Docker Compose** (для локального поднятия SQL Server и FTP‑сервера через `docker-compose.yml`)
-
-### Среда выполнения
+## ⚙️ Requirements
 
 - **.NET Runtime 8.0**  
-  (либо self‑contained сборка приложения под целевую ОС)
-- Настроен как минимум один источник обновлений:
-  - **FTP‑сервер** — доступен извне;
-  - **или SQL Server** — поддерживается Microsoft SQL Server 2019+.
+  (or a self‑contained build for the target OS)
+- At least one update source configured:
+  - **FTP server** — reachable externally;
+  - **or SQL Server** — Microsoft SQL Server 2019+ supported.
 
-## 🚀 Быстрый старт (Sql Server + FTP)
+## 🚀 Quick start (SQL Server + FTP)
 
-Пример использования с хранением метаданных обновлений в БД и файлов обновлений на FTP-сервере. Текущая версия приложения хранится в файле `[app directory]\version`.
-Целостость файлов обновлений проверяется хэш функцией алгоритмом sha256. Файлы обновления должны содержаться в zip архиве.
+Example: store update metadata in SQL Server, keep update files on an FTP server. The current app version is stored in `[app directory]\version` as `major.minor.build`. Update files are ZIP archives; integrity is verified via SHA‑256.
 
+Create the table first:
+```sql
+CREATE TABLE [dbo].[UpdateInfo]
+(
+    [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    [Version] NVARCHAR(256) NOT NULL,
+    [FileName] NVARCHAR(256) NOT NULL,
+    [FileDir] NVARCHAR(256) NULL, -- Path to the file on the FTP server
+    [CheckSum] NVARCHAR(256) NOT NULL,
+    [ReleaseDate] DATETIME NOT NULL,
+)
+```
+
+Create and use `UpdateManager` to download and install updates:
 ```csharp
 using SnkUpdateMaster.Core;
 using SnkUpdateMaster.Ftp;
@@ -54,7 +58,7 @@ using SnkUpdateMaster.SqlServer.Database;
 
 var ftpClientFactory = new AsyncFtpClientFactory("localhost", "snk", "snk@12345", 2121);
 var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString);
-var appDir = "app";
+var appDir = "app"; // Path to the application folder
 var downloadsDir = "downloads";
 
 var updateManager = new UpdateManagerBuilder()
@@ -67,103 +71,100 @@ var updateManager = new UpdateManagerBuilder()
 
 var progress = new Progress<double>();
 var updated = await updateManager.CheckAndInstallUpdatesAsync(progress);
+
+Console.WriteLine(updated ? "Update installed" : "Already up to date");
 ```
 
-## 🏗️ Архитектура
+> 💡 You can mix FTP and SQL as you like: keep metadata in the database and archives on the file server, or vice versa.
 
-Корневые каталоги:
+## 📚 Project modules
+- [Core — application update building blocks.](docs/Core.md)
+- [SqlServer — update flow backed by a relational database.](docs/SqlServer.md)
+- [SnkUpdateMasterDb — database project.](docs/SnkUpdateMasterDb.md)
+- [Ftp — update flow backed by an FTP server.](docs/Ftp.md)
 
-```text
-src/
-  SnkUpdateMaster.Core            — основные компоненты работы приложения 
-  SnkUpdateMaster.Ftp             — интеграция с FTP
-  SnkUpdateMaster.SqlServer       — интеграция с SQL Server
-  SnkUpdateMaster.ReleasePublisher.CLI — консольный загрузчик релизов (**временно не работает** ⚠️)
-  Database                        — Docker-окружение и проект БД
-tests/                            — интеграционные тесты и тестовые данные
-docker-compose.yml                — инфраструктура (SQL + FTP)
-````
+## 🏗️ Library architecture
 
-## 📚 Модули проекта
-- [Core - основные компоненты работы приложения.](docs/Core.md)
-- [SqlServer - реализация работы с обновлениями через реляционную базу данных.](docs/SqlServer.md)
-- [SnkUpdateMasterDb - проект базы данных.](docs/SnkUpdateMasterDb.md)
-- [Ftp - реализация работы с обновлениями через FTP-сервер](docs/Ftp.md)
+- **Core** — defines interfaces (`IUpdateInfoProvider`, `IUpdateDownloader`, `IInstaller`, `IIntegrityVerifier`, `ICurrentVersionManager`) and base implementations.
+- **Ftp** — metadata provider and file downloader over FTP, plus FTP client factory.
+- **SqlServer** — provider and downloader working with SQL Server tables; uses Dapper.
+- **SnkUpdateMasterDb** — SQL Server infrastructure in Docker with ready-to-use schema scripts.
 
-## 🧪 Тестирование через Docker
+Extend the library by registering your own interface implementations or adding extension methods to `UpdateManagerBuilder`.
 
-Для интеграционных тестов библиотека использует инфраструктуру на базе Docker Compose.  
-Файлы `docker-compose.yml` в корне репозитория описаны необходимые сервисы. Тесты запускаются через стандартные инструменты .NET, подключаясь к инфраструктуре внутри Docker.
+## 🧪 Testing with Docker
 
-### Требования
+Integration tests rely on Docker Compose. The root `docker-compose.yml` describes required services. Tests are run via standard .NET tooling against the Docker infra.
+
+### Requirements
 
 - **Docker** / **Docker Desktop**;
 - **Docker Compose v2**;
 - **.NET SDK 8.0**.
 
-### 1. Запуск инфраструктуры
+### 1. Start the infrastructure
 
-Из корня репозитория:
+From the repo root:
 
 ```bash
 docker compose up
 ```
-### 2. Запуск тестов
 
-Когда контейнеры подняты и база данных готова, выполните:
+The command starts SQL Server and FTP with test data. On first run, creating tables may take up to 30 seconds.
+
+### 2. Run tests
+
+When containers are up and the database is ready, run:
 
 ```bash
 dotnet test SnkUpdateMaster.sln
 ```
 
-или, при необходимости, отдельный проект с тестами:
+or a specific test project:
 
 ```bash
-dotnet test tests/ИмяПроекта.Tests/ИмяПроекта.Tests.csproj
+dotnet test tests/ProjectName.Tests/ProjectName.Tests.csproj
 ```
 
-Тесты используют строку подключения, настроенную на работу с БД из Docker.
-При необходимости параметры подключения (порт, логин/пароль и т.п.) можно переопределить в `docker-compose.override.yml`.
+Tests use the connection string configured for Docker. Connection parameters (port, login/password, etc.) can be overridden in `docker-compose.override.yml` or via environment variables.
 
-### 3. Завершение работы и очистка данных
+### 3. Tear down and clean up
 
-После прогонки тестов контейнеры можно остановить и удалить:
+After tests, stop and remove containers:
 
 ```bash
 docker compose down
 ```
 
-## 🧪 Тестирование без Docker
+## 🧪 Testing without Docker
 
-Используется, если настроена локальная среда разработки. Все внешние зависимости (база данных, FTP-сервер) в этом случае должны быть запущены и доступны из тестовых проектов.
+Use this mode when you have a local environment with dependencies running. SQL Server and FTP must be available to the test projects.
 
-### Требования
+### Requirements
 
 - **.NET SDK 8.0**;
-- настроен и запущен **SQL Server** для тестовой базы;
-- настроен и запущен **FTP-сервер** для интеграционных тестов.
+- configured and running **SQL Server** for the test DB;
+- configured and running **FTP server** for integration tests.
 
-### Настройка окружения
+### Environment variables
 
-Определите переменные среды для интеграционных тестов.
+**FTP tests** (`SnkUpdateMaster.Ftp.IntegrationTests`):
 
-**FTP‑тесты** (`SnkUpdateMaster.Ftp.IntegrationTests`):
+- `SNK_UPDATE_MASTER__FTP_HOST` — FTP host (default `localhost`)
+- `SNK_UPDATE_MASTER__FTP_PORT` — FTP port (default `2121`)
+- `SNK_UPDATE_MASTER__FTP_USER` — login (default `snk`)
+- `SNK_UPDATE_MASTER__FTP_PASS` — password (default `snk@12345`)
 
-- `SNK_UPDATE_MASTER__FTP_HOST` — хост FTP (по умолчанию `localhost`)
-- `SNK_UPDATE_MASTER__FTP_PORT` — порт FTP (по умолчанию `2121`)
-- `SNK_UPDATE_MASTER__FTP_USER` — логин (по умолчанию `snk`)
-- `SNK_UPDATE_MASTER__FTP_PASS` — пароль (по умолчанию `snk@12345`)
+**SQL Server tests** (`SnkUpdateMaster.SqlServer.IntegrationTests`):
 
-**SQL Server‑тесты** (`SnkUpdateMaster.SqlServer.IntegrationTests`):
-
-- `SNK_UPDATE_MASTER__SQL_CONN` — строка подключения к SQL Server  
-  По умолчанию:
+- `SNK_UPDATE_MASTER__SQL_CONN` — SQL Server connection string  
+  Default:  
   `Server=localhost,1455;Database=SnkUpdateMasterDb;User Id=sa;Password=Snk@12345;Encrypt=False;TrustServerCertificate=True`
 
+## 🧭 Useful scenarios
 
+- **FTP only** — metadata and archives on FTP: use `WithFtpUpdateInfoProvider` and `WithFtpUpdateDownloader`.
+- **SQL Server only** — metadata and files in the DB: use `WithSqlServerUpdateInfoProvider` and `WithSqlServerUpdateDownloader`.
+- **Hybrid** — metadata in SQL Server, files on FTP: combine providers as in the Quick Start example.
 
-
-
-
-
-
+If you need another source (REST API, file system, etc.), implement `IUpdateInfoProvider` and/or `IUpdateDownloader` and register them via `UpdateManagerBuilder.AddDependency`.

@@ -4,6 +4,27 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Title>SnkUpdateMaster.Core</Title>
+    <Authors>Vladimir Vyplaven</Authors>
+    <Description>The main library module for downloading and installing update files for your software.
+The module requires implementation of the following interfaces:
+- IUpdateInfoProvider - retrieving update information from an external source.
+- IUpdateDownloader - downloading update files from an external source.
+To use existing implementations, you need to download:
+- SnkUpdateMaster.SqlServer - using a SQL Server database as an external source.
+- SnkUpdateMaster.Ftp - using an FTP server as an external source.</Description>
+    <PackageProjectUrl>https://github.com/vladimir97927/SnkUpdateMaster</PackageProjectUrl>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageReadmeFile>Core.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\docs\Core.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
