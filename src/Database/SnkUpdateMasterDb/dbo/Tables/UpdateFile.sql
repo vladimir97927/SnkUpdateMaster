@@ -1,0 +1,6 @@
+﻿CREATE TABLE [dbo].[UpdateFile]
+(
+	[Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[UpdateInfoId] INT NOT NULL,
+	[FileData] VARBINARY(MAX) NOT NULL
+)

@@ -1,0 +1,28 @@
+﻿using SnkUpdateMaster.SqlServer.IntegrationTests.SeedWork;
+using SnkUpdateMaster.SqlServer.Database;
+using NUnit.Framework;
+
+namespace SnkUpdateMaster.SqlServer.IntegrationTests
+{
+    [TestFixture]
+    internal class UpdateInfoProviderTests : TestBase
+    {
+        [Test]
+        public async Task GetLastUpdatesFromSqlServerSourceTest()
+        {
+            var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString);
+            var updateInfoProvider = new SqlServerUpdateInfoProvider(sqlConnectionFactory);
+            var lastUpdates = await updateInfoProvider.GetLastUpdatesAsync();
+
+            Assert.That(lastUpdates, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(lastUpdates.Id, Is.EqualTo(1));
+                Assert.That(lastUpdates.Version.ToString(), Is.EqualTo("1.0.2"));
+                Assert.That(lastUpdates.FileName, Is.EqualTo("AppTest.zip"));
+                Assert.That(lastUpdates.Checksum, Is.EqualTo("da6499760769f971d007ae769ea91e3bd262b0a9fe6fa5a30ac63e853c7603cc"));
+                Assert.That(lastUpdates.ReleaseDate, Is.EqualTo(new DateTime(2025, 12, 3)));
+            });
+        }
+    }
+}
