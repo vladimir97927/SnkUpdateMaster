@@ -2,15 +2,7 @@
 
 **Назначение:** реализация источника информации об обновлениях и загрузчика обновлений через FTP.
 
-Файлы:
-
-*   `AsyncFtpClientFactory.cs`
-*   `IAsyncFtpClientFactory.cs`
-*   `FtpUpdateInfoProvider.cs`
-*   `FtpUpdateDownloader.cs`
-*   `Configuration/UpdateManagerBuilderFtpExtensions.cs`
-
-Ключевые элементы:
+#### Предоставляемые реализации
 
 *   `IAsyncFtpClientFactory` / `AsyncFtpClientFactory`  
     Инкапсулирует создание и подключение `FluentFTP.AsyncFtpClient`. Позволяет переиспользовать подключение, автоматически переподключаться.

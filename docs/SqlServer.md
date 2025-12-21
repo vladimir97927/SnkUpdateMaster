@@ -2,39 +2,41 @@
 
 Набор расширений для реализации механизма обновлений через Microsoft SQL Server.
 
-**Назначение:** интеграция с Microsoft SQL Server для:
+**Назначение:** интеграция с Microsoft SQL Server для получения и загрузки обновлений из таблиц `UpdateInfo` / `UpdateFile`.
 
-*   получения и загрузки обновлений из таблиц `UpdateInfo` / `UpdateFile`;
-*   конфигурации билдера через extension‑методы.
-
-Файлы (основные):
-
-*   `Configuration/UpdateManagerBuilderSqlServerExtensions.cs`
-*   `Configuration/ReleaseManagerBuilderSqlServerExtensions.cs`
-*   `Database/ISqlConnectionFactory.cs`
-*   `Database/SqlConnectionFactory.cs`
-*   `Database/SnkUpdateMasterContext.cs`
-*   `Database/ReleaseEntityTypeConfiguration.cs`
-*   `Pagination/PageData.cs`
-*   `Pagination/PagedQueryHelper.cs`
-*   `SqlServerUpdateInfoProvider.cs`
-*   `SqlServerUpdateDownloader.cs`
-*   `SqlServerReleaseInfoSource.cs`
-*   `SqlServerReleaseSource.cs`
-*   `SqlServerReleaseSourceFactory.cs`
-
-#### Обновления через SQL Server
+#### Предоставляемые реализации
 
 *   `SqlServerUpdateInfoProvider : IUpdateInfoProvider`  
     Использует Dapper и `ISqlConnectionFactory`, читает последнюю запись из `[dbo].[UpdateInfo]` по `ReleaseDate DESC`.
 *   `SqlServerUpdateDownloader : IUpdateDownloader`  
-    Читает BLOB из `[dbo].[UpdateFile]` по `UpdateInfoId`, сохраняет в указанную директорию (`downloadsDir`), поддерживает прогресс.
+    Читает BLOB из `[dbo].[UpdateFile]` по `UpdateInfoId`, сохраняет в указанную директорию (`downloadsDir`).
 *   `UpdateManagerBuilderSqlServerExtensions`:
     *   `WithSqlServerUpdateInfoProvider(ISqlConnectionFactory sqlConnectionFactory)`
     *   `WithSqlServerUpdateDownloader(ISqlConnectionFactory sqlConnectionFactory, string downloadsDir)`
 
-**Пример конфигурации:**
+**Пример использования:**
 
+Предварительно необходимо создать таблицы в БД:
+```sql
+CREATE TABLE [dbo].[UpdateInfo]
+(
+	[Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[Version] NVARCHAR(256) NOT NULL,
+	[FileName] NVARCHAR(256) NOT NULL,
+	[FileDir] NVARCHAR(256) NULL, --Может быть пустым при хранении файлов обновления в таблице [UpdateFile]
+	[CheckSum] NVARCHAR(256) NOT NULL,
+	[ReleaseDate] DATETIME NOT NULL,
+)
+
+CREATE TABLE [dbo].[UpdateFile]
+(
+	[Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[UpdateInfoId] INT NOT NULL,
+	[FileData] VARBINARY(MAX) NOT NULL
+)
+```
+
+Создание менеджера обновлений:
 ```csharp
 using SnkUpdateMaster.Core;
 using SnkUpdateMaster.SqlServer.Configuration;
