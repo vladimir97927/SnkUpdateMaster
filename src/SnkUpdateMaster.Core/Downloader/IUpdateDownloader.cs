@@ -25,6 +25,6 @@
         /// <see cref="string"/> - полный путь к загруженному файлу
         /// </para>
         /// </returns>
-        Task<string> DownloadUpdateAsync(UpdateInfo updateInfo, IProgress<double> progress, CancellationToken cancellationToken = default);
+        Task<string> DownloadUpdateAsync(UpdateInfo updateInfo, IProgress<double>? progress = null, CancellationToken cancellationToken = default);
     }
 }

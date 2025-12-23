@@ -18,10 +18,11 @@ namespace SnkUpdateMaster.SqlServer
         /// Возвращает информацию о последнем опубликованном обновлении из таблицы UpdateInfo.
         /// </summary>
         /// <returns>Объект с данными обновления <see cref="UpdateInfo"/> или null, если обновления отсутствуют</returns>
-        public async Task<UpdateInfo?> GetLastUpdatesAsync()
+        public async Task<UpdateInfo?> GetLastUpdatesAsync(CancellationToken cancellationToken = default)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
-            var updateInfo = await connection.QueryFirstOrDefaultAsync<UpdateInfo>(
+
+            const string sql =
                 "SELECT TOP(1) " +
                 "u.[Id], " +
                 "u.[Version], " +
@@ -30,7 +31,11 @@ namespace SnkUpdateMaster.SqlServer
                 "u.[ReleaseDate], " +
                 "u.[FileDir] " +
                 "FROM [dbo].[UpdateInfo] u " +
-                "ORDER BY u.[ReleaseDate] DESC");
+                "ORDER BY u.[ReleaseDate] DESC";
+
+            var command = new CommandDefinition(sql, cancellationToken: cancellationToken);
+
+            var updateInfo = await connection.QueryFirstOrDefaultAsync<UpdateInfo>(command);
 
             return updateInfo;
         }

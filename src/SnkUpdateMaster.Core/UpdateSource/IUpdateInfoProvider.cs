@@ -24,6 +24,6 @@
         /// <see langword="null"/> - если обновления отсутствуют
         /// </para>
         /// </returns>
-        Task<UpdateInfo?> GetLastUpdatesAsync();
+        Task<UpdateInfo?> GetLastUpdatesAsync(CancellationToken cancellationToken = default);
     }
 }

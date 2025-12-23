@@ -21,21 +21,21 @@ namespace SnkUpdateMaster.Core
     /// 
     /// <para><strong>Зависимости:</strong></para>
     /// <param name="currentVersionManager">Менеджер текущей версии</param>
-    /// <param name="updateSource">Источник информации об обновлениях</param>
+    /// <param name="updateInfoProvider">Источник информации об обновлениях</param>
     /// <param name="integrityVerifier">Верификатор целостности файлов</param>
     /// <param name="installer">Установщик обновлений</param>
     /// <param name="updateDownloader">Загрузчик обновлений</param>
     /// </remarks>
     public class UpdateManager(
         ICurrentVersionManager currentVersionManager,
-        IUpdateInfoProvider updateSource,
+        IUpdateInfoProvider updateInfoProvider,
         IIntegrityVerifier integrityVerifier,
         IInstaller installer,
         IUpdateDownloader updateDownloader)
     {
         private readonly ICurrentVersionManager _currentVersionManager = currentVersionManager;
 
-        private readonly IUpdateInfoProvider _updateSource = updateSource;
+        private readonly IUpdateInfoProvider _updateInfoProvider = updateInfoProvider;
 
         private readonly IIntegrityVerifier _integrityVerifier = integrityVerifier;
 
@@ -58,28 +58,29 @@ namespace SnkUpdateMaster.Core
         /// <exception cref="IOException">
         /// Ошибка ввода-вывода при работе с файлами
         /// </exception>
-        public async Task<bool> CheckAndInstallUpdatesAsync(IProgress<double> progress, CancellationToken cancellationToken = default)
+        public async Task<bool> CheckAndInstallUpdatesAsync(IProgress<double>? progress = null, CancellationToken cancellationToken = default)
         {
-            var currentVersion = await _currentVersionManager.GetCurrentVersionAsync();
-            var lastUpdateInfo = await _updateSource.GetLastUpdatesAsync();
+            var currentVersion = await _currentVersionManager.GetCurrentVersionAsync(cancellationToken);
+            var lastUpdateInfo = await _updateInfoProvider.GetLastUpdatesAsync(cancellationToken);
             if (lastUpdateInfo == null || lastUpdateInfo.Version <= currentVersion)
             {
                 return false;
             }
 
-            var downloadProgress = new Progress<double>(p => progress.Report(p * 0.7));
+            var downloadProgress = progress == null ? null : new Progress<double>(p => progress.Report(p * 0.7));
             var updateFilePath = await _updateDownloader.DownloadUpdateAsync(lastUpdateInfo, downloadProgress, cancellationToken);
-            progress.Report(0.75);
+            progress?.Report(0.75);
             if (!_integrityVerifier.VerifyFile(updateFilePath, lastUpdateInfo.Checksum))
             {
-                return false;
+                SafeDeleteFile(updateFilePath);
+                throw new IntegrityVerificationException(updateFilePath, lastUpdateInfo.Checksum);
             }
 
-            progress.Report(0.8);
-            var installProgress = new Progress<double>(p => progress.Report(0.8 + p * 0.2));
+            progress?.Report(0.8);
+            var installProgress = progress == null ? null : new Progress<double>(p => progress.Report(0.8 + p * 0.2));
             await _installer.InstallAsync(updateFilePath, installProgress, cancellationToken);
-            await _currentVersionManager.UpdateCurrentVersionAsync(lastUpdateInfo.Version);
-            progress.Report(1);
+            await _currentVersionManager.UpdateCurrentVersionAsync(lastUpdateInfo.Version, cancellationToken);
+            progress?.Report(1);
 
             return true;
         }
@@ -90,9 +91,24 @@ namespace SnkUpdateMaster.Core
         /// <returns>
         /// Текущая версия приложения или null, если версия не определена
         /// </returns>
-        public async Task<Version?> GetCurrentVersionAsync()
+        public async Task<Version?> GetCurrentVersionAsync(CancellationToken cancellationToken = default)
         {
-            return await _currentVersionManager.GetCurrentVersionAsync();
+            return await _currentVersionManager.GetCurrentVersionAsync(cancellationToken);
+        }
+
+        private static void SafeDeleteFile(string filePath)
+        {
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+            }
+            catch
+            {
+                // ignored
+            }
         }
     }
 }

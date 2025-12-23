@@ -28,7 +28,7 @@ namespace SnkUpdateMaster.SqlServer
         /// <param name="cancellationToken">Токен отмены операции</param>
         /// <returns>Полный путь к скачанному файлу</returns>
         /// <exception cref="KeyNotFoundException">Файл обновления не найден в базе данных</exception>
-        public async Task<string> DownloadUpdateAsync(UpdateInfo updateInfo, IProgress<double> progress, CancellationToken cancellationToken = default)
+        public async Task<string> DownloadUpdateAsync(UpdateInfo updateInfo, IProgress<double>? progress = null, CancellationToken cancellationToken = default)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
             using var command = new SqlCommand(
@@ -54,7 +54,7 @@ namespace SnkUpdateMaster.SqlServer
 
                 bytesReadTotal += bytesRead;
 
-                if (blobStream.CanSeek && blobStream.Length > 0)
+                if (progress != null && blobStream.CanSeek && blobStream.Length > 0)
                 {
                     var percentage = (double)bytesReadTotal / blobStream.Length;
                     progress.Report(percentage);

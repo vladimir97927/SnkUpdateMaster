@@ -31,7 +31,7 @@ namespace SnkUpdateMaster.Ftp
         /// <exception cref="FtpException">Не удалось скачать файл обновления с сервера.</exception>
         public async Task<string> DownloadUpdateAsync(
             UpdateInfo updateInfo,
-            IProgress<double> progress,
+            IProgress<double>? progress = null,
             CancellationToken cancellationToken = default)
         {
             var client = await _ftpClientFactory.GetConnectClientAsync(cancellationToken);
@@ -43,18 +43,22 @@ namespace SnkUpdateMaster.Ftp
             {
                 throw new FileNotFoundException($"Update file not found {remoteFilePath}");
             }
-            var ftpProgress = new Progress<FtpProgress>(p =>
-            {
-                if (p.Progress < 0)
+            var ftpProgress = progress == null
+                ? null
+                : new Progress<FtpProgress>(p =>
                 {
-                    progress.Report(0);
-                }
-                else
-                {
-                    progress.Report(p.Progress / 100.0);
-                }
-            });
-            
+                    if (p.Progress < 0)
+                    {
+                        progress.Report(0);
+                    }
+                    else
+                    {
+                        progress.Report(p.Progress / 100.0);
+                    }
+                });
+
+            Directory.CreateDirectory(_downloadsDir);
+
             var localFilePath = Path.Combine(_downloadsDir, updateInfo.FileName);
             var status = await client.DownloadFile(
                 localFilePath,

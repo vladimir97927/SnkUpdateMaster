@@ -50,7 +50,7 @@ namespace SnkUpdateMaster.Core.Installer
         /// <exception cref="UnauthorizedAccessException">
         /// Отсутствуют права на запись в целевую директорию
         /// </exception>
-        public async Task InstallAsync(string updateFilePath, IProgress<double> progress, CancellationToken cancellationToken = default)
+        public async Task InstallAsync(string updateFilePath, IProgress<double>? progress = null, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace SnkUpdateMaster.Core.Installer
             }
         }
 
-        private Task CreateBackupAsync(IProgress<double> progress, CancellationToken cancellationToken)
+        private Task CreateBackupAsync(IProgress<double>? progress, CancellationToken cancellationToken)
         {
             return Task.Run(() =>
             {
@@ -80,12 +80,12 @@ namespace SnkUpdateMaster.Core.Installer
                     Directory.CreateDirectory(Path.GetDirectoryName(backupPath)!);
                     File.Copy(file, backupPath, true);
 
-                    progress.Report((double)i / files.Length * 0.5);
+                    progress?.Report((double)i / files.Length * 0.5);
                 }
             }, cancellationToken);
         }
 
-        private Task ExtractUpdateAsync(string updateFilePath, IProgress<double> progress, CancellationToken cancellationToken)
+        private Task ExtractUpdateAsync(string updateFilePath, IProgress<double>? progress, CancellationToken cancellationToken)
         {
             return Task.Run(() =>
             {
@@ -107,7 +107,7 @@ namespace SnkUpdateMaster.Core.Installer
                         entry.ExtractToFile(destPath, true);
                     }
 
-                    progress.Report(0.5 + (double)i / totalEntries * 0.5);
+                    progress?.Report(0.5 + (double)i / totalEntries * 0.5);
                 }
             }, cancellationToken);
         }

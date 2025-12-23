@@ -29,10 +29,10 @@ namespace SnkUpdateMaster.Ftp
         /// </summary>
         /// <returns>Объект с данными обновления <see cref="UpdateInfo"/> или null, если обновления отсутствуют.</returns>
         /// <exception cref="FtpException">Не удалось скачать файл с данными об обновлении с FTP-сервера.</exception>
-        public async Task<UpdateInfo?> GetLastUpdatesAsync()
+        public async Task<UpdateInfo?> GetLastUpdatesAsync(CancellationToken cancellationToken = default)
         {
-            var client = await _ftpClientFactory.GetConnectClientAsync();
-            if (!await client.FileExists(_updateInfoFilePath))
+            var client = await _ftpClientFactory.GetConnectClientAsync(cancellationToken);
+            if (!await client.FileExists(_updateInfoFilePath, cancellationToken))
             {
                 return null;
             }
@@ -40,7 +40,7 @@ namespace SnkUpdateMaster.Ftp
             {
                 byte[] fileBytes;
                 using var stream = new MemoryStream();
-                bool isSuccess = await client.DownloadStream(stream, _updateInfoFilePath);
+                bool isSuccess = await client.DownloadStream(stream, _updateInfoFilePath, token: cancellationToken);
                 if (!isSuccess)
                 {
                     throw new FtpException($"Can't download update info file from {_updateInfoFilePath}");
