@@ -36,7 +36,9 @@ namespace SnkUpdateMaster.Ftp
         {
             var client = await _ftpClientFactory.GetConnectClientAsync(cancellationToken);
 
-            var remoteFilePath = Path.Combine(updateInfo.FileDir ?? string.Empty, updateInfo.FileName);
+            var remoteFilePath = Path
+                .Combine(updateInfo.FileDir ?? string.Empty, updateInfo.FileName)
+                .Replace("\\", "/");
             if (!await client.FileExists(remoteFilePath, cancellationToken))
             {
                 throw new FileNotFoundException($"Update file not found {remoteFilePath}");
