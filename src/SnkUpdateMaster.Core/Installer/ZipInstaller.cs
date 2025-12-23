@@ -56,6 +56,7 @@ namespace SnkUpdateMaster.Core.Installer
             {
                 await CreateBackupAsync(progress, cancellationToken);
                 await ExtractUpdateAsync(updateFilePath, progress, cancellationToken);
+                CleanupBackup();
             }
             catch
             {
@@ -124,6 +125,21 @@ namespace SnkUpdateMaster.Core.Installer
             catch
             {
                 throw;
+            }
+        }
+
+        private void CleanupBackup()
+        {
+            try
+            {
+                if (Directory.Exists(_backupDir))
+                {
+                    Directory.Delete(_backupDir, true);
+                }
+            }
+            catch
+            {
+                // ignored
             }
         }
     }
