@@ -32,12 +32,13 @@ namespace SnkUpdateMaster.Ftp
         public async Task<UpdateInfo?> GetLastUpdatesAsync(CancellationToken cancellationToken = default)
         {
             var client = await _ftpClientFactory.GetConnectClientAsync(cancellationToken);
-            if (!await client.FileExists(_updateInfoFilePath, cancellationToken))
-            {
-                return null;
-            }
+
             try
             {
+                if (!await client.FileExists(_updateInfoFilePath, cancellationToken))
+                {
+                    return null;
+                }
                 byte[] fileBytes;
                 using var stream = new MemoryStream();
                 bool isSuccess = await client.DownloadStream(stream, _updateInfoFilePath, token: cancellationToken);
@@ -49,9 +50,9 @@ namespace SnkUpdateMaster.Ftp
                 var updateInfo = _updateInfoFileParser.Parse(fileBytes);
                 return updateInfo;
             }
-            catch (Exception)
+            finally
             {
-                throw;
+                await client.DisposeAsync();
             }
         }
     }
