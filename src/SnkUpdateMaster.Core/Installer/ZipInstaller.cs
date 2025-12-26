@@ -34,8 +34,10 @@ namespace SnkUpdateMaster.Core.Installer
         /// </exception>
         public ZipInstaller(string appDir)
         {
-            _appDir = appDir;
-            _backupDir = Path.Combine(_appDir, "backup");
+            _appDir = Path.GetFullPath(appDir);
+            var appFolderName = Path.GetFileName(Path.TrimEndingDirectorySeparator(_appDir));
+            var backupBaseDir = Path.GetDirectoryName(appDir) ?? Path.GetTempPath();
+            _backupDir = Path.Combine(backupBaseDir, $"{appFolderName}_backup");
         }
 
         /// <summary>
@@ -69,9 +71,11 @@ namespace SnkUpdateMaster.Core.Installer
         {
             return Task.Run(() =>
             {
+                CleanupBackup();
                 Directory.CreateDirectory(_backupDir);
                 var files = Directory.GetFiles(_appDir, "*", SearchOption.AllDirectories);
-                for (var i = 0; i < files.Length; i++)
+                var filesCount = files.Length;
+                for (var i = 0; i < filesCount; i++)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -81,7 +85,12 @@ namespace SnkUpdateMaster.Core.Installer
                     Directory.CreateDirectory(Path.GetDirectoryName(backupPath)!);
                     File.Copy(file, backupPath, true);
 
-                    progress?.Report((double)i / files.Length * 0.5);
+                    progress?.Report((double)(i + 1) / filesCount * 0.5);
+                }
+
+                if (filesCount == 0)
+                {
+                    progress?.Report(0.5);
                 }
             }, cancellationToken);
         }
@@ -92,6 +101,11 @@ namespace SnkUpdateMaster.Core.Installer
             {
                 using var archive = ZipFile.OpenRead(updateFilePath);
                 var totalEntries = archive.Entries.Count;
+                if (totalEntries == 0)
+                {
+                    progress?.Report(1.0);
+                    return;
+                }
                 for (int i = 0; i < totalEntries; i++)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
@@ -108,7 +122,7 @@ namespace SnkUpdateMaster.Core.Installer
                         entry.ExtractToFile(destPath, true);
                     }
 
-                    progress?.Report(0.5 + (double)i / totalEntries * 0.5);
+                    progress?.Report(0.5 + (double)(i + 1) / totalEntries * 0.5);
                 }
             }, cancellationToken);
         }
@@ -119,7 +133,11 @@ namespace SnkUpdateMaster.Core.Installer
                 return;
             try
             {
-                Directory.Delete(_appDir, true);
+                if (Directory.Exists(_appDir))
+                {
+                    Directory.Delete(_appDir, true);
+                }
+
                 Directory.Move(_backupDir, _appDir);
             }
             catch
