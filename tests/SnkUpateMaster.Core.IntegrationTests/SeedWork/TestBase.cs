@@ -8,6 +8,10 @@
 
         protected Version CurrentVersion = new("1.0.0");
 
+        protected string BackupDir => Path.Combine(
+            Path.GetDirectoryName(Path.GetFullPath(AppDir)) ?? Path.GetTempPath(),
+            $"{Path.GetFileName(Path.TrimEndingDirectorySeparator(Path.GetFullPath(AppDir)))}_backup");
+
         [SetUp]
         public async Task BeforeEachTest()
         {
@@ -18,7 +22,20 @@
         [TearDown]
         public void AfterEachTest()
         {
-            Directory.Delete(AppDir, true);
+            if (Directory.Exists(AppDir))
+            {
+                Directory.Delete(AppDir, true);
+            }
+
+            if (Directory.Exists(BackupDir))
+            {
+                Directory.Delete(BackupDir, true);
+            }
+
+            if (File.Exists(VersionFileName))
+            {
+                File.Delete(VersionFileName);
+            }
         }
 
         private async Task CreateCurrentVersionFile()

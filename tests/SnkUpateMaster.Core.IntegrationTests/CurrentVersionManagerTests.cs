@@ -1,7 +1,4 @@
 ﻿using SnkUpateMaster.Core.IntegrationTests.SeedWork;
-using SnkUpdateMaster.Core;
-using SnkUpdateMaster.Core.Downloader;
-using SnkUpdateMaster.Core.UpdateSource;
 using SnkUpdateMaster.Core.VersionManager;
 
 namespace SnkUpateMaster.Core.IntegrationTests

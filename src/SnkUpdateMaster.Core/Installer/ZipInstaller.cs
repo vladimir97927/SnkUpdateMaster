@@ -1,4 +1,5 @@
 ﻿
+using SnkUpdateMaster.Core.Common;
 using System.IO.Compression;
 
 namespace SnkUpdateMaster.Core.Installer
@@ -21,6 +22,8 @@ namespace SnkUpdateMaster.Core.Installer
     /// </remarks>
     public class ZipInstaller : IInstaller
     {
+        private readonly IDiskSpaceProvider _diskSpaceProvider;
+
         private readonly string _appDir;
 
         private readonly string _backupDir;
@@ -32,8 +35,9 @@ namespace SnkUpdateMaster.Core.Installer
         /// <exception cref="ArgumentException">
         /// Возникает при недопустимом пути приложения
         /// </exception>
-        public ZipInstaller(string appDir)
+        public ZipInstaller(string appDir, IDiskSpaceProvider? diskSpaceProvider = null)
         {
+            _diskSpaceProvider = diskSpaceProvider ?? new DiskSpaceProvider();
             _appDir = Path.GetFullPath(appDir);
             var appFolderName = Path.GetFileName(Path.TrimEndingDirectorySeparator(_appDir));
             var backupBaseDir = Path.GetDirectoryName(appDir) ?? Path.GetTempPath();
@@ -54,16 +58,31 @@ namespace SnkUpdateMaster.Core.Installer
         /// </exception>
         public async Task InstallAsync(string updateFilePath, IProgress<double>? progress = null, CancellationToken cancellationToken = default)
         {
+            using var archive = ZipFile.OpenRead(updateFilePath);
+            EnsureSufficientDiskSpace(archive);
+
             try
             {
                 await CreateBackupAsync(progress, cancellationToken);
-                await ExtractUpdateAsync(updateFilePath, progress, cancellationToken);
+                await ExtractUpdateAsync(archive, progress, cancellationToken);
                 CleanupBackup();
             }
             catch
             {
                 Rollback();
                 throw;
+            }
+        }
+
+        private void EnsureSufficientDiskSpace(ZipArchive archive)
+        {
+            var requiredSpace = archive.Entries.Sum(e => e.Length);
+            var availableSpace = _diskSpaceProvider.GetAvailableFreeSpace(_appDir);
+
+            if (availableSpace < requiredSpace)
+            {
+                throw new IOException("There is not enough free disk space to install updates." +
+                    $"{requiredSpace} bytes required, {availableSpace} bytes available.");
             }
         }
 
@@ -95,11 +114,10 @@ namespace SnkUpdateMaster.Core.Installer
             }, cancellationToken);
         }
 
-        private Task ExtractUpdateAsync(string updateFilePath, IProgress<double>? progress, CancellationToken cancellationToken)
+        private Task ExtractUpdateAsync(ZipArchive archive, IProgress<double>? progress, CancellationToken cancellationToken)
         {
             return Task.Run(() =>
             {
-                using var archive = ZipFile.OpenRead(updateFilePath);
                 var totalEntries = archive.Entries.Count;
                 if (totalEntries == 0)
                 {

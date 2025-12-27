@@ -11,13 +11,6 @@
 
   <ItemGroup>
     <None Remove="SeedWork\AppTest.zip" />
-    <None Remove="SeedWork\TestApp.zip" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="SeedWork\TestApp.zip">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
