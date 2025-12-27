@@ -3,7 +3,7 @@
 [![WIP](https://img.shields.io/badge/Status-Work%20In%20Progress-orange)](https://github.com/vladimir97927/SnkUpdateMaster)
 ![platform: .NET](https://img.shields.io/badge/platform-.NET-informational)
 ![language: C#](https://img.shields.io/badge/language-C%23-blue)
-[![NuGet version (SnkUpdateMaster.Core)](https://img.shields.io/nuget/v/SnkUpdateMaster.Core.svg?style=flat-square)](https://www.nuget.org/packages/SnkUpdateMaster.Core/)
+[![NuGet version (SnkUpdateMaster.Core)](https://img.shields.io/nuget/v/SnkUpdateMaster.Core.svg)](https://www.nuget.org/packages/SnkUpdateMaster.Core/)
 
 **Documentation:** English | [Русский](README.ru.md)
 
