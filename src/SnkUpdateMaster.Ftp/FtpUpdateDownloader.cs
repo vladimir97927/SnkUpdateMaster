@@ -31,41 +31,53 @@ namespace SnkUpdateMaster.Ftp
         /// <exception cref="FtpException">Не удалось скачать файл обновления с сервера.</exception>
         public async Task<string> DownloadUpdateAsync(
             UpdateInfo updateInfo,
-            IProgress<double> progress,
+            IProgress<double>? progress = null,
             CancellationToken cancellationToken = default)
         {
             var client = await _ftpClientFactory.GetConnectClientAsync(cancellationToken);
 
-            var remoteFilePath = Path.Combine(updateInfo.FileDir ?? string.Empty, updateInfo.FileName);
-            if (!await client.FileExists(remoteFilePath, cancellationToken))
+            try
             {
-                throw new FileNotFoundException($"Update file not found {remoteFilePath}");
-            }
-            var ftpProgress = new Progress<FtpProgress>(p =>
-            {
-                if (p.Progress < 0)
+                var remoteFilePath = Path
+                    .Combine(updateInfo.FileDir ?? string.Empty, updateInfo.FileName)
+                    .Replace("\\", "/");
+                if (!await client.FileExists(remoteFilePath, cancellationToken))
                 {
-                    progress.Report(0);
+                    throw new FileNotFoundException($"Update file not found {remoteFilePath}");
                 }
-                else
+                var ftpProgress = progress == null
+                    ? null
+                    : new Progress<FtpProgress>(p =>
+                    {
+                        if (p.Progress < 0)
+                        {
+                            progress.Report(0);
+                        }
+                        else
+                        {
+                            progress.Report(p.Progress / 100.0);
+                        }
+                    });
+
+                Directory.CreateDirectory(_downloadsDir);
+
+                var localFilePath = Path.Combine(_downloadsDir, updateInfo.FileName);
+                var status = await client.DownloadFile(
+                    localFilePath,
+                    remoteFilePath,
+                    progress: ftpProgress,
+                    token: cancellationToken);
+
+                if (status != FtpStatus.Success)
                 {
-                    progress.Report(p.Progress / 100.0);
+                    throw new FtpException($"Can't download updates. FTP status: {status}");
                 }
-            });
-            
-            var localFilePath = Path.Combine(_downloadsDir, updateInfo.FileName);
-            var status = await client.DownloadFile(
-                localFilePath,
-                remoteFilePath,
-                progress: ftpProgress,
-                token: cancellationToken);
-
-            if (status != FtpStatus.Success)
-            {
-                throw new FtpException($"Can't download updates. FTP status: {status}");
+                return localFilePath;
             }
-
-            return localFilePath;
+            finally
+            {
+                await client.DisposeAsync();
+            }
         }
     }
 }

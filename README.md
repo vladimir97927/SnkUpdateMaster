@@ -3,6 +3,7 @@
 [![WIP](https://img.shields.io/badge/Status-Work%20In%20Progress-orange)](https://github.com/vladimir97927/SnkUpdateMaster)
 ![platform: .NET](https://img.shields.io/badge/platform-.NET-informational)
 ![language: C#](https://img.shields.io/badge/language-C%23-blue)
+[![NuGet version (SnkUpdateMaster.Core)](https://img.shields.io/nuget/v/SnkUpdateMaster.Core.svg)](https://www.nuget.org/packages/SnkUpdateMaster.Core/)
 
 **Documentation:** English | [Русский](README.ru.md)
 
@@ -12,7 +13,7 @@ SnkUpdateMaster is a modular library for managing desktop application updates. I
 
 ## 🌟 Core idea
 
-The library covers the full update cycle: discover an available version, download the file, verify its checksum, and safely apply the update with a backup. All key components—metadata provider, downloader, integrity verifier, and installer—are dependencies that can be swapped with your own implementations.
+The library covers the full update cycle: discover an available version, download the file, verify its checksum, and safely apply the update with a backup. All key components - metadata provider, downloader, integrity verifier, and installer - are dependencies that can be swapped with your own implementations.
 
 **Key capabilities**
 
@@ -28,8 +29,27 @@ The library covers the full update cycle: discover an available version, downloa
 - **.NET Runtime 8.0**  
   (or a self‑contained build for the target OS)
 - At least one update source configured:
-  - **FTP server** — reachable externally;
-  - **or SQL Server** — Microsoft SQL Server 2019+ supported.
+  - **FTP server** - reachable externally;
+  - **or SQL Server** - Microsoft SQL Server 2019+ supported.
+
+## ⬇️ Installation
+
+SnkUpdateMaster can be installed using the Nuget package manager or the dotnet command line interface.
+
+**Core Components:**
+```
+dotnet add package SnkUpdateMaster.Core
+```
+
+**SqlServer Implementation:**
+```
+dotnet add package SnkUpdateMaster.SqlServer
+```
+
+**FTP Implementation:**
+```
+dotnet add package SnkUpdateMaster.Ftp
+```
 
 ## 🚀 Quick start (SQL Server + FTP)
 
@@ -78,17 +98,17 @@ Console.WriteLine(updated ? "Update installed" : "Already up to date");
 > 💡 You can mix FTP and SQL as you like: keep metadata in the database and archives on the file server, or vice versa.
 
 ## 📚 Project modules
-- [Core — application update building blocks.](docs/Core.md)
-- [SqlServer — update flow backed by a relational database.](docs/SqlServer.md)
-- [SnkUpdateMasterDb — database project.](docs/SnkUpdateMasterDb.md)
-- [Ftp — update flow backed by an FTP server.](docs/Ftp.md)
+- [Core - application update building blocks.](docs/Core.md)
+- [SqlServer - update flow backed by a relational database.](docs/SqlServer.md)
+- [SnkUpdateMasterDb - database project.](docs/SnkUpdateMasterDb.md)
+- [Ftp - update flow backed by an FTP server.](docs/Ftp.md)
 
 ## 🏗️ Library architecture
 
-- **Core** — defines interfaces (`IUpdateInfoProvider`, `IUpdateDownloader`, `IInstaller`, `IIntegrityVerifier`, `ICurrentVersionManager`) and base implementations.
-- **Ftp** — metadata provider and file downloader over FTP, plus FTP client factory.
-- **SqlServer** — provider and downloader working with SQL Server tables; uses Dapper.
-- **SnkUpdateMasterDb** — SQL Server infrastructure in Docker with ready-to-use schema scripts.
+- **Core** - defines interfaces (`IUpdateInfoProvider`, `IUpdateDownloader`, `IInstaller`, `IIntegrityVerifier`, `ICurrentVersionManager`) and base implementations.
+- **Ftp** - metadata provider and file downloader over FTP, plus FTP client factory.
+- **SqlServer** - provider and downloader working with SQL Server tables; uses Dapper.
+- **SnkUpdateMasterDb** - SQL Server infrastructure in Docker with ready-to-use schema scripts.
 
 Extend the library by registering your own interface implementations or adding extension methods to `UpdateManagerBuilder`.
 
@@ -150,21 +170,25 @@ Use this mode when you have a local environment with dependencies running. SQL S
 
 **FTP tests** (`SnkUpdateMaster.Ftp.IntegrationTests`):
 
-- `SNK_UPDATE_MASTER__FTP_HOST` — FTP host (default `localhost`)
-- `SNK_UPDATE_MASTER__FTP_PORT` — FTP port (default `2121`)
-- `SNK_UPDATE_MASTER__FTP_USER` — login (default `snk`)
-- `SNK_UPDATE_MASTER__FTP_PASS` — password (default `snk@12345`)
+- `SNK_UPDATE_MASTER__FTP_HOST` - FTP host (default `localhost`)
+- `SNK_UPDATE_MASTER__FTP_PORT` - FTP port (default `2121`)
+- `SNK_UPDATE_MASTER__FTP_USER` - login (default `snk`)
+- `SNK_UPDATE_MASTER__FTP_PASS` - password (default `snk@12345`)
 
 **SQL Server tests** (`SnkUpdateMaster.SqlServer.IntegrationTests`):
 
-- `SNK_UPDATE_MASTER__SQL_CONN` — SQL Server connection string  
+- `SNK_UPDATE_MASTER__SQL_CONN` - SQL Server connection string  
   Default:  
   `Server=localhost,1455;Database=SnkUpdateMasterDb;User Id=sa;Password=Snk@12345;Encrypt=False;TrustServerCertificate=True`
 
 ## 🧭 Useful scenarios
 
-- **FTP only** — metadata and archives on FTP: use `WithFtpUpdateInfoProvider` and `WithFtpUpdateDownloader`.
-- **SQL Server only** — metadata and files in the DB: use `WithSqlServerUpdateInfoProvider` and `WithSqlServerUpdateDownloader`.
-- **Hybrid** — metadata in SQL Server, files on FTP: combine providers as in the Quick Start example.
+- **FTP only** - metadata and archives on FTP: use `WithFtpUpdateInfoProvider` and `WithFtpUpdateDownloader`.
+- **SQL Server only** - metadata and files in the DB: use `WithSqlServerUpdateInfoProvider` and `WithSqlServerUpdateDownloader`.
+- **Hybrid** - metadata in SQL Server, files on FTP: combine providers as in the Quick Start example.
 
 If you need another source (REST API, file system, etc.), implement `IUpdateInfoProvider` and/or `IUpdateDownloader` and register them via `UpdateManagerBuilder.AddDependency`.
+
+## 📃 License, Copyright, etc.
+
+SnkUpdateMaster is copyrighted by [Vladimir Vyplaven](https://github.com/vladimir97927) and is distributed under the [Apache2](LICENSE.txt) license.

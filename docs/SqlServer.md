@@ -56,4 +56,4 @@ var updateManager = new UpdateManagerBuilder()
     .Build();
 ```
 
-> 📌 If update archives are stored in `UpdateFile`, leave `FileDir` empty in `UpdateInfo`—the downloader will pick the right source automatically.
+> 📌 If update archives are stored in `UpdateFile`, leave `FileDir` empty in `UpdateInfo`- the downloader will pick the right source automatically.

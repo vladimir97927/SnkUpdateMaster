@@ -56,43 +56,43 @@ var updated = await updateManager.CheckAndInstallUpdatesAsync(progress);
         Возвращает `true`, если обновление было найдено и установлено.
     *   `UpdateInfo`  
         Класс с метаданными обновления:
-        *   `Id` — идентификатор;
-        *   `Version` — `System.Version`;
+        *   `Id` - идентификатор;
+        *   `Version` - `System.Version`;
         *   `FileName`;
         *   `Checksum` (SHA‑256, hex);
         *   `ReleaseDate` (UTC);
-        *   `FileDir` — каталог файла (для FTP / файловых сценариев).
+        *   `FileDir` - каталог файла (для FTP / файловых сценариев).
     *   `UpdateManagerBuilder` (наследуется от `DependencyBuilder<UpdateManager>`)  
         Fluent‑билдер для конфигурации `UpdateManager`. Встроенные методы:
-        *   `WithFileCurrentVersionManager()` — хранение текущей версии в файле `version` в `Environment.CurrentDirectory`;
-        *   `WithSha256IntegrityVerifier()` — проверка целостности через SHA‑256;
-        *   `WithZipInstaller(string appDir)` — установщик, который разворачивает ZIP‑архив поверх директории приложения `appDir` с созданием бэкапа.
+        *   `WithFileCurrentVersionManager()` - хранение текущей версии в файле `version` в `Environment.CurrentDirectory`;
+        *   `WithSha256IntegrityVerifier()` - проверка целостности через SHA‑256;
+        *   `WithZipInstaller(string appDir)` - установщик, который разворачивает ZIP‑архив поверх директории приложения `appDir` с созданием бэкапа.
         Источники обновлений и загрузчики подключаются либо напрямую через `AddDependency<T>`, либо через extension‑методы из модулей `Ftp` и `SqlServer`.
 2.  **Управление версией (`VersionManager`)**
     Файлы:
     *   `VersionManager/ICurrentVersionManager.cs`
     *   `VersionManager/FileVersionManager.cs`
-    *   `ICurrentVersionManager` — абстракция над хранением текущей версии приложения.
-    *   `FileVersionManager` — реализация через обычный текстовый файл `version`:
+    *   `ICurrentVersionManager` - абстракция над хранением текущей версии приложения.
+    *   `FileVersionManager` - реализация через обычный текстовый файл `version`:
         *   формат: `major.minor.build` (например, `1.0.2`);
         *   умеет читать и обновлять версию;
         *   автоматически создаёт файл при первом обновлении.
 3.  **Провайдеры обновлений (`UpdateSource`)**
     Файл:
     *   `UpdateSource/IUpdateInfoProvider.cs`
-    *   `IUpdateInfoProvider` — интерфейс для получения информации о последнем доступном обновлении из любого внешнего источника (FTP, БД, файловая система и т.п.).
+    *   `IUpdateInfoProvider` - интерфейс для получения информации о последнем доступном обновлении из любого внешнего источника (FTP, БД, файловая система и т.п.).
     Конкретные реализации находятся в проектах `SnkUpdateMaster.Ftp` и `SnkUpdateMaster.SqlServer`.
 4.  **Загрузчики обновлений (`Downloader`)**
     Файл:
     *   `Downloader/IUpdateDownloader.cs`
-    *   `IUpdateDownloader` — интерфейс для асинхронной загрузки файла обновления (HTTP, FTP, БД, локальное копирование и т.п.).  
+    *   `IUpdateDownloader` - интерфейс для асинхронной загрузки файла обновления (HTTP, FTP, БД, локальное копирование и т.п.).  
         Возвращает путь к локальному файлу.
-    Реализации — в проектах `SnkUpdateMaster.Ftp` и `SnkUpdateMaster.SqlServer`.
+    Реализации - в проектах `SnkUpdateMaster.Ftp` и `SnkUpdateMaster.SqlServer`.
 5.  **Установщики обновлений (`Installer`)**
     Файлы:
     *   `Installer/IInstaller.cs`
     *   `Installer/ZipInstaller.cs`
-    *   `IInstaller` — абстракция “как применить загруженный файл обновления”.
+    *   `IInstaller` - абстракция “как применить загруженный файл обновления”.
     *   `ZipInstaller`:
         *   создаёт полную резервную копию директории приложения;
         *   распаковывает ZIP‑архив поверх приложения;
@@ -108,16 +108,16 @@ var updated = await updateManager.CheckAndInstallUpdatesAsync(progress);
     *   `Integrity/ShaIntegrityVerifier.cs`
     *   `Integrity/IntegrityProviderType.cs`
     Основные типы:
-    *   `IChecksumCalculator` — расчёт контрольной суммы файла;
-    *   `IIntegrityProvider` — “обёртка” над калькулятором, может выполнять дополнительные проверки;
-    *   `IIntegrityVerifier` — сравнение вычисленной суммы с ожидаемой;
-    *   `ShaChecksumCalculator` / `ShaIntegrityProvider` / `ShaIntegrityVerifier` — реализация через SHA‑256.
+    *   `IChecksumCalculator` - расчёт контрольной суммы файла;
+    *   `IIntegrityProvider` - “обёртка” над калькулятором, может выполнять дополнительные проверки;
+    *   `IIntegrityVerifier` - сравнение вычисленной суммы с ожидаемой;
+    *   `ShaChecksumCalculator` / `ShaIntegrityProvider` / `ShaIntegrityVerifier` - реализация через SHA‑256.
 7.  **Парсинг файлов с описанием обновлений (`Files`)**
     Файлы:
     *   `Files/IUpdateInfoFileParser.cs`
     *   `Files/JsonUpdateInfoFileParser.cs`
-    *   `IUpdateInfoFileParser` — абстракция над парсингом файла с метаданными обновления.
-    *   `JsonUpdateInfoFileParser` — реализация для JSON‑файла.  
+    *   `IUpdateInfoFileParser` - абстракция над парсингом файла с метаданными обновления.
+    *   `JsonUpdateInfoFileParser` - реализация для JSON‑файла.  
         Ожидаемый формат (пример `tests/ftp-data/manifest.json`):
         ```json
         {

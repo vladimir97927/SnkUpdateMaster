@@ -8,7 +8,7 @@
 *   `Database/entrypoint.sh`
 *   `Database/SnkUpdateMasterDb/scripts/CreateDatabase.sql`
 *   `Database/SnkUpdateMasterDb/scripts/CreateStructure.sql`
-*   `Database/SnkUpdateMasterDb/dbo/Tables/*.sql` — таблицы `UpdateInfo`, `UpdateFile`
+*   `Database/SnkUpdateMasterDb/dbo/Tables/*.sql` - таблицы `UpdateInfo`, `UpdateFile`
 
 `Dockerfile`:
 
@@ -25,11 +25,11 @@
 
 Основные таблицы:
 
-*   `UpdateInfo` — метаданные доступных обновлений.
-*   `UpdateFile` — BLOB‑ы файлов обновлений.
+*   `UpdateInfo` - метаданные доступных обновлений.
+*   `UpdateFile` - BLOB‑ы файлов обновлений.
 
 **Как использовать:**
-- запустите инфраструктуру через `docker compose up` в корне репозитория — контейнер создаст базу и структуру автоматически;
+- запустите инфраструктуру через `docker compose up` в корне репозитория - контейнер создаст базу и структуру автоматически;
 - строка подключения по умолчанию: `Server=localhost,1455;Database=SnkUpdateMasterDb;User Id=sa;Password=Snk@12345;Encrypt=False;TrustServerCertificate=True`.
 
 > ⚠️ Логин/пароль `sa / Snk@12345` и настройки из Docker предназначены только для разработки и тестов. Не использовать в продакшене.

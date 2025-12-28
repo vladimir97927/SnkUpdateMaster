@@ -24,6 +24,6 @@
         /// <param name="cancellationToken">
         /// Токен для отмены операции
         /// </param>
-        Task InstallAsync(string updateFilePath, IProgress<double> progress, CancellationToken cancellationToken = default);
+        Task InstallAsync(string updateFilePath, IProgress<double>? progress = null, CancellationToken cancellationToken = default);
     }
 }
