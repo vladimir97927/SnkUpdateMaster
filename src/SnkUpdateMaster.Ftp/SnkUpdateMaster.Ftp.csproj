@@ -10,12 +10,22 @@
     <Description>Module that retrieves update metadata and archives via FTP/SFTP.</Description>
     <PackageProjectUrl>https://github.com/vladimir97927/SnkUpdateMaster</PackageProjectUrl>
     <PackageReadmeFile>Ftp.md</PackageReadmeFile>
-    <AssemblyVersion>1.0.0</AssemblyVersion>
-    <FileVersion>1.0.0</FileVersion>
+    <AssemblyVersion>1.0.1</AssemblyVersion>
+    <FileVersion>1.0.1</FileVersion>
+    <Version>1.0.1</Version>
+    <PackageTags>updater;update-manager;auto-update;ftp</PackageTags>
+    <PackageReleaseNotes>The main changes affected the SnkUpdateMaster.Core package.</PackageReleaseNotes>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <Copyright>Copyright (c) Vladimir Vyplaven 2025</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\..\docs\Ftp.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\LICENSE.txt">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
