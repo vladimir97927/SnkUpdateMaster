@@ -35,7 +35,7 @@ namespace SnkUpdateMaster.Core
         IIntegrityVerifier integrityVerifier,
         IInstaller installer,
         IUpdateDownloader updateDownloader,
-        ILogger<UpdateManager>? logger = null)
+        ILogger? logger = null)
     {
         private readonly ICurrentVersionManager _currentVersionManager = currentVersionManager;
 
@@ -47,7 +47,7 @@ namespace SnkUpdateMaster.Core
 
         private readonly IUpdateDownloader _updateDownloader = updateDownloader;
 
-        private readonly ILogger<UpdateManager> _logger = logger ?? NullLogger<UpdateManager>.Instance;
+        private readonly ILogger _logger = logger ?? NullLogger.Instance;
 
         /// <summary>
         /// Выполняет полный цикл проверки и установки обновлений

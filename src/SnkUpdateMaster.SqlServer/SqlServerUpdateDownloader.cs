@@ -18,13 +18,13 @@ namespace SnkUpdateMaster.SqlServer
     public class SqlServerUpdateDownloader(
         ISqlConnectionFactory sqlConnectionFactory,
         string downloadsDir,
-        ILogger<SqlServerUpdateDownloader>? logger = null) : IUpdateDownloader
+        ILogger? logger = null) : IUpdateDownloader
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory = sqlConnectionFactory;
 
         private readonly string _downloadsDir = downloadsDir;
 
-        private readonly ILogger<SqlServerUpdateDownloader> _logger = logger ?? NullLogger<SqlServerUpdateDownloader>.Instance;
+        private readonly ILogger _logger = logger ?? NullLogger.Instance;
 
         /// <summary>
         /// Скачивает обновления в заданную директроию

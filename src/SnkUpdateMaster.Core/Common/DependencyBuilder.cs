@@ -22,7 +22,7 @@
         /// <exception cref="ArgumentNullException">
         /// Зависимость указанного типа не зарегистрирована
         /// </exception>
-        protected T GetDependency<T>()
+        public T GetDependency<T>()
         {
             if (_dependencies.TryGetValue(typeof(T), out var dependency))
             {
@@ -51,7 +51,7 @@
         /// <exception cref="InvalidCastException">
         /// Зависимость не может быть приведена к указанному типу
         /// </exception>
-        protected bool TryGetDependency<T>(out T? dependency)
+        public bool TryGetDependency<T>(out T? dependency)
         {
             if (_dependencies.TryGetValue(typeof(T), out var dep))
             {

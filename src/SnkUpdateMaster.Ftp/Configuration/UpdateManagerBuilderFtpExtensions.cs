@@ -22,16 +22,15 @@ namespace SnkUpdateMaster.Ftp.Configuration
         /// <param name="updateInfoFileParser">Парсер, используемый для интерпретации файлов с информацией об обновлениях, полученных с FTP-источника.</param>
         /// <param name="asyncFtpClientFactory">Фабрика для создания асинхронных экземпляров FTP-клиента, используемых для доступа к файлу с информацией об обновлениях.</param>
         /// <param name="updateFileInfoPath">Путь к файлу с информацией об обновлениях на FTP-сервере.</param>
-        /// <param name="logger">Логгер для регистрации операций поставщика информации об обновлениях.</param>
         /// <returns>Тот же экземпляр билдера для цепочки вызовов.</returns>
         public static UpdateManagerBuilder WithFtpUpdateInfoProvider(
             this UpdateManagerBuilder builder,
             IUpdateInfoFileParser updateInfoFileParser,
             IAsyncFtpClientFactory asyncFtpClientFactory,
-            string updateFileInfoPath,
-            ILogger<FtpUpdateInfoProvider>? logger = null)
+            string updateFileInfoPath)
         {
-            var updateSource = new FtpUpdateInfoProvider(asyncFtpClientFactory, updateInfoFileParser, updateFileInfoPath, logger);
+            builder.TryGetDependency(out ILogger? sharedLogger);
+            var updateSource = new FtpUpdateInfoProvider(asyncFtpClientFactory, updateInfoFileParser, updateFileInfoPath, sharedLogger);
 
             builder.AddDependency<IUpdateInfoProvider>(updateSource);
 
@@ -46,15 +45,14 @@ namespace SnkUpdateMaster.Ftp.Configuration
         /// <param name="builder">Текущий экземпляр билдера.</param>
         /// <param name="asyncFtpClientFactory">Фабрика для создания асинхронных экземпляров FTP-клиента, используемых для доступа к файлу с информацией об обновлениях.</param>
         /// <param name="downloadsDir">Путь к каталогу, в котором будут храниться загруженные файлы обновлений.</param>
-        /// <param name="logger">Логгер для регистрации операций загрузчика обновлений</param>
         /// <returns>Тот же экземпляр билдера для цепочки вызовов.</returns>
         public static UpdateManagerBuilder WithFtpUpdateDownloader(
             this UpdateManagerBuilder builder,
             IAsyncFtpClientFactory asyncFtpClientFactory,
-            string downloadsDir,
-            ILogger<FtpUpdateDownloader>? logger = null)
+            string downloadsDir)
         {
-            var updateDownloader = new FtpUpdateDownloader(asyncFtpClientFactory, downloadsDir, logger);
+            builder.TryGetDependency(out ILogger? sharedLogger);
+            var updateDownloader = new FtpUpdateDownloader(asyncFtpClientFactory, downloadsDir, sharedLogger);
 
             builder.AddDependency<IUpdateDownloader>(updateDownloader);
 

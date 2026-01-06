@@ -71,7 +71,7 @@ namespace SnkUpdateMaster.Core
             return this;
         }
 
-        public UpdateManagerBuilder WithLogger(ILogger<UpdateManager> logger)
+        public UpdateManagerBuilder WithLogger(ILogger logger)
         {
             AddDependency(logger);
             return this;
@@ -88,7 +88,7 @@ namespace SnkUpdateMaster.Core
             var integrityVerifier = GetDependency<IIntegrityVerifier>();
             var installer = GetDependency<IInstaller>();
             var downloader = GetDependency<IUpdateDownloader>();
-            TryGetDependency(out ILogger<UpdateManager>? logger);
+            TryGetDependency(out ILogger? logger);
 
             return new UpdateManager(
                 currentVersionManager,
