@@ -1,5 +1,7 @@
 ﻿using FluentFTP;
 using FluentFTP.Exceptions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using SnkUpdateMaster.Core;
 using SnkUpdateMaster.Core.Downloader;
 
@@ -12,11 +14,15 @@ namespace SnkUpdateMaster.Ftp
     /// </summary>
     /// <param name="ftpClientFactory">Фабрика подключений к FTP-серверу.</param>
     /// <param name="downloadsDir">Директория для сохранения файлов.</param>
+    /// <param name="logger">Логгер для отслеживания процесса загрузки.</param>
     public class FtpUpdateDownloader(
         IAsyncFtpClientFactory ftpClientFactory,
-        string downloadsDir) : IUpdateDownloader
+        string downloadsDir,
+        ILogger<FtpUpdateDownloader>? logger = null) : IUpdateDownloader
     {
         private readonly IAsyncFtpClientFactory _ftpClientFactory = ftpClientFactory;
+
+        private readonly ILogger<FtpUpdateDownloader> _logger = logger ?? NullLogger<FtpUpdateDownloader>.Instance;
 
         private readonly string _downloadsDir = downloadsDir;
 
@@ -34,6 +40,8 @@ namespace SnkUpdateMaster.Ftp
             IProgress<double>? progress = null,
             CancellationToken cancellationToken = default)
         {
+            _logger.LogInformation("Starting download of update {UpdateId} version {Version}",
+                updateInfo.Id, updateInfo.Version);
             var client = await _ftpClientFactory.GetConnectClientAsync(cancellationToken);
 
             try
@@ -43,8 +51,11 @@ namespace SnkUpdateMaster.Ftp
                     .Replace("\\", "/");
                 if (!await client.FileExists(remoteFilePath, cancellationToken))
                 {
+                    _logger.LogError("Update file not found on FTP server at path {RemotePath}", remoteFilePath);
                     throw new FileNotFoundException($"Update file not found {remoteFilePath}");
                 }
+
+                _logger.LogInformation("Downloading update file from FTP path {RemotePath} to directory {DownloadsDir}", remoteFilePath, _downloadsDir);
                 var ftpProgress = progress == null
                     ? null
                     : new Progress<FtpProgress>(p =>
@@ -70,12 +81,17 @@ namespace SnkUpdateMaster.Ftp
 
                 if (status != FtpStatus.Success)
                 {
+                    _logger.LogError("Failed to download update file from FTP server. Status: {Status}", status);
                     throw new FtpException($"Can't download updates. FTP status: {status}");
                 }
+
+                _logger.LogInformation("Successfully downloaded update {UpdateId} to {LocalPath}",
+                    updateInfo.Id, localFilePath);
                 return localFilePath;
             }
             finally
             {
+                _logger.LogDebug("Disposing FTP client after download attempt for update {UpdateId}", updateInfo.Id);
                 await client.DisposeAsync();
             }
         }

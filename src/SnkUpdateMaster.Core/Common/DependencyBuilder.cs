@@ -40,6 +40,37 @@
         }
 
         /// <summary>
+        /// Пытается получить зарегистрированную зависимость по типу
+        /// </summary>
+        /// <typeparam name="T">Тип требуемой зависимости</typeparam>
+        /// <param name="dependency">Найденная зависимость, если она зарегистрирована</param>
+        /// <returns>
+        /// <c>true</c> если зависимость зарегистрирована<br/>
+        /// <c>false</c> если зависимость отсутствует
+        /// </returns>
+        /// <exception cref="InvalidCastException">
+        /// Зависимость не может быть приведена к указанному типу
+        /// </exception>
+        protected bool TryGetDependency<T>(out T? dependency)
+        {
+            if (_dependencies.TryGetValue(typeof(T), out var dep))
+            {
+                try
+                {
+                    dependency = (T)dep;
+                    return true;
+                }
+                catch
+                {
+                    dependency = default;
+                    return false;
+                }
+            }
+            dependency = default;
+            return false;
+        }
+
+        /// <summary>
         /// Регистрирует зависимость в строителе
         /// </summary>
         /// <typeparam name="T">Тип зависимости (обычно интерфейс)</typeparam>

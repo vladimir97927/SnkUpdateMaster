@@ -1,4 +1,5 @@
-﻿using SnkUpdateMaster.Core;
+﻿using Microsoft.Extensions.Logging;
+using SnkUpdateMaster.Core;
 using SnkUpdateMaster.Core.Downloader;
 using SnkUpdateMaster.Core.UpdateSource;
 using SnkUpdateMaster.SqlServer.Database;
@@ -17,12 +18,14 @@ namespace SnkUpdateMaster.SqlServer.Configuration
         /// </summary>
         /// <param name="builder">Текущий экземпляр билдера</param>
         /// <param name="sqlConnectionFactory">Фабрика SQL подключения</param>
+        /// <param name="logger">Логгер для регистрации операций поставщика информации об обновлениях</param>
         /// <returns>Тот же экземпляр билдера для цепочки вызовов</returns>
         public static UpdateManagerBuilder WithSqlServerUpdateInfoProvider(
             this UpdateManagerBuilder builder,
-            ISqlConnectionFactory sqlConnectionFactory)
+            ISqlConnectionFactory sqlConnectionFactory,
+            ILogger<SqlServerUpdateInfoProvider>? logger = null)
         {
-            var updateInfoProvider = new SqlServerUpdateInfoProvider(sqlConnectionFactory);
+            var updateInfoProvider = new SqlServerUpdateInfoProvider(sqlConnectionFactory, logger);
 
             builder.AddDependency<IUpdateInfoProvider>(updateInfoProvider);
 
@@ -36,13 +39,15 @@ namespace SnkUpdateMaster.SqlServer.Configuration
         /// <param name="builder">Текущий экземпляр билдера</param>
         /// <param name="sqlConnectionFactory">Фабрика SQL подключения</param>
         /// <param name="downloadsDir">Директория для хранения загруженных файлов</param>
+        /// <param name="logger">Логгер для регистрации операций загрузчика обновлений</param>
         /// <returns>Тот же экземпляр билдера для цепочки вызовов</returns>
         public static UpdateManagerBuilder WithSqlServerUpdateDownloader(
             this UpdateManagerBuilder builder,
             ISqlConnectionFactory sqlConnectionFactory,
-            string downloadsDir)
+            string downloadsDir,
+            ILogger<SqlServerUpdateDownloader>? logger = null)
         {
-            var downloader = new SqlServerUpdateDownloader(sqlConnectionFactory, downloadsDir);
+            var downloader = new SqlServerUpdateDownloader(sqlConnectionFactory, downloadsDir, logger);
 
             builder.AddDependency<IUpdateDownloader>(downloader);
 

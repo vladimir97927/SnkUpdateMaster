@@ -1,4 +1,5 @@
-﻿using SnkUpdateMaster.Core.Common;
+﻿using Microsoft.Extensions.Logging;
+using SnkUpdateMaster.Core.Common;
 using SnkUpdateMaster.Core.Downloader;
 using SnkUpdateMaster.Core.Installer;
 using SnkUpdateMaster.Core.Integrity;
@@ -70,6 +71,12 @@ namespace SnkUpdateMaster.Core
             return this;
         }
 
+        public UpdateManagerBuilder WithLogger(ILogger<UpdateManager> logger)
+        {
+            AddDependency(logger);
+            return this;
+        }
+
         /// <summary>
         /// Создает экземпляр <see cref="UpdateManager"/> с настроенными зависимостями
         /// </summary>
@@ -81,13 +88,15 @@ namespace SnkUpdateMaster.Core
             var integrityVerifier = GetDependency<IIntegrityVerifier>();
             var installer = GetDependency<IInstaller>();
             var downloader = GetDependency<IUpdateDownloader>();
+            TryGetDependency(out ILogger<UpdateManager>? logger);
 
             return new UpdateManager(
                 currentVersionManager,
                 updateSource,
                 integrityVerifier,
                 installer,
-                downloader);
+                downloader,
+                logger);
         }
     }
 }
