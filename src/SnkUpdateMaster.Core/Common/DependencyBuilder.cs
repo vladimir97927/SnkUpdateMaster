@@ -1,59 +1,77 @@
-﻿namespace SnkUpdateMaster.Core.Common
+﻿using System.Collections.Concurrent;
+
+namespace SnkUpdateMaster.Core.Common
 {
     /// <summary>
-    /// Базовый класс для построения объектов с внедрением зависимостей
+    /// Base class for building objects with dependency injection
     /// </summary>
-    /// <typeparam name="TResult">Тип конечного объекта для построения</typeparam>
+    /// <typeparam name="TResult">The final object type to build</typeparam>
     /// <remarks>
-    /// Реализует паттерн "Строитель" для пошаговой настройки зависимостей
+    /// Implements the "Builder" pattern for step-by-step configuration of dependencies
     /// </remarks>
-    public abstract class DependencyBuilder<TResult>
+    public abstract class DependencyBuilder<TResult> : IDependencyRegistry, IDependencyResolver
     {
-        private readonly Dictionary<Type, object> _dependencies = [];
+        private readonly ConcurrentDictionary<Type, Func<IDependencyResolver, object>> _factories = new();
+
+        private readonly ConcurrentDictionary<Type, object> _instances = new();
 
         /// <summary>
-        /// Возвращает зарегистрированную зависимость по типу
+        /// Resolves an instance of the specified type from the container, if available.
         /// </summary>
-        /// <typeparam name="T">Тип требуемой зависимости</typeparam>
-        /// <returns>Экземпляр зависимости типа T</returns>
-        /// <exception cref="InvalidCastException">
-        /// Зависимость не может быть приведена к указанному типу
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Зависимость указанного типа не зарегистрирована
-        /// </exception>
-        protected T GetDependency<T>()
+        /// <remarks>If the requested type is not registered or cannot be resolved, the method returns
+        /// <see langword="null"/> rather than throwing an exception. This method is typically used to retrieve optional
+        /// dependencies.</remarks>
+        /// <typeparam name="T">The type of object to resolve from the container.</typeparam>
+        /// <returns>An instance of type <typeparamref name="T"/> if the container can resolve it; otherwise, <see
+        /// langword="null"/>.</returns>
+        public T? Resolve<T>()
         {
-            if (_dependencies.TryGetValue(typeof(T), out var dependency))
-            {
-                try
-                {
-                    return (T)dependency;
-                }
-                catch
-                {
-                    throw new InvalidCastException($"Can not cast object to {nameof(T)} dependency");
-                }
-            }
+            if (!TryResolve(typeof(T), out var value))
+                return default;
 
-            throw new ArgumentNullException($"Please add {nameof(T)} dependency");
+            return value is T typed ? typed : default;
         }
 
-        /// <summary>
-        /// Регистрирует зависимость в строителе
-        /// </summary>
-        /// <typeparam name="T">Тип зависимости (обычно интерфейс)</typeparam>
-        /// <param name="dependency">Экземпляр зависимости</param>
-        /// <returns>Текущий экземпляр строителя</returns>
-        /// <exception cref="ArgumentNullException">
-        /// Переданная зависимость равна null
-        /// </exception>
-        public DependencyBuilder<TResult> AddDependency<T>(T dependency)
+        public T ResolveRequired<T>()
         {
-            if (dependency == null)
-                throw new ArgumentNullException(nameof(dependency));
-            _dependencies[typeof(T)] = dependency;
-            return this;
+            if (!TryResolve(typeof(T), out var value))
+            {
+                throw new InvalidOperationException($"Dependency '{typeof(T).FullName}' is not registered.");
+            }
+
+            if (value is T typed)
+                return typed;
+
+            throw new InvalidCastException($"Registered dependency for '{typeof(T).FullName}' has type '{value?.GetType().FullName}', which cannot be cast.");
+        }
+
+        public void RegisterFactory<T>(Func<IDependencyResolver, T> factory)
+        {
+            _factories[typeof(T)] = c => factory(c)!;
+        }
+
+        public void RegisterInstance<T>(T instance)
+        {
+            if (instance == null)
+            {
+                throw new ArgumentNullException(nameof(instance), "Instance can not be null");
+            }
+            _instances[typeof(T)] = instance;
+        }
+
+        private bool TryResolve(Type type, out object? value)
+        {
+            if (_instances.TryGetValue(type, out value))
+                return true;
+
+            if (_factories.TryGetValue(type, out var factory))
+            {
+                value = factory(this);
+                return true;
+            }
+
+            value = default;
+            return false;
         }
 
         /// <summary>

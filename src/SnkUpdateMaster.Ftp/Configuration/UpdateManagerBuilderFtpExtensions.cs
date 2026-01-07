@@ -30,7 +30,7 @@ namespace SnkUpdateMaster.Ftp.Configuration
         {
             var updateSource = new FtpUpdateInfoProvider(asyncFtpClientFactory, updateInfoFileParser, updateFileInfoPath);
 
-            builder.AddDependency<IUpdateInfoProvider>(updateSource);
+            builder.RegisterInstance<IUpdateInfoProvider>(updateSource);
 
             return builder;
         }
@@ -51,7 +51,7 @@ namespace SnkUpdateMaster.Ftp.Configuration
         {
             var updateDownloader = new FtpUpdateDownloader(asyncFtpClientFactory, downloadsDir);
 
-            builder.AddDependency<IUpdateDownloader>(updateDownloader);
+            builder.RegisterInstance<IUpdateDownloader>(updateDownloader);
 
             return builder;
         }
