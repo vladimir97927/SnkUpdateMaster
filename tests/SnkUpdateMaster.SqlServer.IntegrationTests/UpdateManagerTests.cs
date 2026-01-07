@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using SnkUpdateMaster.Core;
 using SnkUpdateMaster.SqlServer.Configuration;
 using SnkUpdateMaster.SqlServer.Database;
 using SnkUpdateMaster.SqlServer.IntegrationTests.SeedWork;
+using System.Collections.Concurrent;
 
 namespace SnkUpdateMaster.SqlServer.IntegrationTests
 {
@@ -15,7 +15,7 @@ namespace SnkUpdateMaster.SqlServer.IntegrationTests
         public async Task CheckAndInstallUpdateTest()
         {
             var sqlConnectionFactory = new SqlConnectionFactory(ConnectionString);
-            var logger = new TestLogger<UpdateManager>();
+            var loggerFactory = new TestLoggerFactory();
 
             var updateManager = new UpdateManagerBuilder()
                 .WithFileCurrentVersionManager()
@@ -23,7 +23,7 @@ namespace SnkUpdateMaster.SqlServer.IntegrationTests
                 .WithZipInstaller(AppDir)
                 .WithSqlServerUpdateInfoProvider(sqlConnectionFactory)
                 .WithSqlServerUpdateDownloader(sqlConnectionFactory, DownloadsPath)
-                .WithLogger(logger)
+                .WithLogger(loggerFactory)
                 .Build();
 
             var mockProgress = new Progress<double>();
@@ -33,10 +33,34 @@ namespace SnkUpdateMaster.SqlServer.IntegrationTests
 
             var newVersion = await updateManager.GetCurrentVersionAsync();
 
+            var categoryName = typeof(UpdateManager).FullName ?? string.Empty;
+            var updateManagerLogger = (TestLogger<object>)loggerFactory.Loggers[categoryName];
+
             Assert.That(newVersion, Is.Not.Null);
             Assert.That(newVersion, Is.EqualTo(new Version("1.0.2")));
-            Assert.That(logger.Entries, Is.Not.Empty);
-            Assert.That(logger.Entries.Any(e => e.Message.Contains("Update process finished successfully")), Is.True);
+            Assert.That(updateManagerLogger, Is.Not.Null);
+            Assert.That(updateManagerLogger.Entries, Is.Not.Empty);
+            Assert.That(updateManagerLogger.Entries.Any(e => e.Message.Contains("Update process finished successfully")), Is.True);
+        }
+
+        private sealed class TestLoggerFactory : ILoggerFactory
+        {
+            public ConcurrentDictionary<string, ILogger> Loggers { get; } = [];
+
+            public void AddProvider(ILoggerProvider provider)
+            {
+
+            }
+            public ILogger CreateLogger(string categoryName)
+            {
+                var logger = new TestLogger<object>();
+                Loggers.AddOrUpdate(categoryName, logger, (key, existingLogger) => logger);
+                return logger;
+            }
+            public void Dispose()
+            {
+
+            }
         }
 
         private sealed class TestLogger<T> : ILogger<T>

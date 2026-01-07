@@ -3,6 +3,7 @@ using SnkUpdateMaster.Core;
 using SnkUpdateMaster.Core.Files;
 using SnkUpdateMaster.Ftp.Configuration;
 using SnkUpdateMaster.Ftp.IntegrationTests.SeedWork;
+using System.Collections.Concurrent;
 
 namespace SnkUpdateMaster.Ftp.IntegrationTests
 {
@@ -14,7 +15,7 @@ namespace SnkUpdateMaster.Ftp.IntegrationTests
         {
             var ftpClientFactory = new AsyncFtpClientFactory(FtpHost, FtpUser, FtpPassword, FtpPort);
             var updateInfoFileParser = new JsonUpdateInfoFileParser();
-            var logger = new TestLogger<UpdateManager>();
+            var loggerFactory = new TestLoggerFactory();
 
             var updateManager = new UpdateManagerBuilder()
                 .WithFileCurrentVersionManager()
@@ -22,7 +23,7 @@ namespace SnkUpdateMaster.Ftp.IntegrationTests
                 .WithZipInstaller(AppDir)
                 .WithFtpUpdateInfoProvider(updateInfoFileParser, ftpClientFactory, UpdateInfoFilePath)
                 .WithFtpUpdateDownloader(ftpClientFactory, DownloadsDir)
-                .WithLogger(logger)
+                .WithLogger(loggerFactory)
                 .Build();
 
             var mockProgress = new Progress<double>();
@@ -32,10 +33,34 @@ namespace SnkUpdateMaster.Ftp.IntegrationTests
 
             var newVersion = await updateManager.GetCurrentVersionAsync();
 
+            var categoryName = typeof(UpdateManager).FullName ?? string.Empty;
+            var updateManagerLogger = (TestLogger<object>)loggerFactory.Loggers[categoryName];
+
             Assert.That(newVersion, Is.Not.Null);
             Assert.That(newVersion.ToString(), Is.EqualTo("1.0.1"));
-            Assert.That(logger.Entries, Is.Not.Empty);
-            Assert.That(logger.Entries.Any(e => e.Message.Contains("Update process finished successfully")), Is.True);
+            Assert.That(updateManagerLogger, Is.Not.Null);
+            Assert.That(updateManagerLogger.Entries, Is.Not.Empty);
+            Assert.That(updateManagerLogger.Entries.Any(e => e.Message.Contains("Update process finished successfully")), Is.True);
+        }
+
+        private sealed class TestLoggerFactory : ILoggerFactory
+        {
+            public ConcurrentDictionary<string, ILogger> Loggers { get; } = [];
+
+            public void AddProvider(ILoggerProvider provider)
+            {
+
+            }
+            public ILogger CreateLogger(string categoryName)
+            {
+                var logger = new TestLogger<object>();
+                Loggers.AddOrUpdate(categoryName, logger, (key, existingLogger) => logger);
+                return logger;
+            }
+            public void Dispose()
+            {
+
+            }
         }
 
         private sealed class TestLogger<T> : ILogger<T>

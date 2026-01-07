@@ -19,7 +19,7 @@ namespace SnkUpdateMaster.Ftp
         IAsyncFtpClientFactory ftpClientFactory,
         IUpdateInfoFileParser updateInfoFileParser,
         string updateInfoFilePath,
-        ILogger? logger = null) : IUpdateInfoProvider
+        ILogger<FtpUpdateInfoProvider>? logger = null) : IUpdateInfoProvider
     {
         private readonly IAsyncFtpClientFactory _ftpClientFactory = ftpClientFactory;
 
@@ -27,7 +27,7 @@ namespace SnkUpdateMaster.Ftp
 
         private readonly string _updateInfoFilePath = updateInfoFilePath;
 
-        private readonly ILogger _logger = logger ?? NullLogger.Instance;
+        private readonly ILogger<FtpUpdateInfoProvider> _logger = logger ?? NullLogger<FtpUpdateInfoProvider>.Instance;
 
         /// <summary>
         /// Асинхронно получает информацию о последнем обновлении из файла на FTP-сервере.

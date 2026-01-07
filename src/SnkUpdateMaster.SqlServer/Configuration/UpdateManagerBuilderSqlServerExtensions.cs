@@ -26,7 +26,8 @@ namespace SnkUpdateMaster.SqlServer.Configuration
         {
             IUpdateInfoProvider UpdateInfoProviderFactory(IDependencyResolver dr)
             {
-                var logger = dr.Resolve<ILogger>();
+                var loggerFactory = dr.Resolve<ILoggerFactory>();
+                var logger = loggerFactory?.CreateLogger<SqlServerUpdateInfoProvider>();
                 return new SqlServerUpdateInfoProvider(sqlConnectionFactory, logger);
             }
 
@@ -49,7 +50,8 @@ namespace SnkUpdateMaster.SqlServer.Configuration
         {
             IUpdateDownloader UpdateDownloaderFactory(IDependencyResolver dr)
             {
-                var logger = dr.Resolve<ILogger>();
+                var loggerFactory = dr.Resolve<ILoggerFactory>();
+                var logger = loggerFactory?.CreateLogger<SqlServerUpdateDownloader>();
                 return new SqlServerUpdateDownloader(sqlConnectionFactory, downloadsDir, logger);
             }
 

@@ -15,11 +15,11 @@ namespace SnkUpdateMaster.SqlServer
     /// <param name="logger">Логгер для регистрации операций поставщика информации об обновлениях</param>
     public class SqlServerUpdateInfoProvider(
         ISqlConnectionFactory sqlConnectionFactory,
-        ILogger? logger = null) : IUpdateInfoProvider
+        ILogger<SqlServerUpdateInfoProvider>? logger = null) : IUpdateInfoProvider
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory = sqlConnectionFactory;
 
-        private readonly ILogger _logger = logger ?? NullLogger.Instance;
+        private readonly ILogger<SqlServerUpdateInfoProvider> _logger = logger ?? NullLogger<SqlServerUpdateInfoProvider>.Instance;
 
         /// <summary>
         /// Возвращает информацию о последнем опубликованном обновлении из таблицы UpdateInfo.

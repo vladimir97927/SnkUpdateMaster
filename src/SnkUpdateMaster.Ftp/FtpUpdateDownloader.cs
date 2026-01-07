@@ -18,11 +18,11 @@ namespace SnkUpdateMaster.Ftp
     public class FtpUpdateDownloader(
         IAsyncFtpClientFactory ftpClientFactory,
         string downloadsDir,
-        ILogger? logger = null) : IUpdateDownloader
+        ILogger<FtpUpdateDownloader>? logger = null) : IUpdateDownloader
     {
         private readonly IAsyncFtpClientFactory _ftpClientFactory = ftpClientFactory;
 
-        private readonly ILogger _logger = logger ?? NullLogger.Instance;
+        private readonly ILogger<FtpUpdateDownloader> _logger = logger ?? NullLogger<FtpUpdateDownloader>.Instance;
 
         private readonly string _downloadsDir = downloadsDir;
 

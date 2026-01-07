@@ -32,7 +32,8 @@ namespace SnkUpdateMaster.Ftp.Configuration
         {
             IUpdateInfoProvider UpdateInfoProviderFactory(IDependencyResolver dr)
             {
-                var logger = dr.Resolve<ILogger>();
+                var loggerFactory = dr.Resolve<ILoggerFactory>();
+                var logger = loggerFactory?.CreateLogger<FtpUpdateInfoProvider>();
                 return new FtpUpdateInfoProvider(asyncFtpClientFactory, updateInfoFileParser, updateFileInfoPath, logger);
             }
 
@@ -56,7 +57,8 @@ namespace SnkUpdateMaster.Ftp.Configuration
         {
             IUpdateDownloader UpdateDownloaderFactory(IDependencyResolver dr)
             {
-                var logger = dr.Resolve<ILogger>();
+                var loggerFactory = dr.Resolve<ILoggerFactory>();
+                var logger = loggerFactory?.CreateLogger<FtpUpdateDownloader>();
                 return new FtpUpdateDownloader(asyncFtpClientFactory, downloadsDir, logger);
             }
 

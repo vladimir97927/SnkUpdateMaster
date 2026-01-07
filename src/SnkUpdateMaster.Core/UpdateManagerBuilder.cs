@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using SnkUpdateMaster.Core.Common;
 using SnkUpdateMaster.Core.Downloader;
 using SnkUpdateMaster.Core.Installer;
@@ -71,9 +72,9 @@ namespace SnkUpdateMaster.Core
             return this;
         }
 
-        public UpdateManagerBuilder WithLogger(ILogger logger)
+        public UpdateManagerBuilder WithLogger(ILoggerFactory loggerFactory)
         {
-            RegisterInstance(logger);
+            RegisterInstance(loggerFactory);
             return this;
         }
 
@@ -88,7 +89,8 @@ namespace SnkUpdateMaster.Core
             var integrityVerifier = ResolveRequired<IIntegrityVerifier>();
             var installer = ResolveRequired<IInstaller>();
             var downloader = ResolveRequired<IUpdateDownloader>();
-            var logger = Resolve<ILogger>();
+            var loggerFactory = Resolve<ILoggerFactory>();
+            var logger = loggerFactory?.CreateLogger<UpdateManager>();
 
             return new UpdateManager(
                 currentVersionManager,
