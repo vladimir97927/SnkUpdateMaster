@@ -1,4 +1,6 @@
-﻿namespace SnkUpdateMaster.Core.Common
+﻿using System.Collections.Concurrent;
+
+namespace SnkUpdateMaster.Core.Common
 {
     /// <summary>
     /// Базовый класс для построения объектов с внедрением зависимостей
@@ -7,53 +9,60 @@
     /// <remarks>
     /// Реализует паттерн "Строитель" для пошаговой настройки зависимостей
     /// </remarks>
-    public abstract class DependencyBuilder<TResult>
+    public abstract class DependencyBuilder<TResult> : IDependencyContainer
     {
-        private readonly Dictionary<Type, object> _dependencies = [];
+        private readonly ConcurrentDictionary<Type, Func<IDependencyContainer, object>> _factories = new();
 
-        /// <summary>
-        /// Возвращает зарегистрированную зависимость по типу
-        /// </summary>
-        /// <typeparam name="T">Тип требуемой зависимости</typeparam>
-        /// <returns>Экземпляр зависимости типа T</returns>
-        /// <exception cref="InvalidCastException">
-        /// Зависимость не может быть приведена к указанному типу
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Зависимость указанного типа не зарегистрирована
-        /// </exception>
-        protected T GetDependency<T>()
+        private readonly ConcurrentDictionary<Type, object> _instances = new();
+
+        public T? GetDependency<T>()
         {
-            if (_dependencies.TryGetValue(typeof(T), out var dependency))
-            {
-                try
-                {
-                    return (T)dependency;
-                }
-                catch
-                {
-                    throw new InvalidCastException($"Can not cast object to {nameof(T)} dependency");
-                }
-            }
+            if (!TryResolve(typeof(T), out var value))
+                return default;
 
-            throw new ArgumentNullException($"Please add {nameof(T)} dependency");
+            return value is T typed ? typed : default;
         }
 
-        /// <summary>
-        /// Регистрирует зависимость в строителе
-        /// </summary>
-        /// <typeparam name="T">Тип зависимости (обычно интерфейс)</typeparam>
-        /// <param name="dependency">Экземпляр зависимости</param>
-        /// <returns>Текущий экземпляр строителя</returns>
-        /// <exception cref="ArgumentNullException">
-        /// Переданная зависимость равна null
-        /// </exception>
-        public DependencyBuilder<TResult> AddDependency<T>(T dependency)
+        public T GetRequiredDependency<T>()
         {
-            if (dependency == null)
-                throw new ArgumentNullException(nameof(dependency));
-            _dependencies[typeof(T)] = dependency;
-            return this;
+            if (!TryResolve(typeof(T), out var value))
+            {
+                throw new InvalidOperationException($"Dependency '{typeof(T).FullName}' is not registered.");
+            }
+
+            if (value is T typed)
+                return typed;
+
+            throw new InvalidCastException($"Registered dependency for '{typeof(T).FullName}' has type '{value?.GetType().FullName}', which cannot be cast.");
+        }
+
+        public void RegisterFactory<T>(Func<IDependencyContainer, T> factory)
+        {
+            _factories[typeof(T)] = c => factory(c)!;
+        }
+
+        public void RegisterInstance<T>(T instance)
+        {
+            if (instance == null)
+            {
+                throw new ArgumentNullException(nameof(instance), "Instnace can not be null");
+            }
+            _instances[typeof(T)] = instance;
+        }
+
+        private bool TryResolve(Type type, out object? value)
+        {
+            if (_instances.TryGetValue(type, out value))
+                return true;
+
+            if (_factories.TryGetValue(type, out var factory))
+            {
+                value = factory(this);
+                return true;
+            }
+
+            value = default;
+            return false;
         }
 
         /// <summary>

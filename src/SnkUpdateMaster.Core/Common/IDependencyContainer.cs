@@ -1,6 +1,6 @@
 ﻿namespace SnkUpdateMaster.Core.Common
 {
-    internal interface IDependencyContainer
+    public interface IDependencyContainer
     {
         void RegisterFactory<T>(Func<IDependencyContainer, T> factory);
 

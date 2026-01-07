@@ -24,7 +24,7 @@ namespace SnkUpdateMaster.SqlServer.Configuration
         {
             var updateInfoProvider = new SqlServerUpdateInfoProvider(sqlConnectionFactory);
 
-            builder.AddDependency<IUpdateInfoProvider>(updateInfoProvider);
+            builder.RegisterInstance<IUpdateInfoProvider>(updateInfoProvider);
 
             return builder;
         }
@@ -44,7 +44,7 @@ namespace SnkUpdateMaster.SqlServer.Configuration
         {
             var downloader = new SqlServerUpdateDownloader(sqlConnectionFactory, downloadsDir);
 
-            builder.AddDependency<IUpdateDownloader>(downloader);
+            builder.RegisterInstance<IUpdateDownloader>(downloader);
 
             return builder;
         }
