@@ -19,13 +19,15 @@
 Use `UpdateManager` to orchestrate download and installation. Build it via `UpdateManagerBuilder`:
 ```csharp
 var updateManager = new UpdateManagerBuilder()
-    .WithZipInstaller("path to app folder")
-    .WithFileCurrentVersionManager()
-    .WithSha256IntegrityVerifier()
-    .AddDependency<IUpdateInfoProvider>(customImplementation)
-    .AddDependency<IUpdateDownloader>(customImplementation)
-    .Build();
+	.WithZipInstaller("path to app folder")
+	.WithFileCurrentVersionManager()
+	.WithSha256IntegrityVerifier()
+	.RegisterInstance<IUpdateInfoProvider>(customProviderInstance)
+	.RegisterFactory<IUpdateDownloader>(customDownloaderFactory)
+	.Build();
 ```
+
+The `RegisterInstance<T>` and `RegisterFactory<T>` methods allow you to add the required dependencies to the builder as a instance object or as a factory method.
 
 Check for updates and install:
 ```csharp

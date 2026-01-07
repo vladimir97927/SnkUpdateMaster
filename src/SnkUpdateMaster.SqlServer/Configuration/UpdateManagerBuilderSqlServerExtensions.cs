@@ -26,7 +26,7 @@ namespace SnkUpdateMaster.SqlServer.Configuration
             builder.TryGetDependency(out ILogger? sharedLogger);
             var updateInfoProvider = new SqlServerUpdateInfoProvider(sqlConnectionFactory, sharedLogger);
 
-            builder.AddDependency<IUpdateInfoProvider>(updateInfoProvider);
+            builder.RegisterInstance<IUpdateInfoProvider>(updateInfoProvider);
 
             return builder;
         }
@@ -47,7 +47,7 @@ namespace SnkUpdateMaster.SqlServer.Configuration
             builder.TryGetDependency(out ILogger? sharedLogger);
             var downloader = new SqlServerUpdateDownloader(sqlConnectionFactory, downloadsDir, sharedLogger);
 
-            builder.AddDependency<IUpdateDownloader>(downloader);
+            builder.RegisterInstance<IUpdateDownloader>(downloader);
 
             return builder;
         }

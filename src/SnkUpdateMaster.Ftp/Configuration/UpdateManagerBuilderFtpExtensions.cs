@@ -32,7 +32,7 @@ namespace SnkUpdateMaster.Ftp.Configuration
             builder.TryGetDependency(out ILogger? sharedLogger);
             var updateSource = new FtpUpdateInfoProvider(asyncFtpClientFactory, updateInfoFileParser, updateFileInfoPath, sharedLogger);
 
-            builder.AddDependency<IUpdateInfoProvider>(updateSource);
+            builder.RegisterInstance<IUpdateInfoProvider>(updateSource);
 
             return builder;
         }
@@ -54,7 +54,7 @@ namespace SnkUpdateMaster.Ftp.Configuration
             builder.TryGetDependency(out ILogger? sharedLogger);
             var updateDownloader = new FtpUpdateDownloader(asyncFtpClientFactory, downloadsDir, sharedLogger);
 
-            builder.AddDependency<IUpdateDownloader>(updateDownloader);
+            builder.RegisterInstance<IUpdateDownloader>(updateDownloader);
 
             return builder;
         }

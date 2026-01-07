@@ -28,7 +28,7 @@ namespace SnkUpdateMaster.Core
     /// <item><description><see cref="IInstaller"/></description></item>
     /// </list>
     /// </remarks>
-    public class UpdateManagerBuilder : DependencyBuilder<UpdateManager>
+    public sealed class UpdateManagerBuilder : DependencyBuilder<UpdateManager>
     {
         /// <summary>
         /// Регистрирует файловую реализацию менеджера версий
@@ -39,7 +39,7 @@ namespace SnkUpdateMaster.Core
         /// </remarks>
         public UpdateManagerBuilder WithFileCurrentVersionManager()
         {
-            AddDependency<ICurrentVersionManager>(new FileVersionManager());
+            RegisterInstance<ICurrentVersionManager>(new FileVersionManager());
             return this;
         }
 
@@ -52,7 +52,7 @@ namespace SnkUpdateMaster.Core
         /// </remarks>
         public UpdateManagerBuilder WithSha256IntegrityVerifier()
         {
-            AddDependency<IIntegrityVerifier>(new ShaIntegrityVerifier());
+            RegisterInstance<IIntegrityVerifier>(new ShaIntegrityVerifier());
             return this;
         }
 
@@ -67,7 +67,7 @@ namespace SnkUpdateMaster.Core
         public UpdateManagerBuilder WithZipInstaller(string appDir)
         {
             var installer = new ZipInstaller(appDir);
-            AddDependency<IInstaller>(installer);
+            RegisterInstance<IInstaller>(installer);
             return this;
         }
 
@@ -83,12 +83,20 @@ namespace SnkUpdateMaster.Core
         /// <returns>Полностью сконфигурированный <see cref="UpdateManager"/></returns>
         public override UpdateManager Build()
         {
+<<<<<<< HEAD
             var currentVersionManager = GetDependency<ICurrentVersionManager>();
             var updateSource = GetDependency<IUpdateInfoProvider>();
             var integrityVerifier = GetDependency<IIntegrityVerifier>();
             var installer = GetDependency<IInstaller>();
             var downloader = GetDependency<IUpdateDownloader>();
             TryGetDependency(out ILogger? logger);
+=======
+            var currentVersionManager = ResolveRequired<ICurrentVersionManager>();
+            var updateSource = ResolveRequired<IUpdateInfoProvider>();
+            var integrityVerifier = ResolveRequired<IIntegrityVerifier>();
+            var installer = ResolveRequired<IInstaller>();
+            var downloader = ResolveRequired<IUpdateDownloader>();
+>>>>>>> develop
 
             return new UpdateManager(
                 currentVersionManager,
