@@ -3,11 +3,11 @@
 namespace SnkUpdateMaster.Core.Common
 {
     /// <summary>
-    /// Базовый класс для построения объектов с внедрением зависимостей
+    /// Base class for building objects with dependency injection
     /// </summary>
-    /// <typeparam name="TResult">Тип конечного объекта для построения</typeparam>
+    /// <typeparam name="TResult">The final object type to build</typeparam>
     /// <remarks>
-    /// Реализует паттерн "Строитель" для пошаговой настройки зависимостей
+    /// Implements the "Builder" pattern for step-by-step configuration of dependencies
     /// </remarks>
     public abstract class DependencyBuilder<TResult> : IDependencyRegistry, IDependencyResolver
     {
@@ -15,6 +15,15 @@ namespace SnkUpdateMaster.Core.Common
 
         private readonly ConcurrentDictionary<Type, object> _instances = new();
 
+        /// <summary>
+        /// Resolves an instance of the specified type from the container, if available.
+        /// </summary>
+        /// <remarks>If the requested type is not registered or cannot be resolved, the method returns
+        /// <see langword="null"/> rather than throwing an exception. This method is typically used to retrieve optional
+        /// dependencies.</remarks>
+        /// <typeparam name="T">The type of object to resolve from the container.</typeparam>
+        /// <returns>An instance of type <typeparamref name="T"/> if the container can resolve it; otherwise, <see
+        /// langword="null"/>.</returns>
         public T? Resolve<T>()
         {
             if (!TryResolve(typeof(T), out var value))

@@ -22,10 +22,12 @@ var updateManager = new UpdateManagerBuilder()
 	.WithZipInstaller("path to app folder")
 	.WithFileCurrentVersionManager()
 	.WithSha256IntegrityVerifier()
-	.AddDependency<IUpdateInfoProvider>(customImplementation)
-	.AddDependency<IUpdateDownloader>(customImplementation)
+	.RegisterInstance<IUpdateInfoProvider>(customProviderInstance)
+	.RegisterFactory<IUpdateDownloader>(customDownloaderFactory)
 	.Build();
 ```
+
+Методы `RegisterInstance<T>` и `RegisterFactory<T>` позволяют добавлять необходимые зависимости в билдер как готовый объект или как фабричный метод.
 
 Проверка наличия обновлений и установка:
 ```csharp
