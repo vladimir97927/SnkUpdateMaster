@@ -73,7 +73,7 @@ namespace SnkUpdateMaster.Core
 
         public UpdateManagerBuilder WithLogger(ILogger logger)
         {
-            AddDependency(logger);
+            RegisterInstance(logger);
             return this;
         }
 
@@ -83,20 +83,12 @@ namespace SnkUpdateMaster.Core
         /// <returns>Полностью сконфигурированный <see cref="UpdateManager"/></returns>
         public override UpdateManager Build()
         {
-<<<<<<< HEAD
-            var currentVersionManager = GetDependency<ICurrentVersionManager>();
-            var updateSource = GetDependency<IUpdateInfoProvider>();
-            var integrityVerifier = GetDependency<IIntegrityVerifier>();
-            var installer = GetDependency<IInstaller>();
-            var downloader = GetDependency<IUpdateDownloader>();
-            TryGetDependency(out ILogger? logger);
-=======
             var currentVersionManager = ResolveRequired<ICurrentVersionManager>();
             var updateSource = ResolveRequired<IUpdateInfoProvider>();
             var integrityVerifier = ResolveRequired<IIntegrityVerifier>();
             var installer = ResolveRequired<IInstaller>();
             var downloader = ResolveRequired<IUpdateDownloader>();
->>>>>>> develop
+            var logger = Resolve<ILogger>();
 
             return new UpdateManager(
                 currentVersionManager,

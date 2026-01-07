@@ -18,12 +18,12 @@ namespace SnkUpdateMaster.SqlServer.IntegrationTests
             var logger = new TestLogger<UpdateManager>();
 
             var updateManager = new UpdateManagerBuilder()
-                .WithLogger(logger)
                 .WithFileCurrentVersionManager()
                 .WithSha256IntegrityVerifier()
                 .WithZipInstaller(AppDir)
                 .WithSqlServerUpdateInfoProvider(sqlConnectionFactory)
                 .WithSqlServerUpdateDownloader(sqlConnectionFactory, DownloadsPath)
+                .WithLogger(logger)
                 .Build();
 
             var mockProgress = new Progress<double>();

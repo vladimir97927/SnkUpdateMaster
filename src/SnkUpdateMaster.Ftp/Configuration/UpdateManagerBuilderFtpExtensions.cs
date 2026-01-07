@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using SnkUpdateMaster.Core;
+using SnkUpdateMaster.Core.Common;
 using SnkUpdateMaster.Core.Downloader;
 using SnkUpdateMaster.Core.Files;
 using SnkUpdateMaster.Core.UpdateSource;
@@ -29,11 +30,13 @@ namespace SnkUpdateMaster.Ftp.Configuration
             IAsyncFtpClientFactory asyncFtpClientFactory,
             string updateFileInfoPath)
         {
-            builder.TryGetDependency(out ILogger? sharedLogger);
-            var updateSource = new FtpUpdateInfoProvider(asyncFtpClientFactory, updateInfoFileParser, updateFileInfoPath, sharedLogger);
+            IUpdateInfoProvider UpdateInfoProviderFactory(IDependencyResolver dr)
+            {
+                var logger = dr.Resolve<ILogger>();
+                return new FtpUpdateInfoProvider(asyncFtpClientFactory, updateInfoFileParser, updateFileInfoPath, logger);
+            }
 
-            builder.RegisterInstance<IUpdateInfoProvider>(updateSource);
-
+            builder.RegisterFactory(UpdateInfoProviderFactory);
             return builder;
         }
 
@@ -51,11 +54,13 @@ namespace SnkUpdateMaster.Ftp.Configuration
             IAsyncFtpClientFactory asyncFtpClientFactory,
             string downloadsDir)
         {
-            builder.TryGetDependency(out ILogger? sharedLogger);
-            var updateDownloader = new FtpUpdateDownloader(asyncFtpClientFactory, downloadsDir, sharedLogger);
+            IUpdateDownloader UpdateDownloaderFactory(IDependencyResolver dr)
+            {
+                var logger = dr.Resolve<ILogger>();
+                return new FtpUpdateDownloader(asyncFtpClientFactory, downloadsDir, logger);
+            }
 
-            builder.RegisterInstance<IUpdateDownloader>(updateDownloader);
-
+            builder.RegisterFactory(UpdateDownloaderFactory);
             return builder;
         }
     }

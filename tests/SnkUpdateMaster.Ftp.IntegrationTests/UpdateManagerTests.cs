@@ -17,12 +17,12 @@ namespace SnkUpdateMaster.Ftp.IntegrationTests
             var logger = new TestLogger<UpdateManager>();
 
             var updateManager = new UpdateManagerBuilder()
-                .WithLogger(logger)
                 .WithFileCurrentVersionManager()
                 .WithSha256IntegrityVerifier()
                 .WithZipInstaller(AppDir)
                 .WithFtpUpdateInfoProvider(updateInfoFileParser, ftpClientFactory, UpdateInfoFilePath)
                 .WithFtpUpdateDownloader(ftpClientFactory, DownloadsDir)
+                .WithLogger(logger)
                 .Build();
 
             var mockProgress = new Progress<double>();
