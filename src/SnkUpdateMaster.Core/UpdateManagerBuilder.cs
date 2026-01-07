@@ -76,11 +76,11 @@ namespace SnkUpdateMaster.Core
         /// <returns>Полностью сконфигурированный <see cref="UpdateManager"/></returns>
         public override UpdateManager Build()
         {
-            var currentVersionManager = GetRequiredDependency<ICurrentVersionManager>();
-            var updateSource = GetRequiredDependency<IUpdateInfoProvider>();
-            var integrityVerifier = GetRequiredDependency<IIntegrityVerifier>();
-            var installer = GetRequiredDependency<IInstaller>();
-            var downloader = GetRequiredDependency<IUpdateDownloader>();
+            var currentVersionManager = ResolveRequired<ICurrentVersionManager>();
+            var updateSource = ResolveRequired<IUpdateInfoProvider>();
+            var integrityVerifier = ResolveRequired<IIntegrityVerifier>();
+            var installer = ResolveRequired<IInstaller>();
+            var downloader = ResolveRequired<IUpdateDownloader>();
 
             return new UpdateManager(
                 currentVersionManager,

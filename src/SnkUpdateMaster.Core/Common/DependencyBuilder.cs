@@ -9,13 +9,13 @@ namespace SnkUpdateMaster.Core.Common
     /// <remarks>
     /// Реализует паттерн "Строитель" для пошаговой настройки зависимостей
     /// </remarks>
-    public abstract class DependencyBuilder<TResult> : IDependencyContainer
+    public abstract class DependencyBuilder<TResult> : IDependencyRegistry, IDependencyResolver
     {
-        private readonly ConcurrentDictionary<Type, Func<IDependencyContainer, object>> _factories = new();
+        private readonly ConcurrentDictionary<Type, Func<IDependencyResolver, object>> _factories = new();
 
         private readonly ConcurrentDictionary<Type, object> _instances = new();
 
-        public T? GetDependency<T>()
+        public T? Resolve<T>()
         {
             if (!TryResolve(typeof(T), out var value))
                 return default;
@@ -23,7 +23,7 @@ namespace SnkUpdateMaster.Core.Common
             return value is T typed ? typed : default;
         }
 
-        public T GetRequiredDependency<T>()
+        public T ResolveRequired<T>()
         {
             if (!TryResolve(typeof(T), out var value))
             {
@@ -36,7 +36,7 @@ namespace SnkUpdateMaster.Core.Common
             throw new InvalidCastException($"Registered dependency for '{typeof(T).FullName}' has type '{value?.GetType().FullName}', which cannot be cast.");
         }
 
-        public void RegisterFactory<T>(Func<IDependencyContainer, T> factory)
+        public void RegisterFactory<T>(Func<IDependencyResolver, T> factory)
         {
             _factories[typeof(T)] = c => factory(c)!;
         }
@@ -45,7 +45,7 @@ namespace SnkUpdateMaster.Core.Common
         {
             if (instance == null)
             {
-                throw new ArgumentNullException(nameof(instance), "Instnace can not be null");
+                throw new ArgumentNullException(nameof(instance), "Instance can not be null");
             }
             _instances[typeof(T)] = instance;
         }

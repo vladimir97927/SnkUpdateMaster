@@ -53,9 +53,9 @@ namespace SnkUpdateMaster.Core.ReleasePublisher
         /// <returns>Полностью сконфигурированный <see cref="ReleaseManager"/></returns>
         public override ReleaseManager Build()
         {
-            var packager = GetRequiredDependency<IReleasePackager>();
-            var releaseSource = GetRequiredDependency<IReleaseSource>();
-            var releaseInfoSource = GetRequiredDependency<IReleaseInfoSource>();
+            var packager = ResolveRequired<IReleasePackager>();
+            var releaseSource = ResolveRequired<IReleaseSource>();
+            var releaseInfoSource = ResolveRequired<IReleaseInfoSource>();
 
             return new ReleaseManager(
                 packager,
