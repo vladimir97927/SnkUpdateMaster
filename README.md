@@ -18,11 +18,12 @@ The library covers the full update cycle: discover an available version, downloa
 **Key capabilities**
 
 1. Choose the update source
-   - FTP/SFTP server (manifest and ZIP archives).
+   - FTP/SFTP server (manifest and update files).
    - Microsoft SQL Server (`UpdateInfo` and `UpdateFile` tables).
-2. Flexible installation: unzip the update over the app directory with backup.
-3. SHA‑256 integrity check before installation.
-4. Fluent configuration through `UpdateManagerBuilder`.
+   - Local file system (manifest and update files).
+1. Flexible installation: unzip the update over the app directory with backup.
+2. SHA‑256 integrity check before installation.
+3. Fluent configuration through `UpdateManagerBuilder`.
 
 ## ⚙️ Requirements
 
@@ -30,7 +31,8 @@ The library covers the full update cycle: discover an available version, downloa
   (or a self‑contained build for the target OS)
 - At least one update source configured:
   - **FTP server** - reachable externally;
-  - **or SQL Server** - Microsoft SQL Server 2019+ supported.
+  - **SQL Server** - Microsoft SQL Server 2019+ supported;
+  - **Local file system** - local folder with a manifest and update files.
 
 ## ⬇️ Installation
 
@@ -102,6 +104,7 @@ Console.WriteLine(updated ? "Update installed" : "Already up to date");
 - [SqlServer - update flow backed by a relational database.](docs/SqlServer.md)
 - [SnkUpdateMasterDb - database project.](docs/SnkUpdateMasterDb.md)
 - [Ftp - update flow backed by an FTP server.](docs/Ftp.md)
+- [FileSystem - update flow backed by local files.](docs/FileSystem.md)
 
 ## 🏗️ Library architecture
 
@@ -109,6 +112,7 @@ Console.WriteLine(updated ? "Update installed" : "Already up to date");
 - **Ftp** - metadata provider and file downloader over FTP, plus FTP client factory.
 - **SqlServer** - provider and downloader working with SQL Server tables; uses Dapper.
 - **SnkUpdateMasterDb** - SQL Server infrastructure in Docker with ready-to-use schema scripts.
+- **FileSystem** - manifest reader and downloader that copies update files from a local releases folder.
 
 Extend the library by registering your own interface implementations or adding extension methods to `UpdateManagerBuilder`.
 
@@ -185,9 +189,10 @@ Use this mode when you have a local environment with dependencies running. SQL S
 
 - **FTP only** - metadata and archives on FTP: use `WithFtpUpdateInfoProvider` and `WithFtpUpdateDownloader`.
 - **SQL Server only** - metadata and files in the DB: use `WithSqlServerUpdateInfoProvider` and `WithSqlServerUpdateDownloader`.
+- **Local folder** - manifest and files on disk: use `WithFileSystemUpdateInfoProvider` and `WithFileSystemUpdateDownloader`.
 - **Hybrid** - metadata in SQL Server, files on FTP: combine providers as in the Quick Start example.
 
-If you need another source (REST API, file system, etc.), implement `IUpdateInfoProvider` and/or `IUpdateDownloader` and register them via `UpdateManagerBuilder.AddDependency`.
+If you need another source (REST API, etc.), implement `IUpdateInfoProvider` and/or `IUpdateDownloader` and register them via `UpdateManagerBuilder`.
 
 ## 📃 License, Copyright, etc.
 
