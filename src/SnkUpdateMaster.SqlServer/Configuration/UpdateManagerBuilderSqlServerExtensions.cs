@@ -1,4 +1,6 @@
-﻿using SnkUpdateMaster.Core;
+﻿using Microsoft.Extensions.Logging;
+using SnkUpdateMaster.Core;
+using SnkUpdateMaster.Core.Common;
 using SnkUpdateMaster.Core.Downloader;
 using SnkUpdateMaster.Core.UpdateSource;
 using SnkUpdateMaster.SqlServer.Database;
@@ -22,10 +24,14 @@ namespace SnkUpdateMaster.SqlServer.Configuration
             this UpdateManagerBuilder builder,
             ISqlConnectionFactory sqlConnectionFactory)
         {
-            var updateInfoProvider = new SqlServerUpdateInfoProvider(sqlConnectionFactory);
+            IUpdateInfoProvider UpdateInfoProviderFactory(IDependencyResolver dr)
+            {
+                var loggerFactory = dr.Resolve<ILoggerFactory>();
+                var logger = loggerFactory?.CreateLogger<SqlServerUpdateInfoProvider>();
+                return new SqlServerUpdateInfoProvider(sqlConnectionFactory, logger);
+            }
 
-            builder.RegisterInstance<IUpdateInfoProvider>(updateInfoProvider);
-
+            builder.RegisterFactory(UpdateInfoProviderFactory);
             return builder;
         }
 
@@ -42,10 +48,14 @@ namespace SnkUpdateMaster.SqlServer.Configuration
             ISqlConnectionFactory sqlConnectionFactory,
             string downloadsDir)
         {
-            var downloader = new SqlServerUpdateDownloader(sqlConnectionFactory, downloadsDir);
+            IUpdateDownloader UpdateDownloaderFactory(IDependencyResolver dr)
+            {
+                var loggerFactory = dr.Resolve<ILoggerFactory>();
+                var logger = loggerFactory?.CreateLogger<SqlServerUpdateDownloader>();
+                return new SqlServerUpdateDownloader(sqlConnectionFactory, downloadsDir, logger);
+            }
 
-            builder.RegisterInstance<IUpdateDownloader>(downloader);
-
+            builder.RegisterFactory(UpdateDownloaderFactory);
             return builder;
         }
     }
