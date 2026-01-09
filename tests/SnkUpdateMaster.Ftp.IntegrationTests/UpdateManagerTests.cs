@@ -1,5 +1,5 @@
 ﻿using SnkUpdateMaster.Core;
-using SnkUpdateMaster.Core.Files;
+using SnkUpdateMaster.Core.Parser;
 using SnkUpdateMaster.Ftp.Configuration;
 using SnkUpdateMaster.Ftp.IntegrationTests.SeedWork;
 
@@ -12,7 +12,7 @@ namespace SnkUpdateMaster.Ftp.IntegrationTests
         public async Task CheckAndInstallUpdateTest()
         {
             var ftpClientFactory = new AsyncFtpClientFactory(FtpHost, FtpUser, FtpPassword, FtpPort);
-            var updateInfoFileParser = new JsonUpdateInfoFileParser();
+            var updateInfoFileParser = new JsonUpdateInfoParser();
             var loggerFactory = new TestLoggerFactory();
 
             var updateManager = new UpdateManagerBuilder()

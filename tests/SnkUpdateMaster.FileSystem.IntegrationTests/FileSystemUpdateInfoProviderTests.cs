@@ -1,4 +1,4 @@
-﻿using SnkUpdateMaster.Core.Files;
+﻿using SnkUpdateMaster.Core.Parser;
 using System.Text.Json;
 
 namespace SnkUpdateMaster.FileSystem.IntegrationTests
@@ -27,7 +27,7 @@ namespace SnkUpdateMaster.FileSystem.IntegrationTests
 
                 await File.WriteAllTextAsync(manifestPath, JsonSerializer.Serialize(manifest));
 
-                var provider = new FileSystemUpdateInfoProvider(new JsonUpdateInfoFileParser(), manifestPath);
+                var provider = new FileSystemUpdateInfoProvider(new JsonUpdateInfoParser(), manifestPath);
 
                 var updateInfo = await provider.GetLastUpdatesAsync();
 
@@ -52,7 +52,7 @@ namespace SnkUpdateMaster.FileSystem.IntegrationTests
             try
             {
                 var manifestPath = Path.Combine(tempDir, "manifest.json");
-                var provider = new FileSystemUpdateInfoProvider(new JsonUpdateInfoFileParser(), manifestPath);
+                var provider = new FileSystemUpdateInfoProvider(new JsonUpdateInfoParser(), manifestPath);
 
                 var updateInfo = await provider.GetLastUpdatesAsync();
 

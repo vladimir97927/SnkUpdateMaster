@@ -1,6 +1,6 @@
 ﻿using SnkUpdateMaster.Core;
-using SnkUpdateMaster.Core.Files;
 using SnkUpdateMaster.Core.Integrity;
+using SnkUpdateMaster.Core.Parser;
 using SnkUpdateMaster.FileSystem.Configuration;
 using System.IO.Compression;
 using System.Text.Json;
@@ -49,7 +49,7 @@ namespace SnkUpdateMaster.FileSystem.IntegrationTests
                     .WithFileCurrentVersionManager()
                     .WithSha256IntegrityVerifier()
                     .WithZipInstaller(appDir)
-                    .WithFileSystemUpdateInfoProvider(new JsonUpdateInfoFileParser(), manifestPath)
+                    .WithFileSystemUpdateInfoProvider(new JsonUpdateInfoParser(), manifestPath)
                     .WithFileSystemUpdateDownloader(downloadsDir)
                     .Build();
 

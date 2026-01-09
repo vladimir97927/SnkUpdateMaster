@@ -1,4 +1,4 @@
-﻿using SnkUpdateMaster.Core.Files;
+﻿using SnkUpdateMaster.Core.Parser;
 using SnkUpdateMaster.Ftp.IntegrationTests.SeedWork;
 
 namespace SnkUpdateMaster.Ftp.IntegrationTests
@@ -10,7 +10,7 @@ namespace SnkUpdateMaster.Ftp.IntegrationTests
         public async Task GetLastUpdatesAsync_LogsStartAndSuccess()
         {
             var ftpClientFactory = new AsyncFtpClientFactory(FtpHost, FtpUser, FtpPassword, FtpPort);
-            var updateInfoFileParser = new JsonUpdateInfoFileParser();
+            var updateInfoFileParser = new JsonUpdateInfoParser();
             var logger = new TestLogger<FtpUpdateInfoProvider>();
             var provider = new FtpUpdateInfoProvider(ftpClientFactory, updateInfoFileParser, UpdateInfoFilePath, logger);
 
@@ -25,7 +25,7 @@ namespace SnkUpdateMaster.Ftp.IntegrationTests
         public async Task GetLastUpdatesAsync_LogsWarningWhenFileMissing()
         {
             var ftpClientFactory = new AsyncFtpClientFactory(FtpHost, FtpUser, FtpPassword, FtpPort);
-            var updateInfoFileParser = new JsonUpdateInfoFileParser();
+            var updateInfoFileParser = new JsonUpdateInfoParser();
             var logger = new TestLogger<FtpUpdateInfoProvider>();
             var provider = new FtpUpdateInfoProvider(ftpClientFactory, updateInfoFileParser, "/missing.json", logger);
 
