@@ -2,7 +2,7 @@
 using SnkUpdateMaster.Core;
 using SnkUpdateMaster.Core.Common;
 using SnkUpdateMaster.Core.Downloader;
-using SnkUpdateMaster.Core.Files;
+using SnkUpdateMaster.Core.Parser;
 using SnkUpdateMaster.Core.UpdateSource;
 
 namespace SnkUpdateMaster.FileSystem.Configuration
@@ -31,7 +31,7 @@ namespace SnkUpdateMaster.FileSystem.Configuration
         /// provider.</returns>
         public static UpdateManagerBuilder WithFileSystemUpdateInfoProvider(
             this UpdateManagerBuilder builder,
-            IUpdateInfoFileParser updateInfoFileParser,
+            IUpdateInfoParser updateInfoFileParser,
             string updateFileInfoPath)
         {
             IUpdateInfoProvider UpdateInfoProviderFactory(IDependencyResolver dr)

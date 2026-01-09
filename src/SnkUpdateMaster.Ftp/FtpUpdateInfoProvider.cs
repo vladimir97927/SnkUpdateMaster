@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using SnkUpdateMaster.Core;
-using SnkUpdateMaster.Core.Files;
+using SnkUpdateMaster.Core.Parser;
 using SnkUpdateMaster.Core.UpdateSource;
 
 namespace SnkUpdateMaster.Ftp
@@ -17,13 +17,13 @@ namespace SnkUpdateMaster.Ftp
     /// <param name="logger">Логгер для отслеживания процесса получения информации об обновлениях</param>
     public class FtpUpdateInfoProvider(
         IAsyncFtpClientFactory ftpClientFactory,
-        IUpdateInfoFileParser updateInfoFileParser,
+        IUpdateInfoParser updateInfoFileParser,
         string updateInfoFilePath,
         ILogger<FtpUpdateInfoProvider>? logger = null) : IUpdateInfoProvider
     {
         private readonly IAsyncFtpClientFactory _ftpClientFactory = ftpClientFactory;
 
-        private readonly IUpdateInfoFileParser _updateInfoFileParser = updateInfoFileParser;
+        private readonly IUpdateInfoParser _updateInfoFileParser = updateInfoFileParser;
 
         private readonly string _updateInfoFilePath = updateInfoFilePath;
 

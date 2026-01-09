@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using SnkUpdateMaster.Core;
-using SnkUpdateMaster.Core.Files;
+using SnkUpdateMaster.Core.Parser;
 using SnkUpdateMaster.Core.UpdateSource;
 
 namespace SnkUpdateMaster.FileSystem
@@ -18,11 +18,11 @@ namespace SnkUpdateMaster.FileSystem
     /// <param name="updateInfoFilePath">The path to the update info file on the file system. Must not be null or empty.</param>
     /// <param name="logger">An optional logger used to record diagnostic messages and errors. If not specified, a no-op logger is used.</param>
     public sealed class FileSystemUpdateInfoProvider(
-        IUpdateInfoFileParser updateInfoFileParser,
+        IUpdateInfoParser updateInfoFileParser,
         string updateInfoFilePath,
         ILogger<FileSystemUpdateInfoProvider>? logger = null) : IUpdateInfoProvider
     {
-        private readonly IUpdateInfoFileParser _updateInfoFileParser = updateInfoFileParser;
+        private readonly IUpdateInfoParser _updateInfoFileParser = updateInfoFileParser;
 
         private readonly string _updateInfoFilePath = updateInfoFilePath;
 
