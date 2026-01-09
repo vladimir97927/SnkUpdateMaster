@@ -1,5 +1,5 @@
 ﻿using SnkUpdateMaster.Core;
-using SnkUpdateMaster.Core.Files;
+using SnkUpdateMaster.Core.Parser;
 using SnkUpdateMaster.Ftp.IntegrationTests.SeedWork;
 
 namespace SnkUpdateMaster.Ftp.IntegrationTests
@@ -11,7 +11,7 @@ namespace SnkUpdateMaster.Ftp.IntegrationTests
         public async Task DownloadUpdateAsync_LogsStartAndSuccess()
         {
             var ftpClientFactory = new AsyncFtpClientFactory(FtpHost, FtpUser, FtpPassword, FtpPort);
-            var updateInfoFileParser = new JsonUpdateInfoFileParser();
+            var updateInfoFileParser = new JsonUpdateInfoParser();
             var infoLogger = new TestLogger<FtpUpdateInfoProvider>();
             var infoProvider = new FtpUpdateInfoProvider(ftpClientFactory, updateInfoFileParser, UpdateInfoFilePath, infoLogger);
             var updateInfo = await infoProvider.GetLastUpdatesAsync();
