@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36717.8 d17.14
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2243A8B1-D46E-4313-B881-E068906AB603}"
 EndProject
@@ -35,6 +35,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpdateMaster.FileSystem", "src\SnkUpdateMaster.FileSystem\SnkUpdateMaster.FileSystem.csproj", "{752C8FE7-88BF-4833-BA26-F1D34CAEC938}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpdateMaster.FileSystem.IntegrationTests", "tests\SnkUpdateMaster.FileSystem.IntegrationTests\SnkUpdateMaster.FileSystem.IntegrationTests.csproj", "{67D98644-3090-4A44-909E-E191F05E4435}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnkUpdateMaster.Http", "src\SnkUpdateMaster.Http\SnkUpdateMaster.Http.csproj", "{19AA94E0-917E-4B4F-A95F-8463D085ADBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,6 +86,10 @@ Global
 		{67D98644-3090-4A44-909E-E191F05E4435}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67D98644-3090-4A44-909E-E191F05E4435}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67D98644-3090-4A44-909E-E191F05E4435}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19AA94E0-917E-4B4F-A95F-8463D085ADBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19AA94E0-917E-4B4F-A95F-8463D085ADBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19AA94E0-917E-4B4F-A95F-8463D085ADBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19AA94E0-917E-4B4F-A95F-8463D085ADBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,6 +107,7 @@ Global
 		{24373E95-8BE1-E5A2-DA51-3F7EB46DA1D9} = {C63FC9EA-53C1-4891-9C6A-440BBAB4578C}
 		{752C8FE7-88BF-4833-BA26-F1D34CAEC938} = {2243A8B1-D46E-4313-B881-E068906AB603}
 		{67D98644-3090-4A44-909E-E191F05E4435} = {C63FC9EA-53C1-4891-9C6A-440BBAB4578C}
+		{19AA94E0-917E-4B4F-A95F-8463D085ADBF} = {2243A8B1-D46E-4313-B881-E068906AB603}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B369AE71-FA7C-4772-85B2-6FF8E6B2B4C6}
