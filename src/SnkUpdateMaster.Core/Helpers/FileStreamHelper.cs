@@ -1,6 +1,6 @@
 ﻿namespace SnkUpdateMaster.FileSystem
 {
-    internal static class FileSystemStreamHelper
+    public static class FileStreamHelper
     {
         private const int BufferSize = 81920;
 
@@ -48,7 +48,7 @@
             await CopyToAsync(source, destination, totalBytes, progress, cancellationToken);
         }
 
-        private static async Task CopyToAsync(
+        public static async Task CopyToAsync(
             Stream source,
             Stream destination,
             CancellationToken cancellationToken = default)
@@ -56,7 +56,7 @@
             await CopyToAsync(source, destination, -1, null, cancellationToken);
         }
 
-        private static async Task CopyToAsync(
+        public static async Task CopyToAsync(
             Stream source,
             Stream destination,
             long totalBytes,
