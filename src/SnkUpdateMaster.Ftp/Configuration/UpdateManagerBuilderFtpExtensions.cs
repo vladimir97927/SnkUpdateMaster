@@ -2,7 +2,7 @@
 using SnkUpdateMaster.Core;
 using SnkUpdateMaster.Core.Common;
 using SnkUpdateMaster.Core.Downloader;
-using SnkUpdateMaster.Core.Files;
+using SnkUpdateMaster.Core.Parser;
 using SnkUpdateMaster.Core.UpdateSource;
 
 namespace SnkUpdateMaster.Ftp.Configuration
@@ -26,7 +26,7 @@ namespace SnkUpdateMaster.Ftp.Configuration
         /// <returns>Тот же экземпляр билдера для цепочки вызовов.</returns>
         public static UpdateManagerBuilder WithFtpUpdateInfoProvider(
             this UpdateManagerBuilder builder,
-            IUpdateInfoFileParser updateInfoFileParser,
+            IUpdateInfoParser updateInfoFileParser,
             IAsyncFtpClientFactory asyncFtpClientFactory,
             string updateFileInfoPath)
         {
