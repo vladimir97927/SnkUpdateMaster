@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using SnkUpdateMaster.Core;
 using SnkUpdateMaster.Core.Parser;
@@ -7,12 +8,10 @@ using SnkUpdateMaster.Core.UpdateSource;
 namespace SnkUpdateMaster.Http
 {
     public sealed class HttpUpdateInfoProvider(
-        IHttpClientFactory httpClientFactory,
         IUpdateInfoParser updateInfoParser,
         string updateInfoUrl,
         ILogger<HttpUpdateInfoProvider>? logger = null) : IUpdateInfoProvider
     {
-        private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
 
         private readonly IUpdateInfoParser _updateInfoParser = updateInfoParser;
 
@@ -22,7 +21,8 @@ namespace SnkUpdateMaster.Http
 
         public Task<UpdateInfo?> GetLastUpdatesAsync(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            
+            
         }
     }
 }
