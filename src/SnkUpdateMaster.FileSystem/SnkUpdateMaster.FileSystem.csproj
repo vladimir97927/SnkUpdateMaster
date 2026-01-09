@@ -4,25 +4,23 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>SnkUpdateMaster.Ftp</Title>
+    <Title>SnkUpdateMaster.FileSystem</Title>
+    <Version>2.0.0</Version>
     <Authors>Vladimir Vyplaven</Authors>
-    <Description>Module that retrieves update metadata and archives via FTP/SFTP.</Description>
+    <Description>A module that reads metadata and files updated from the local file system.</Description>
+    <Copyright>Copyright (c) Vladimir Vyplaven 2026</Copyright>
     <PackageProjectUrl>https://github.com/vladimir97927/SnkUpdateMaster</PackageProjectUrl>
-    <PackageReadmeFile>Ftp.md</PackageReadmeFile>
+    <PackageReadmeFile>FileSystem.md</PackageReadmeFile>
+    <PackageTags>updater;update-manager;auto-update;file-system</PackageTags>
     <AssemblyVersion>2.0.0</AssemblyVersion>
     <FileVersion>2.0.0</FileVersion>
-    <Version>2.0.0</Version>
-    <PackageTags>updater;update-manager;auto-update;ftp</PackageTags>
-    <PackageReleaseNotes>- Logger added.
-The main changes affected the SnkUpdateMaster.Core package.</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Copyright>Copyright (c) Vladimir Vyplaven 2026</Copyright>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\docs\Ftp.md">
+    <None Include="..\..\docs\FileSystem.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
@@ -30,11 +28,6 @@ The main changes affected the SnkUpdateMaster.Core package.</PackageReleaseNotes
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="FluentFTP" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
 
   <ItemGroup>

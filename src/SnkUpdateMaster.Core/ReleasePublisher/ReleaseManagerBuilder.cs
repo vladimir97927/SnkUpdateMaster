@@ -42,7 +42,7 @@ namespace SnkUpdateMaster.Core.ReleasePublisher
                     integrityProvider = new ShaIntegrityProvider();
                 break;
             }
-            AddDependency<IReleasePackager>(new ZipReleasePackager(integrityProvider));
+            RegisterInstance<IReleasePackager>(new ZipReleasePackager(integrityProvider));
             return this;
         }
 
@@ -53,9 +53,9 @@ namespace SnkUpdateMaster.Core.ReleasePublisher
         /// <returns>Полностью сконфигурированный <see cref="ReleaseManager"/></returns>
         public override ReleaseManager Build()
         {
-            var packager = GetDependency<IReleasePackager>();
-            var releaseSource = GetDependency<IReleaseSource>();
-            var releaseInfoSource = GetDependency<IReleaseInfoSource>();
+            var packager = ResolveRequired<IReleasePackager>();
+            var releaseSource = ResolveRequired<IReleaseSource>();
+            var releaseInfoSource = ResolveRequired<IReleaseInfoSource>();
 
             return new ReleaseManager(
                 packager,

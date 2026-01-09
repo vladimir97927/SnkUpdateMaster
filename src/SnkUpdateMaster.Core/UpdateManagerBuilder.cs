@@ -1,4 +1,6 @@
-﻿using SnkUpdateMaster.Core.Common;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using SnkUpdateMaster.Core.Common;
 using SnkUpdateMaster.Core.Downloader;
 using SnkUpdateMaster.Core.Installer;
 using SnkUpdateMaster.Core.Integrity;
@@ -27,7 +29,7 @@ namespace SnkUpdateMaster.Core
     /// <item><description><see cref="IInstaller"/></description></item>
     /// </list>
     /// </remarks>
-    public class UpdateManagerBuilder : DependencyBuilder<UpdateManager>
+    public sealed class UpdateManagerBuilder : DependencyBuilder<UpdateManager>
     {
         /// <summary>
         /// Регистрирует файловую реализацию менеджера версий
@@ -38,7 +40,7 @@ namespace SnkUpdateMaster.Core
         /// </remarks>
         public UpdateManagerBuilder WithFileCurrentVersionManager()
         {
-            AddDependency<ICurrentVersionManager>(new FileVersionManager());
+            RegisterInstance<ICurrentVersionManager>(new FileVersionManager());
             return this;
         }
 
@@ -51,7 +53,7 @@ namespace SnkUpdateMaster.Core
         /// </remarks>
         public UpdateManagerBuilder WithSha256IntegrityVerifier()
         {
-            AddDependency<IIntegrityVerifier>(new ShaIntegrityVerifier());
+            RegisterInstance<IIntegrityVerifier>(new ShaIntegrityVerifier());
             return this;
         }
 
@@ -66,7 +68,13 @@ namespace SnkUpdateMaster.Core
         public UpdateManagerBuilder WithZipInstaller(string appDir)
         {
             var installer = new ZipInstaller(appDir);
-            AddDependency<IInstaller>(installer);
+            RegisterInstance<IInstaller>(installer);
+            return this;
+        }
+
+        public UpdateManagerBuilder WithLogger(ILoggerFactory loggerFactory)
+        {
+            RegisterInstance(loggerFactory);
             return this;
         }
 
@@ -76,18 +84,21 @@ namespace SnkUpdateMaster.Core
         /// <returns>Полностью сконфигурированный <see cref="UpdateManager"/></returns>
         public override UpdateManager Build()
         {
-            var currentVersionManager = GetDependency<ICurrentVersionManager>();
-            var updateSource = GetDependency<IUpdateInfoProvider>();
-            var integrityVerifier = GetDependency<IIntegrityVerifier>();
-            var installer = GetDependency<IInstaller>();
-            var downloader = GetDependency<IUpdateDownloader>();
+            var currentVersionManager = ResolveRequired<ICurrentVersionManager>();
+            var updateSource = ResolveRequired<IUpdateInfoProvider>();
+            var integrityVerifier = ResolveRequired<IIntegrityVerifier>();
+            var installer = ResolveRequired<IInstaller>();
+            var downloader = ResolveRequired<IUpdateDownloader>();
+            var loggerFactory = Resolve<ILoggerFactory>();
+            var logger = loggerFactory?.CreateLogger<UpdateManager>();
 
             return new UpdateManager(
                 currentVersionManager,
                 updateSource,
                 integrityVerifier,
                 installer,
-                downloader);
+                downloader,
+                logger);
         }
     }
 }

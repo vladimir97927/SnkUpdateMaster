@@ -1,6 +1,8 @@
-﻿using SnkUpdateMaster.Core;
+﻿using Microsoft.Extensions.Logging;
+using SnkUpdateMaster.Core;
+using SnkUpdateMaster.Core.Common;
 using SnkUpdateMaster.Core.Downloader;
-using SnkUpdateMaster.Core.Files;
+using SnkUpdateMaster.Core.Parser;
 using SnkUpdateMaster.Core.UpdateSource;
 
 namespace SnkUpdateMaster.Ftp.Configuration
@@ -24,14 +26,18 @@ namespace SnkUpdateMaster.Ftp.Configuration
         /// <returns>Тот же экземпляр билдера для цепочки вызовов.</returns>
         public static UpdateManagerBuilder WithFtpUpdateInfoProvider(
             this UpdateManagerBuilder builder,
-            IUpdateInfoFileParser updateInfoFileParser,
+            IUpdateInfoParser updateInfoFileParser,
             IAsyncFtpClientFactory asyncFtpClientFactory,
             string updateFileInfoPath)
         {
-            var updateSource = new FtpUpdateInfoProvider(asyncFtpClientFactory, updateInfoFileParser, updateFileInfoPath);
+            IUpdateInfoProvider UpdateInfoProviderFactory(IDependencyResolver dr)
+            {
+                var loggerFactory = dr.Resolve<ILoggerFactory>();
+                var logger = loggerFactory?.CreateLogger<FtpUpdateInfoProvider>();
+                return new FtpUpdateInfoProvider(asyncFtpClientFactory, updateInfoFileParser, updateFileInfoPath, logger);
+            }
 
-            builder.AddDependency<IUpdateInfoProvider>(updateSource);
-
+            builder.RegisterFactory(UpdateInfoProviderFactory);
             return builder;
         }
 
@@ -42,17 +48,21 @@ namespace SnkUpdateMaster.Ftp.Configuration
         /// для получения файлов обновлений.</remarks>
         /// <param name="builder">Текущий экземпляр билдера.</param>
         /// <param name="asyncFtpClientFactory">Фабрика для создания асинхронных экземпляров FTP-клиента, используемых для доступа к файлу с информацией об обновлениях.</param>
-        /// <param name="downloadsDir">Путь к каталогу, в котором будут храниться загруженные файлы обновлений..</param>
+        /// <param name="downloadsDir">Путь к каталогу, в котором будут храниться загруженные файлы обновлений.</param>
         /// <returns>Тот же экземпляр билдера для цепочки вызовов.</returns>
         public static UpdateManagerBuilder WithFtpUpdateDownloader(
             this UpdateManagerBuilder builder,
             IAsyncFtpClientFactory asyncFtpClientFactory,
             string downloadsDir)
         {
-            var updateDownloader = new FtpUpdateDownloader(asyncFtpClientFactory, downloadsDir);
+            IUpdateDownloader UpdateDownloaderFactory(IDependencyResolver dr)
+            {
+                var loggerFactory = dr.Resolve<ILoggerFactory>();
+                var logger = loggerFactory?.CreateLogger<FtpUpdateDownloader>();
+                return new FtpUpdateDownloader(asyncFtpClientFactory, downloadsDir, logger);
+            }
 
-            builder.AddDependency<IUpdateDownloader>(updateDownloader);
-
+            builder.RegisterFactory(UpdateDownloaderFactory);
             return builder;
         }
     }

@@ -19,13 +19,13 @@ namespace SnkUpdateMaster.SqlServer.Configuration
             this ReleaseManagerBuilder builder,
             string connectionString)
         {
-            var factory = new SqlServerReleaseSourceFactory(connectionString);
-            var releaseSource = factory.Create();
-            builder.AddDependency(releaseSource);
+            //var factory = new SqlServerReleaseSourceFactory(connectionString);
+            //var releaseSource = factory.Create();
+            //builder.AddDependency(releaseSource);
 
-            var sqlConnectionFactory = new SqlConnectionFactory(connectionString);
-            var releaseInfoSource = new SqlServerReleaseInfoSource(sqlConnectionFactory);
-            builder.AddDependency(releaseInfoSource);
+            //var sqlConnectionFactory = new SqlConnectionFactory(connectionString);
+            //var releaseInfoSource = new SqlServerReleaseInfoSource(sqlConnectionFactory);
+            //builder.AddDependency(releaseInfoSource);
 
             return builder;
         }

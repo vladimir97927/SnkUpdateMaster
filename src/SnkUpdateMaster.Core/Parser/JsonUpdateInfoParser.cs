@@ -1,16 +1,16 @@
 ﻿using System.Text;
 using System.Text.Json;
 
-namespace SnkUpdateMaster.Core.Files
+namespace SnkUpdateMaster.Core.Parser
 {
     /// <summary>
     /// Предоставляет функциональность для парсинга информации об обновлениях из файлов JSON..
     /// </summary>
-    /// <remarks>Этот класс реализует интерфейс <see cref="IUpdateInfoFileParser"/>.
+    /// <remarks>Этот класс реализует интерфейс <see cref="IUpdateInfoParser"/>.
     /// Он получает информацию из JSON-файлов, предоставленных в виде путей к файлам или байтовых массивов. Ожидается, что JSON-данные
     /// будут соответствовать определенной структуре, которая включает такие поля, Id, Version, FileName, Checksum, ReleaseDate,
     /// и необязательный параметр FileDir.</remarks>
-    public class JsonUpdateInfoFileParser : IUpdateInfoFileParser
+    public class JsonUpdateInfoParser : IUpdateInfoParser
     {
         private static readonly JsonSerializerOptions _jsonOptions = new()
         {
@@ -47,9 +47,9 @@ namespace SnkUpdateMaster.Core.Files
         /// <param name="fileBytes">Массив байтов, представляющий файл для парсинга. Должен содержать корректную строку JSON в кодировке UTF-8.</param>
         /// <returns>An <see cref="UpdateInfo"/>Объект, содержащий данные об обновлении.</returns>
         /// <exception cref="Exception">Вызывается, если десериализация приводит к null объекту.</exception>
-        public UpdateInfo Parse(byte[] fileBytes)
+        public UpdateInfo Parse(byte[] dataBytes)
         {
-            var jsonString = Encoding.UTF8.GetString(fileBytes);
+            var jsonString = Encoding.UTF8.GetString(dataBytes);
             var dto = JsonSerializer.Deserialize<UpdateInfoDto>(jsonString, _jsonOptions) ??
                 throw new Exception("Cant't parse file");
             return new UpdateInfo(

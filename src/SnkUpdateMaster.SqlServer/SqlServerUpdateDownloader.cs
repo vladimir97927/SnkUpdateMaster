@@ -1,4 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using SnkUpdateMaster.Core;
 using SnkUpdateMaster.Core.Downloader;
 using SnkUpdateMaster.SqlServer.Database;
@@ -12,13 +14,17 @@ namespace SnkUpdateMaster.SqlServer
     /// </summary>
     /// <param name="sqlConnectionFactory">Фабрика подключений к SQL Server</param>
     /// <param name="downloadsDir">Директория для сохранения файлов</param>
+    /// <param name="logger">Логгер для регистрации операций загрузчика обновлений</param>
     public class SqlServerUpdateDownloader(
         ISqlConnectionFactory sqlConnectionFactory,
-        string downloadsDir) : IUpdateDownloader
+        string downloadsDir,
+        ILogger<SqlServerUpdateDownloader>? logger = null) : IUpdateDownloader
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory = sqlConnectionFactory;
 
         private readonly string _downloadsDir = downloadsDir;
+
+        private readonly ILogger<SqlServerUpdateDownloader> _logger = logger ?? NullLogger<SqlServerUpdateDownloader>.Instance;
 
         /// <summary>
         /// Скачивает обновления в заданную директроию
@@ -30,6 +36,7 @@ namespace SnkUpdateMaster.SqlServer
         /// <exception cref="KeyNotFoundException">Файл обновления не найден в базе данных</exception>
         public async Task<string> DownloadUpdateAsync(UpdateInfo updateInfo, IProgress<double>? progress = null, CancellationToken cancellationToken = default)
         {
+            _logger.LogInformation("Starting SQL Server download for update {UpdateId} ({Version})", updateInfo.Id, updateInfo.Version);
             var connection = _sqlConnectionFactory.GetOpenConnection();
             using var command = new SqlCommand(
                 "SELECT [FileData] " +
@@ -39,10 +46,12 @@ namespace SnkUpdateMaster.SqlServer
             using var reader = await command.ExecuteReaderAsync(System.Data.CommandBehavior.SequentialAccess, cancellationToken);
             if (!await reader.ReadAsync(cancellationToken))
             {
+                _logger.LogError("Update file with UpdateInfoId {UpdateId} not found in database.", updateInfo.Id);
                 throw new KeyNotFoundException("Файл обновления не найден");
             }
             Directory.CreateDirectory(_downloadsDir);
             var filePath = Path.Combine(_downloadsDir, updateInfo.FileName);
+            _logger.LogInformation("Saving update file to {FilePath}", filePath);
             using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
             var buffer = new byte[8192];
             long bytesReadTotal = 0;
@@ -60,6 +69,8 @@ namespace SnkUpdateMaster.SqlServer
                     progress.Report(percentage);
                 }
             }
+            _logger.LogInformation("Successfully downloaded update from SQL Server to {FilePath}", filePath);
+
             return filePath;
         }
     }
