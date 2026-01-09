@@ -6,6 +6,17 @@ using System.Security;
 
 namespace SnkUpdateMaster.FileSystem
 {
+    /// <summary>
+    /// Provides functionality to download update files from the file system to a specified directory, supporting
+    /// progress reporting and cancellation.
+    /// </summary>
+    /// <remarks>This class implements the IUpdateDownloader interface using file system operations. It
+    /// ensures that update files are copied to the target directory and supports progress reporting and cancellation.
+    /// Logging is performed for key events and errors. The class is thread-safe for concurrent download
+    /// operations.</remarks>
+    /// <param name="downloadsDir">The directory path where downloaded update files will be stored. Must be a valid, writable file system path.</param>
+    /// <param name="logger">An optional logger used to record diagnostic and error information during update downloads. If not specified, a
+    /// no-op logger is used.</param>
     public sealed class FileSystemUpdateDownloader(
         string downloadsDir,
         ILogger<FileSystemUpdateDownloader>? logger = null) : IUpdateDownloader
@@ -14,6 +25,19 @@ namespace SnkUpdateMaster.FileSystem
 
         private readonly ILogger<FileSystemUpdateDownloader> _logger = logger ?? NullLogger<FileSystemUpdateDownloader>.Instance;
 
+        /// <summary>
+        /// Asynchronously downloads the specified update file to the local downloads directory.
+        /// </summary>
+        /// <remarks>If the operation is canceled, any partially downloaded file will be deleted from the
+        /// downloads directory. The method will overwrite any existing file with the same name in the downloads
+        /// directory.</remarks>
+        /// <param name="updateInfo">Information about the update to download, including file name, version, and source directory. Cannot be
+        /// null.</param>
+        /// <param name="progress">An optional progress reporter that receives the completion percentage of the download operation. If null,
+        /// progress is not reported.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the download operation.</param>
+        /// <returns>A string containing the full path to the downloaded update file in the local downloads directory.</returns>
+        /// <exception cref="FileNotFoundException">Thrown if the update file specified by <paramref name="updateInfo"/> does not exist at the source path.</exception>
         public async Task<string> DownloadUpdateAsync(
             UpdateInfo updateInfo,
             IProgress<double>? progress = null,
