@@ -59,14 +59,12 @@ dotnet add package SnkUpdateMaster.Ftp
 ```
 dotnet add package SnkUpdateMaster.FileSystem
 ```
-<<<<<<< HEAD
-=======
 
 **HTTP Implementation:**
 ```
 dotnet add package SnkUpdateMaster.Http
 ```
->>>>>>> feature/http
+
 ## 🚀 Quick start (SQL Server + FTP)
 
 Example: store update metadata in SQL Server, keep update files on an FTP server. The current app version is stored in `[app directory]\version` as `major.minor.build`. Update files are ZIP archives; integrity is verified via SHA‑256.
