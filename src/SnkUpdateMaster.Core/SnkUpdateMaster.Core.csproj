@@ -15,15 +15,13 @@ To use existing implementations, you need to download:
 - SnkUpdateMaster.Ftp - using an FTP server as an external source.
 - SnkUpdateMaster.FileSystem - manifest reader and downloader that copies update files from a local releases folder.</Description>
     <PackageProjectUrl>https://github.com/vladimir97927/SnkUpdateMaster</PackageProjectUrl>
-    <AssemblyVersion>2.0.0</AssemblyVersion>
-    <FileVersion>2.0.0</FileVersion>
+    <AssemblyVersion>2.1.0</AssemblyVersion>
+    <FileVersion>2.1.0</FileVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageReadmeFile>Core.md</PackageReadmeFile>
-    <Version>2.0.0</Version>
+    <Version>2.1.0</Version>
     <Copyright>Copyright (c) Vladimir Vyplaven 2026</Copyright>
-    <PackageReleaseNotes>- The approach to adding dependencies to DependencyBuilder has been changed. 
-Use RegisterInstance or RegisterFactory methods.
-- Logger added. Use WithLogger(ILoggerFactory loggerFactory)</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
     <PackageTags>updater;update-manager;auto-update</PackageTags>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
