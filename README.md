@@ -9,7 +9,7 @@
 
 > **⚠️ Heads‑up:** The project is under active development. API and structure may change.
 
-SnkUpdateMaster is a modular library for managing desktop application updates. It lets you store release metadata in SQL Server or on FTP, download and install ZIP archives with integrity checks, and keep track of the currently installed version.
+SnkUpdateMaster is a modular library for managing desktop application updates. It lets you store release metadata in SQL Server, FTP, HTTP, local file system, download and install ZIP archives with integrity checks, and keep track of the currently installed version.
 
 ## 🌟 Core idea
 
@@ -21,6 +21,7 @@ The library covers the full update cycle: discover an available version, downloa
    - FTP/SFTP server (manifest and update files).
    - Microsoft SQL Server (`UpdateInfo` and `UpdateFile` tables).
    - Local file system (manifest and update files).
+   - HTTP/HTTPS server (manifest and update files).
 1. Flexible installation: unzip the update over the app directory with backup.
 2. SHA‑256 integrity check before installation.
 3. Fluent configuration through `UpdateManagerBuilder`.
@@ -32,7 +33,8 @@ The library covers the full update cycle: discover an available version, downloa
 - At least one update source configured:
   - **FTP server** - reachable externally;
   - **SQL Server** - Microsoft SQL Server 2019+ supported;
-  - **Local file system** - local folder with a manifest and update files.
+  - **Local file system** - local folder with a manifest and update files;
+  - **HTTP server** - reachable externally.
 
 ## ⬇️ Installation
 
@@ -53,6 +55,15 @@ dotnet add package SnkUpdateMaster.SqlServer
 dotnet add package SnkUpdateMaster.Ftp
 ```
 
+**File System Implementation:**
+```
+dotnet add package SnkUpdateMaster.FileSystem
+```
+
+**HTTP Implementation:**
+```
+dotnet add package SnkUpdateMaster.Http
+```
 ## 🚀 Quick start (SQL Server + FTP)
 
 Example: store update metadata in SQL Server, keep update files on an FTP server. The current app version is stored in `[app directory]\version` as `major.minor.build`. Update files are ZIP archives; integrity is verified via SHA‑256.
@@ -103,8 +114,9 @@ Console.WriteLine(updated ? "Update installed" : "Already up to date");
 - [Core - application update building blocks.](docs/Core.md)
 - [SqlServer - update flow backed by a relational database.](docs/SqlServer.md)
 - [SnkUpdateMasterDb - database project.](docs/SnkUpdateMasterDb.md)
-- [Ftp - update flow backed by an FTP server.](docs/Ftp.md)
+- [Ftp - update flow backed by an FTP server.](Ftp.md)
 - [FileSystem - update flow backed by local files.](docs/FileSystem.md)
+- [Http - update flow backed by an HTTP.](docs/Http.md)
 
 ## 🏗️ Library architecture
 
@@ -190,9 +202,10 @@ Use this mode when you have a local environment with dependencies running. SQL S
 - **FTP only** - metadata and archives on FTP: use `WithFtpUpdateInfoProvider` and `WithFtpUpdateDownloader`.
 - **SQL Server only** - metadata and files in the DB: use `WithSqlServerUpdateInfoProvider` and `WithSqlServerUpdateDownloader`.
 - **Local folder** - manifest and files on disk: use `WithFileSystemUpdateInfoProvider` and `WithFileSystemUpdateDownloader`.
+- **HTTP only** - receive update metadata and archives via HTTP: use `WithHttpUpdateInfoProvider` and `WithHttpUpdateDownloader`.
 - **Hybrid** - metadata in SQL Server, files on FTP: combine providers as in the Quick Start example.
 
-If you need another source (REST API, etc.), implement `IUpdateInfoProvider` and/or `IUpdateDownloader` and register them via `UpdateManagerBuilder`.
+If you need another source, implement `IUpdateInfoProvider` and/or `IUpdateDownloader` and register them via `UpdateManagerBuilder`.
 
 ## 📃 License, Copyright, etc.
 

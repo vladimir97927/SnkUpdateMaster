@@ -9,7 +9,7 @@ namespace SnkUpdateMaster.Http.Configuration
 {
     public static class UpdateManagerBuilderHttpExtensions
     {
-        public static UpdateManagerBuilder UseHttpUpdateInfoProvider(
+        public static UpdateManagerBuilder WithHttpUpdateInfoProvider(
             this UpdateManagerBuilder builder,
             HttpClient httpClient,
             IUpdateInfoParser updateInfoParser,
@@ -25,7 +25,7 @@ namespace SnkUpdateMaster.Http.Configuration
             return builder;
         }
 
-        public static UpdateManagerBuilder UseHttpUpdateDownloader(
+        public static UpdateManagerBuilder WithHttpUpdateDownloader(
             this UpdateManagerBuilder builder,
             HttpClient httpClient,
             string downloadsDir)
