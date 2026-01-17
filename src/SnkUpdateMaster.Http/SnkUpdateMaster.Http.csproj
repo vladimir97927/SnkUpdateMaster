@@ -5,23 +5,21 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>SnkUpdateMaster.Ftp</Title>
+    <Version>2.1.0</Version>
     <Authors>Vladimir Vyplaven</Authors>
-    <Description>Module that retrieves update metadata and archives via FTP/SFTP.</Description>
+    <Description>Module that retrieves update metadata and archives via HTTP/HTTPS.</Description>
+    <Copyright>Copyright (c) Vladimir Vyplaven 2026</Copyright>
     <PackageProjectUrl>https://github.com/vladimir97927/SnkUpdateMaster</PackageProjectUrl>
-    <PackageReadmeFile>Ftp.md</PackageReadmeFile>
+    <PackageReadmeFile>Http.md</PackageReadmeFile>
+    <PackageTags>updater;update-manager;auto-update;http</PackageTags>
     <AssemblyVersion>2.1.0</AssemblyVersion>
     <FileVersion>2.1.0</FileVersion>
-    <Version>2.1.0</Version>
-    <PackageTags>updater;update-manager;auto-update;ftp</PackageTags>
-    <PackageReleaseNotes></PackageReleaseNotes>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Copyright>Copyright (c) Vladimir Vyplaven 2026</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\docs\Ftp.md">
+    <None Include="..\..\docs\Http.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
@@ -32,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentFTP" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
 

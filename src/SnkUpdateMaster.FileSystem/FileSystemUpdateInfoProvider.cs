@@ -50,7 +50,7 @@ namespace SnkUpdateMaster.FileSystem
                     return null;
                 }
 
-                var fileBytes = await FileSystemStreamHelper.ReadAllBytesAsync(
+                var fileBytes = await FileStreamHelper.ReadAllBytesAsync(
                     _updateInfoFilePath,
                     cancellationToken);
 

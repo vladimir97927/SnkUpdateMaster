@@ -61,7 +61,7 @@ namespace SnkUpdateMaster.FileSystem
 
             try
             {
-                await FileSystemStreamHelper.CopyToFileAsync(
+                await FileStreamHelper.CopyToFileAsync(
                     updateFilePath,
                     destinationFilePath,
                     progress,
