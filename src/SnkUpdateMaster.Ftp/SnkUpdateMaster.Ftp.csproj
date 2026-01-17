@@ -11,7 +11,7 @@
     <PackageProjectUrl>https://github.com/vladimir97927/SnkUpdateMaster</PackageProjectUrl>
     <PackageReadmeFile>Ftp.md</PackageReadmeFile>
     <AssemblyVersion>2.1.0</AssemblyVersion>
-    <FileVersion>2.0.0</FileVersion>
+    <FileVersion>2.1.0</FileVersion>
     <Version>2.1.0</Version>
     <PackageTags>updater;update-manager;auto-update;ftp</PackageTags>
     <PackageReleaseNotes></PackageReleaseNotes>

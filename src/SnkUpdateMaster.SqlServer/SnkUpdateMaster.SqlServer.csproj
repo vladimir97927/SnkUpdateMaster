@@ -11,7 +11,7 @@
     <PackageReadmeFile>SqlServer.md</PackageReadmeFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <AssemblyVersion>2.1.0</AssemblyVersion>
-    <FileVersion>2.0.0</FileVersion>
+    <FileVersion>2.1.0</FileVersion>
     <Version>2.1.0</Version>
     <Copyright>Copyright (c) Vladimir Vyplaven 2026</Copyright>
     <PackageTags>updater;update-manager;auto-update;sql;sql-server</PackageTags>
