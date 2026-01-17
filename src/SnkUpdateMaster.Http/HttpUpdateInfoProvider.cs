@@ -7,6 +7,17 @@ using System.Net;
 
 namespace SnkUpdateMaster.Http
 {
+    /// <summary>
+    /// Provides update information by retrieving and parsing data from a specified HTTP endpoint.
+    /// </summary>
+    /// <remarks>This provider is typically used to fetch update metadata from a remote server. The update
+    /// information is parsed using the specified parser. If a relative URL is supplied, the HttpClient's BaseAddress
+    /// must be set. This class is thread-safe for concurrent use.</remarks>
+    /// <param name="httpClient">The HTTP client instance used to send requests to the update information endpoint. Must have a valid BaseAddress
+    /// if a relative URL is provided.</param>
+    /// <param name="updateInfoParser">The parser used to convert the downloaded update information data into an UpdateInfo object.</param>
+    /// <param name="updateInfoUrl">The absolute or relative URL of the update information resource. Cannot be null or empty.</param>
+    /// <param name="logger">The logger used to record diagnostic messages for this provider. If null, a no-op logger is used.</param>
     public sealed class HttpUpdateInfoProvider(
         HttpClient httpClient,
         IUpdateInfoParser updateInfoParser,
@@ -21,6 +32,14 @@ namespace SnkUpdateMaster.Http
 
         private readonly ILogger<HttpUpdateInfoProvider> _logger = logger ?? NullLogger<HttpUpdateInfoProvider>.Instance;
 
+        /// <summary>
+        /// Asynchronously retrieves the most recent update information from the configured HTTP endpoint.
+        /// </summary>
+        /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="UpdateInfo"/>
+        /// object with the latest update information, or <see langword="null"/> if no update information is available.</returns>
+        /// <exception cref="HttpRequestException">Thrown if the HTTP request to retrieve update information fails with a non-success status code other than
+        /// 404 (Not Found).</exception>
         public async Task<UpdateInfo?> GetLastUpdatesAsync(CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Starting to get update info from HTTP at {UpdateInfoUrl}", _updateInfoUri);
